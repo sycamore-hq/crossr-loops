@@ -30,3 +30,18 @@ Stacked on crossr-skills `pr1-peel-persona-protocol` (plan: crossr-skills `docs/
 ## Verification Status
 - `./scripts/verify-graphs`: PASS
 - `./scripts/verify-protocol`: PASS (6 adversary nodes)
+
+## gan-layer-separation — PR 2a (COMPLETED)
+
+Plan: crossr-skills `docs/plans/gan-layer-separation-plan.md` §4 PR 2 / §3.2. Load by role, not by stack.
+
+- Personas renamed (`git mv`): `reviewer-agent`, `tester-agent`, `architect-agent`. Title lines updated. Personality / Required Skills / protocol steps untouched — Rust-flavored voice is PR 5.
+- `axel-conductor-agent` load set is now `axel` + `gan-verdict`. Language stack is disclosed to subagents, never loaded by the conductor. `rust-team-lead` stays as an inner-GAN delegation option until PR 3.
+- `graphs/rust-team-lead.json` `uses.persona` retargeted. `graphs/axel.json` `requires.skills` reduced to the conductor window. Plan node still `axel-conductor-agent` (PR 6).
+- Template `templates/harness/opencode/agent/axel.md` prose only: new persona names + matching load set. Files kept (deletion is PR 3, after harness generation in 2b).
+- `scripts/verify-skill-refs` (`just verify-skill-refs`): every graph `uses.skill` / `requires.skills` resolves to a SKILL.md in this checkout or the pinned catalog; every `uses.persona` resolves to `.agents/agents/<name>.md`. Scope addition beyond the plan — loops#4 shipped dangling `rust-architect` that only a human grep caught.
+
+## Verification Status
+- `./scripts/verify-graphs`: PASS
+- `./scripts/verify-protocol`: PASS
+- `./scripts/verify-skill-refs`: PASS

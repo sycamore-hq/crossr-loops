@@ -26,6 +26,11 @@
         "id": "pr1b",
         "title": "Persona verdict formats + verify-protocol + skills pin retarget",
         "status": "completed"
+      },
+      {
+        "id": "pr2a",
+        "title": "Rename personas to role names; conductor loads by role",
+        "status": "completed"
       }
     ]
   }

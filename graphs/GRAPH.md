@@ -8,7 +8,7 @@ Explicit topology for the conductors. **Not a runtime.**
 - **If a graph and a `SKILL.md` disagree, `SKILL.md` wins.** The graph is a map.
 - No Rhai. No OpenCode-native executor. No interpreter in v0.
 
-Schema: [`schema.json`](schema.json). Gate: `./scripts/verify-graphs` (`just graphs-verify`).
+Schema: [`schema.json`](schema.json). Gates: `just graphs-verify`, `just verify-skill-refs`.
 
 | File | What |
 |------|------|

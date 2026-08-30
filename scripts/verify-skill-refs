@@ -1,0 +1,189 @@
+#!/usr/bin/env python3
+"""Verify graph skill and persona names resolve.
+
+Every `uses.skill` and `requires.skills` name in graphs/*.json must resolve
+to `.agents/skills/<name>/SKILL.md` in this checkout or the pinned catalog.
+Every `uses.persona` must resolve to `.agents/agents/<name>.md`.
+
+The catalog is the lockfile `skills = "<tag>"` pin. Resolution order:
+local `.agents/skills/`, then CROSSR_SKILLS_PATH, then a sibling
+`crossr-skills` checkout, then a shallow clone of the pin.
+
+Rationale: loops#4 shipped dangling `rust-architect` graph references that
+only a human grep caught. Mechanical before LLM.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import re
+import shutil
+import subprocess
+import tempfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+GRAPHS = ROOT / "graphs"
+AGENTS = ROOT / ".agents" / "agents"
+LOCAL_SKILLS = ROOT / ".agents" / "skills"
+SCHEMA_NAME = "schema.json"
+LOCKFILE = ROOT / "lockfile.toml"
+CATALOG_URL = os.environ.get(
+    "CROSSR_SKILLS_URL", "https://github.com/sycamore-hq/crossr-skills.git"
+)
+
+_cloned: Path | None = None
+
+
+class Check:
+    def __init__(self) -> None:
+        self.ok: list[str] = []
+        self.bad: list[str] = []
+
+    def pass_(self, msg: str) -> None:
+        print(f"  ✓ {msg}")
+        self.ok.append(msg)
+
+    def fail(self, msg: str) -> None:
+        print(f"  ✗ {msg}")
+        self.bad.append(msg)
+
+
+def load_graphs() -> dict[str, dict]:
+    out = {}
+    for path in sorted(GRAPHS.glob("*.json")):
+        if path.name == SCHEMA_NAME:
+            continue
+        with path.open() as f:
+            out[path.stem] = json.load(f)
+    return out
+
+
+def lockfile_skills_pin() -> str | None:
+    if not LOCKFILE.is_file():
+        return None
+    m = re.search(r'(?m)^\s*skills\s*=\s*"([^"]+)"', LOCKFILE.read_text())
+    return m.group(1) if m else None
+
+
+def catalog_roots() -> list[Path]:
+    roots: list[Path] = []
+    env = os.environ.get("CROSSR_SKILLS_PATH")
+    if env:
+        roots.append(Path(env))
+    sibling = ROOT.parent / "crossr-skills"
+    if sibling.joinpath(".agents", "skills").is_dir():
+        roots.append(sibling)
+    return roots
+
+
+def clone_pin(tag: str) -> Path:
+    global _cloned
+    if _cloned is not None:
+        return _cloned
+    dest = Path(tempfile.mkdtemp(prefix="crossr-skills-pin."))
+    print(f"  → cloning sycamore-hq/crossr-skills @ {tag}")
+    subprocess.run(
+        [
+            "git",
+            "-c",
+            "advice.detachedHead=false",
+            "clone",
+            "--quiet",
+            "--depth",
+            "1",
+            "--branch",
+            tag,
+            CATALOG_URL,
+            str(dest),
+        ],
+        check=True,
+    )
+    _cloned = dest
+    return dest
+
+
+def skill_path(name: str, catalog: list[Path]) -> Path | None:
+    local = LOCAL_SKILLS / name / "SKILL.md"
+    if local.is_file():
+        return local
+    for root in catalog:
+        p = root / ".agents" / "skills" / name / "SKILL.md"
+        if p.is_file():
+            return p
+    return None
+
+
+def collect_names(g: dict) -> tuple[set[str], set[str]]:
+    skills: set[str] = set((g.get("requires") or {}).get("skills") or [])
+    personas: set[str] = set()
+    for node in g.get("nodes") or []:
+        if not isinstance(node, dict):
+            continue
+        uses = node.get("uses") or {}
+        if uses.get("skill"):
+            skills.add(uses["skill"])
+        if uses.get("persona"):
+            personas.add(uses["persona"])
+    return skills, personas
+
+
+def verify(name: str, g: dict, catalog: list[Path], c: Check) -> None:
+    skills, personas = collect_names(g)
+    start = len(c.bad)
+    for skill in sorted(skills):
+        if skill_path(skill, catalog) is None:
+            c.fail(
+                f"{name}: skill {skill!r} has no .agents/skills/{skill}/SKILL.md "
+                f"in this checkout or the pinned catalog"
+            )
+    for persona in sorted(personas):
+        p = AGENTS / f"{persona}.md"
+        if not p.is_file():
+            c.fail(f"{name}: persona {persona!r} has no {p.relative_to(ROOT)}")
+    if len(c.bad) == start:
+        c.pass_(
+            f"{name}: {len(skills)} skill(s), {len(personas)} persona(s) resolve"
+        )
+
+
+def main() -> int:
+    c = Check()
+    print("→ Verifying graph skill/persona refs against local + pinned catalog...")
+    pin = lockfile_skills_pin()
+    catalog = [p for p in catalog_roots() if p.joinpath(".agents", "skills").is_dir()]
+    if not catalog:
+        if not pin:
+            c.fail("no CROSSR_SKILLS_PATH, sibling catalog, or lockfile skills pin")
+        else:
+            try:
+                catalog = [clone_pin(pin)]
+            except (OSError, subprocess.CalledProcessError) as exc:
+                c.fail(f"could not clone pinned catalog {pin!r}: {exc}")
+    if pin:
+        print(f"  pin: skills = {pin!r}")
+    if catalog:
+        print(f"  catalog: {catalog[0]}")
+
+    graphs = load_graphs()
+    if not graphs:
+        c.fail("no graph JSON files")
+    if not c.bad or catalog:
+        for name in sorted(graphs):
+            verify(name, graphs[name], catalog, c)
+
+    print()
+    if c.bad:
+        print(f"✗ verify-skill-refs FAILED ({len(c.bad)} problem(s))")
+        return 1
+    print(f"✓ verify-skill-refs PASS ({len(graphs)} graphs, {len(c.ok)} check(s))")
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    finally:
+        if _cloned is not None:
+            shutil.rmtree(_cloned, ignore_errors=True)
