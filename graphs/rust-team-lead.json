@@ -28,7 +28,7 @@
       "id": "architect",
       "role": "adversary",
       "catalog": true,
-      "uses": {"skill": "rust-architect", "persona": "rust-architect-agent"}
+      "uses": {"skill": "architecture", "persona": "rust-architect-agent"}
     },
     {"id": "commit", "role": "gate"}
   ],
@@ -47,7 +47,7 @@
       "rust-code-writer",
       "rust-code-reviewer",
       "rust-code-tester",
-      "rust-architect"
+      "architecture"
     ]
   }
 }
