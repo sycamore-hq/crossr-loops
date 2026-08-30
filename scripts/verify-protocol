@@ -1,0 +1,124 @@
+#!/usr/bin/env python3
+"""Verify the GAN verdict protocol across graphs and personas.
+
+The authority is the `gan-verdict` catalog skill: verdict tokens are exactly
+BLESS or REJECT. This script enforces that contract against loops-local files —
+it does not need to read the catalog.
+
+For every adversary node in graphs/*.json:
+  - the node names a persona and the persona file exists;
+  - every out-edge fires on BLESS or REJECT, and both edges exist;
+  - the persona declares both BLESS and REJECT verbatim (silence is not a
+    protocol) and declares no retired verdict token (BLESSED, PASSED,
+    REJECTED, NACK).
+"""
+
+from __future__ import annotations
+
+import json
+import re
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+GRAPHS = ROOT / "graphs"
+AGENTS = ROOT / ".agents" / "agents"
+SCHEMA_NAME = "schema.json"
+TOKENS = {"BLESS", "REJECT"}
+RETIRED = re.compile(r"\b(BLESSED|PASSED|REJECTED|NACK)\b")
+
+
+class Check:
+    def __init__(self) -> None:
+        self.ok: list[str] = []
+        self.bad: list[str] = []
+
+    def pass_(self, msg: str) -> None:
+        print(f"  ✓ {msg}")
+        self.ok.append(msg)
+
+    def fail(self, msg: str) -> None:
+        print(f"  ✗ {msg}")
+        self.bad.append(msg)
+
+
+def load_graphs() -> dict[str, dict]:
+    out = {}
+    for path in sorted(GRAPHS.glob("*.json")):
+        if path.name == SCHEMA_NAME:
+            continue
+        with path.open() as f:
+            out[path.stem] = json.load(f)
+    return out
+
+
+def check_persona(name: str, nid: str, persona: str, c: Check) -> None:
+    path = AGENTS / f"{persona}.md"
+    if not path.is_file():
+        c.fail(f"{name}: node {nid} missing persona {path.relative_to(ROOT)}")
+        return
+    text = path.read_text()
+    start = len(c.bad)
+    for token in sorted(TOKENS):
+        if not re.search(rf"\b{token}\b", text):
+            c.fail(
+                f"{name}: persona {persona} never declares `{token}` — "
+                f"silence is not a protocol"
+            )
+    for m in sorted({m.group(1) for m in RETIRED.finditer(text)}):
+        c.fail(f"{name}: persona {persona} declares retired verdict token `{m}`")
+    if len(c.bad) == start:
+        c.pass_(f"{name}: persona {persona} declares BLESS/REJECT only")
+
+
+def check_adversary_edges(name: str, nid: str, edges: list[dict], c: Check) -> None:
+    out = [e for e in edges if e.get("from") == nid]
+    whens = [e.get("when") for e in out]
+    start = len(c.bad)
+    for e, when in zip(out, whens):
+        if when not in TOKENS:
+            c.fail(
+                f"{name}: adversary {nid} edge to {e.get('to')!r} fires on "
+                f"{when!r} — verdict edges are BLESS/REJECT only"
+            )
+    for token in sorted(TOKENS - set(whens)):
+        c.fail(f"{name}: adversary {nid} has no `{token}` out-edge")
+    if len(c.bad) == start:
+        c.pass_(f"{name}: adversary {nid} edges fire on BLESS/REJECT")
+
+
+def verify(name: str, g: dict, c: Check) -> int:
+    edges = g.get("edges") or []
+    adversaries = 0
+    for node in g.get("nodes") or []:
+        if not isinstance(node, dict) or node.get("role") != "adversary":
+            continue
+        adversaries += 1
+        nid = node.get("id", "?")
+        check_adversary_edges(name, nid, edges, c)
+        persona = (node.get("uses") or {}).get("persona")
+        if persona:
+            check_persona(name, nid, persona, c)
+        else:
+            c.fail(f"{name}: adversary {nid} has no persona — silence is not a protocol")
+    return adversaries
+
+
+def main() -> int:
+    c = Check()
+    total = 0
+    print("→ Verifying GAN verdict protocol (gan-verdict: BLESS | REJECT)...")
+    for name, g in load_graphs().items():
+        total += verify(name, g, c)
+    if total == 0:
+        c.fail("no adversary nodes found in graphs/ — nothing enforced")
+    print()
+    if c.bad:
+        print(f"✗ verify-protocol FAILED ({len(c.bad)} problem(s), {total} adversary node(s))")
+        return 1
+    print(f"✓ verify-protocol PASS ({total} adversary node(s), {len(c.ok)} check(s))")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

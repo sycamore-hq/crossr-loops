@@ -13,5 +13,8 @@ test:
 graphs-verify:
     @./scripts/verify-graphs
 
+verify-protocol:
+    @./scripts/verify-protocol
+
 graphs-verify-html:
     @./scripts/verify-graphs --html

@@ -18,5 +18,15 @@
         ]
       }
     ]
+  },
+  "gan-layer-separation": {
+    "status": "in_progress",
+    "commits": [
+      {
+        "id": "pr1b",
+        "title": "Persona verdict formats + verify-protocol + skills pin retarget",
+        "status": "completed"
+      }
+    ]
   }
 }
