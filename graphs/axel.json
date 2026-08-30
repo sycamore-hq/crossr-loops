@@ -26,7 +26,7 @@
       "rust-code-writer",
       "rust-code-reviewer",
       "rust-code-tester",
-      "rust-architect"
+      "architecture"
     ]
   }
 }
