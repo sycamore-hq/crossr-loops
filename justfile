@@ -16,6 +16,8 @@ graphs-verify:
 verify-protocol:
     @./scripts/verify-protocol
 
+# Requires CROSSR_SKILLS_PATH pointing at the lockfile skills pin.
+# A sibling checkout is never used as the pin; this target does not clone.
 verify-skill-refs:
     @./scripts/verify-skill-refs
 

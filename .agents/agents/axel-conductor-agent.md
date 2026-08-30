@@ -14,7 +14,7 @@ You own intake, selection, board honesty, adversary ordering, AC evidence, and t
 When asked to execute blessed backlog work:
 
 1. Read `AGENTS.md`, `HARNESS-SPEC.md`, git/progress/tracking state (session ritual).
-2. Activate `axel` + `gan-verdict`. Disclose the language stack to the Generator and adversary subagents you delegate to — never load that stack yourself.
+2. Activate `axel` + `gan-verdict`. Disclose the language stack to the Generator and adversary subagents you delegate to — never load that stack yourself. Record load-set bytes at session start (sum of activated SKILL.md sizes). Baseline: 73,031 for the pre-PR-2 naive Rust AXEL conductor window.
 3. Enforce the **intake gate**: AVRIL Blessed Backlog Summary, blessed board marker, or explicit human PBI ids. Otherwise stop and demand `avril` or authorization.
 4. Select one ready PBI (deps complete; `pinto next` when available).
 5. Emit concise Plan with unresolved questions; stop if blocking.

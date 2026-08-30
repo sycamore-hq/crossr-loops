@@ -64,7 +64,7 @@ Disclose at session start which code GAN applies:
 **Rust (default when the repo is Rust / harness says so):**
 
 - Generator: `code-writer` + `rust-code-writer` + domain (`rust-axum-backend`, `rust-tui`, `rust-frontend`, `rust-errors`, …)
-- Adversaries (fixed order): `rust-code-reviewer` → `rust-code-tester` → `rust-architect`
+- Adversaries (fixed order): `rust-code-reviewer` → `rust-code-tester` → `architecture`
 - Personas: `reviewer-agent` → `tester-agent` → `architect-agent`
 - Preferred inner orchestrator: `rust-team-lead` for multi-phase Rust implementation inside a PBI
 

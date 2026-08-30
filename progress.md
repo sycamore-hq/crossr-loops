@@ -39,7 +39,15 @@ Plan: crossr-skills `docs/plans/gan-layer-separation-plan.md` §4 PR 2 / §3.2. 
 - `axel-conductor-agent` load set is now `axel` + `gan-verdict`. Language stack is disclosed to subagents, never loaded by the conductor. `rust-team-lead` stays as an inner-GAN delegation option until PR 3.
 - `graphs/rust-team-lead.json` `uses.persona` retargeted. `graphs/axel.json` `requires.skills` reduced to the conductor window. Plan node still `axel-conductor-agent` (PR 6).
 - Template `templates/harness/opencode/agent/axel.md` prose only: new persona names + matching load set. Files kept (deletion is PR 3, after harness generation in 2b).
-- `scripts/verify-skill-refs` (`just verify-skill-refs`): every graph `uses.skill` / `requires.skills` resolves to a SKILL.md in this checkout or the pinned catalog; every `uses.persona` resolves to `.agents/agents/<name>.md`. Scope addition beyond the plan — loops#4 shipped dangling `rust-architect` that only a human grep caught.
+- `scripts/verify-skill-refs` (`just verify-skill-refs`): every graph `uses.skill` / `requires.skills` / `uses.persona` / `uses.graph` resolves. Catalog is `CROSSR_SKILLS_PATH` only — a sibling checkout is never the pin; no clone fallback. Failure text names the trees actually checked.
+- `axel/SKILL.md` adversary line: `rust-architect` → `architecture` (one word; same class as loops#4). Writer-stack activation prose left for PR 3/4.
+- `axel-conductor-agent` records load-set bytes at session start (plan §7; persona, not law). Baseline 73,031.
+
+**Named window (PR 2 → 3/4) — do not expand 2a.** The persona and graph load by role. These still teach the old writer-stack activation and will put the 73k stack back if a conductor obeys SKILL.md-as-law:
+
+- `axel/SKILL.md` frontmatter “Always activate together with `code-writer`”; body MUST-apply; activation statement `code-writer` + `axel` + `rust-team-lead`
+- `templates/harness/opencode/command/axel.md` — “Load the `axel` and `code-writer` skills”
+- `book/src/pipeline/axel.md:39` — `code-writer` + `axel` + `rust-code-writer` + `rust-team-lead`
 
 ## Verification Status
 - `./scripts/verify-graphs`: PASS

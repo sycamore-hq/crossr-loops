@@ -8,7 +8,7 @@ Explicit topology for the conductors. **Not a runtime.**
 - **If a graph and a `SKILL.md` disagree, `SKILL.md` wins.** The graph is a map.
 - No Rhai. No OpenCode-native executor. No interpreter in v0.
 
-Schema: [`schema.json`](schema.json). Gates: `just graphs-verify`, `just verify-skill-refs`.
+Schema: [`schema.json`](schema.json). Gates: `just graphs-verify`, `just verify-skill-refs` (requires `CROSSR_SKILLS_PATH` at the lockfile skills pin; a sibling checkout is never substituted).
 
 | File | What |
 |------|------|
