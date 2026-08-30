@@ -8,6 +8,8 @@ This remote does not own skill text. It is pinned from a harness lockfile.
 
 **Dogfood is live (split-08).** First published pin: [`v0`](https://github.com/sycamore-hq/crossr-loops/releases/tag/v0). Lockfile: `skills = "v0-last-monolith"`, `loops = "v0"`. Process files came from `crossr-harness --process-only` — they are a consumer instance, not loop law.
 
+**Graphs (split-09).** JSON nodes+edges under [`graphs/`](graphs/). Map, not a runtime. SKILL.md stays the law. Human view: [`graphs/index.html`](graphs/index.html).
+
 Charter: [`skills-loops-harness-split.html`](https://github.com/sycamore-hq/crossr-skills/blob/main/docs/plans/skills-loops-harness-split.html).
 
 ## What's here
@@ -36,6 +38,10 @@ Charter: [`skills-loops-harness-split.html`](https://github.com/sycamore-hq/cros
 ### Pipeline law
 
 `book/src/pipeline/{overview,avril,axel,brick}.md` is the SSOT for those chapters.
+
+### Graphs (topology)
+
+[`graphs/`](graphs/) — `avril`, `axel`, `brick`, `rust-team-lead`, `flagship`. Catalog skills by name. No Rhai. `just graphs-verify`.
 
 ## Not here
 

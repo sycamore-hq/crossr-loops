@@ -1,0 +1,18 @@
+{
+  "apiVersion": "crossr-loops/v0",
+  "kind": "Graph",
+  "name": "flagship",
+  "title": "Intent → AVRIL → AXEL → Done",
+  "description": "Flagship pipeline. BRICK is the alternative (graphs/brick.json), not a node here.",
+  "nodes": [
+    {"id": "intent", "role": "gate"},
+    {"id": "avril", "role": "graph", "uses": {"graph": "avril"}},
+    {"id": "axel", "role": "graph", "uses": {"graph": "axel"}},
+    {"id": "done", "role": "terminal"}
+  ],
+  "edges": [
+    {"from": "intent", "to": "avril"},
+    {"from": "avril", "to": "axel", "when": "blessed-backlog"},
+    {"from": "axel", "to": "done", "when": "ac-evidenced"}
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "apiVersion": "crossr-loops/v0",
+  "kind": "Graph",
+  "name": "rust-team-lead",
+  "title": "Rust Team Lead — inner code GAN",
+  "description": "Generator then Reviewer → Tester → Architect. Catalog skills by name. SKILL.md is the law.",
+  "conductor": "rust-team-lead",
+  "nodes": [
+    {
+      "id": "generate",
+      "role": "generator",
+      "catalog": true,
+      "uses": {"skill": "rust-code-writer"}
+    },
+    {
+      "id": "reviewer",
+      "role": "adversary",
+      "catalog": true,
+      "uses": {"skill": "rust-code-reviewer", "persona": "rust-reviewer-agent"}
+    },
+    {
+      "id": "tester",
+      "role": "adversary",
+      "catalog": true,
+      "uses": {"skill": "rust-code-tester", "persona": "rust-tester-agent"}
+    },
+    {
+      "id": "architect",
+      "role": "adversary",
+      "catalog": true,
+      "uses": {"skill": "rust-architect", "persona": "rust-architect-agent"}
+    },
+    {"id": "commit", "role": "gate"}
+  ],
+  "edges": [
+    {"from": "generate", "to": "reviewer"},
+    {"from": "reviewer", "to": "tester", "when": "BLESS"},
+    {"from": "reviewer", "to": "generate", "when": "REJECT"},
+    {"from": "tester", "to": "architect", "when": "BLESS"},
+    {"from": "tester", "to": "generate", "when": "REJECT"},
+    {"from": "architect", "to": "commit", "when": "BLESS"},
+    {"from": "architect", "to": "generate", "when": "REJECT"}
+  ],
+  "requires": {
+    "skills": [
+      "code-writer",
+      "rust-code-writer",
+      "rust-code-reviewer",
+      "rust-code-tester",
+      "rust-architect"
+    ]
+  }
+}

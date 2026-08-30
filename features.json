@@ -1,6 +1,22 @@
 {
   "phase0": {
-    "status": "in_progress",
+    "status": "completed",
     "commits": []
+  },
+  "graphs": {
+    "status": "in_progress",
+    "commits": [
+      {
+        "id": "split-09",
+        "title": "Explicit JSON graph format: nodes + edges",
+        "status": "completed",
+        "features": [
+          "graph-schema",
+          "conductor-graphs",
+          "flagship-pipeline-graph",
+          "graph-verify"
+        ]
+      }
+    ]
   }
 }

@@ -8,6 +8,8 @@
 
 Pinned from the harness lockfile (`skills = <tag>`, `loops = <tag>`). Catalog skills live in `.agents/skills/`. Loop conductors come from `crossr-loops`.
 
+Graphs (topology, not a runtime) live in `graphs/`. `just graphs-verify` must PASS. Do not rewrite conductor `SKILL.md` to match a graph — the skill wins.
+
 - `code-writer`
 - `rust-code-writer`
 - `agent-harness`

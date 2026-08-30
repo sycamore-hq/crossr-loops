@@ -1,0 +1,58 @@
+{
+  "apiVersion": "crossr-loops/v0",
+  "kind": "Graph",
+  "name": "brick",
+  "title": "BRICK — stage pipeline",
+  "description": "Informal spec to mutation-verified code. Stage skills stay in the catalog. SKILL.md is the law.",
+  "conductor": "brick",
+  "nodes": [
+    {"id": "task-division", "role": "stage"},
+    {"id": "tasks-gate", "role": "gate"},
+    {
+      "id": "specifier",
+      "role": "stage",
+      "catalog": true,
+      "uses": {"skill": "brick-specifier", "persona": "brick-specifier-agent"}
+    },
+    {"id": "gherkin-gate", "role": "gate"},
+    {
+      "id": "coder",
+      "role": "stage",
+      "catalog": true,
+      "uses": {"skill": "brick-coder", "persona": "brick-coder-agent"}
+    },
+    {
+      "id": "refactorer",
+      "role": "stage",
+      "catalog": true,
+      "uses": {"skill": "brick-refactorer", "persona": "brick-refactorer-agent"}
+    },
+    {
+      "id": "mutator",
+      "role": "stage",
+      "catalog": true,
+      "uses": {"skill": "brick-mutator", "persona": "brick-mutator-agent"}
+    },
+    {"id": "done-gate", "role": "gate"},
+    {"id": "stop", "role": "terminal"}
+  ],
+  "edges": [
+    {"from": "task-division", "to": "tasks-gate"},
+    {"from": "tasks-gate", "to": "specifier", "when": "human"},
+    {"from": "specifier", "to": "gherkin-gate"},
+    {"from": "gherkin-gate", "to": "coder", "when": "human"},
+    {"from": "coder", "to": "refactorer", "when": "green"},
+    {"from": "refactorer", "to": "mutator", "when": "green"},
+    {"from": "mutator", "to": "done-gate", "when": "zero-survivors"},
+    {"from": "done-gate", "to": "stop", "when": "human"}
+  ],
+  "requires": {
+    "skills": [
+      "code-writer",
+      "brick-specifier",
+      "brick-coder",
+      "brick-refactorer",
+      "brick-mutator"
+    ]
+  }
+}

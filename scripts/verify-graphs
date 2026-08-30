@@ -1,0 +1,285 @@
+#!/usr/bin/env python3
+"""Verify graphs/*.json against the v0 contract. Optional --html report."""
+
+from __future__ import annotations
+
+import html
+import json
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+GRAPHS = ROOT / "graphs"
+AGENTS = ROOT / ".agents" / "agents"
+SKILLS = ROOT / ".agents" / "skills"
+SCHEMA_NAME = "schema.json"
+ALLOWED_GRAPH = {
+    "apiVersion",
+    "kind",
+    "name",
+    "title",
+    "description",
+    "conductor",
+    "nodes",
+    "edges",
+    "requires",
+}
+ALLOWED_NODE = {"id", "role", "catalog", "uses"}
+ALLOWED_USES = {"skill", "persona", "graph"}
+ALLOWED_EDGE = {"from", "to", "when"}
+ALLOWED_ROLE = {"generator", "adversary", "stage", "gate", "terminal", "graph"}
+API = "crossr-loops/v0"
+
+
+class Check:
+    def __init__(self) -> None:
+        self.ok: list[str] = []
+        self.bad: list[str] = []
+
+    def pass_(self, msg: str) -> None:
+        print(f"  ✓ {msg}")
+        self.ok.append(msg)
+
+    def fail(self, msg: str) -> None:
+        print(f"  ✗ {msg}")
+        self.bad.append(msg)
+
+
+def load_graphs() -> dict[str, dict]:
+    out = {}
+    for path in sorted(GRAPHS.glob("*.json")):
+        if path.name == SCHEMA_NAME:
+            continue
+        with path.open() as f:
+            data = json.load(f)
+        out[path.stem] = data
+    return out
+
+
+def validate(name: str, g: dict, all_names: set[str], c: Check) -> None:
+    start = len(c.bad)
+    extra = set(g) - ALLOWED_GRAPH
+    if extra:
+        c.fail(f"{name}: unknown keys {sorted(extra)}")
+    if g.get("apiVersion") != API:
+        c.fail(f"{name}: apiVersion must be {API}")
+    if g.get("kind") != "Graph":
+        c.fail(f"{name}: kind must be Graph")
+    if g.get("name") != name:
+        c.fail(f"{name}: name field must match filename")
+    nodes = g.get("nodes")
+    edges = g.get("edges")
+    if not isinstance(nodes, list) or not nodes:
+        c.fail(f"{name}: nodes must be a non-empty list")
+        return
+    if not isinstance(edges, list):
+        c.fail(f"{name}: edges must be a list")
+        return
+    ids = []
+    for i, node in enumerate(nodes):
+        if not isinstance(node, dict):
+            c.fail(f"{name}: node {i} not an object")
+            continue
+        extra_n = set(node) - ALLOWED_NODE
+        if extra_n:
+            c.fail(f"{name}: node {i} unknown keys {sorted(extra_n)}")
+        nid = node.get("id")
+        if not nid or not isinstance(nid, str):
+            c.fail(f"{name}: node {i} missing id")
+            continue
+        ids.append(nid)
+        role = node.get("role")
+        if role is not None and role not in ALLOWED_ROLE:
+            c.fail(f"{name}: node {nid} bad role {role!r}")
+        uses = node.get("uses") or {}
+        if uses:
+            extra_u = set(uses) - ALLOWED_USES
+            if extra_u:
+                c.fail(f"{name}: node {nid} uses unknown keys {sorted(extra_u)}")
+            if "graph" in uses and ("skill" in uses):
+                c.fail(f"{name}: node {nid} uses.graph is exclusive of uses.skill")
+            persona = uses.get("persona")
+            if persona:
+                p = AGENTS / f"{persona}.md"
+                if not p.is_file():
+                    c.fail(f"{name}: node {nid} missing persona {p.relative_to(ROOT)}")
+            skill = uses.get("skill")
+            catalog = bool(node.get("catalog"))
+            if skill:
+                required = (g.get("requires") or {}).get("skills") or []
+                if catalog:
+                    if skill not in required:
+                        c.fail(
+                            f"{name}: node {nid} catalog skill {skill!r} not in requires.skills"
+                        )
+                else:
+                    sk = SKILLS / skill / "SKILL.md"
+                    if not sk.is_file():
+                        c.fail(
+                            f"{name}: node {nid} missing local skill {sk.relative_to(ROOT)}"
+                        )
+            graph = uses.get("graph")
+            if graph and graph not in all_names:
+                c.fail(f"{name}: node {nid} uses.graph {graph!r} has no graphs/{graph}.json")
+            if graph and graph == name:
+                c.fail(f"{name}: node {nid} must not reference its own graph")
+        elif node.get("catalog"):
+            c.fail(f"{name}: node {nid} catalog true but no uses.skill")
+    if len(ids) != len(set(ids)):
+        c.fail(f"{name}: duplicate node ids")
+    idset = set(ids)
+    for i, edge in enumerate(edges):
+        if not isinstance(edge, dict):
+            c.fail(f"{name}: edge {i} not an object")
+            continue
+        extra_e = set(edge) - ALLOWED_EDGE
+        if extra_e:
+            c.fail(f"{name}: edge {i} unknown keys {sorted(extra_e)}")
+        frm, to = edge.get("from"), edge.get("to")
+        if frm not in idset:
+            c.fail(f"{name}: edge {i} from {frm!r} is not a node")
+        if to not in idset:
+            c.fail(f"{name}: edge {i} to {to!r} is not a node")
+    conductor = g.get("conductor")
+    if conductor:
+        sk = SKILLS / conductor / "SKILL.md"
+        if not sk.is_file():
+            c.fail(f"{name}: conductor {conductor!r} has no SKILL.md")
+    req = g.get("requires") or {}
+    extra_r = set(req) - {"skills"}
+    if extra_r:
+        c.fail(f"{name}: requires unknown keys {sorted(extra_r)}")
+    if len(c.bad) == start:
+        c.pass_(f"{name}: {len(ids)} nodes, {len(edges)} edges")
+
+
+def mermaid(g: dict) -> str:
+    lines = ["flowchart LR"]
+    for e in g.get("edges") or []:
+        frm = e["from"].replace("-", "_")
+        to = e["to"].replace("-", "_")
+        when = e.get("when")
+        if when:
+            label = when.replace('"', "")
+            lines.append(f"  {frm} -->|{label}| {to}")
+        else:
+            lines.append(f"  {frm} --> {to}")
+    return "\n".join(lines)
+
+
+def write_html(graphs: dict[str, dict], c: Check, path: Path) -> None:
+    status = "PASS" if not c.bad else "FAIL"
+    badge = (
+        "border-emerald-500/40 text-emerald-300"
+        if not c.bad
+        else "border-red-500/40 text-red-300"
+    )
+    cards = []
+    for name, g in graphs.items():
+        nodes = "".join(
+            f"<li><code>{html.escape(n.get('id',''))}</code> "
+            f"{html.escape(n.get('role') or '')} "
+            f"{html.escape(json.dumps(n.get('uses') or {}, separators=(',', ':')))}"
+            f"</li>"
+            for n in g.get("nodes") or []
+        )
+        edges = "".join(
+            f"<li><code>{html.escape(e.get('from',''))}</code> → "
+            f"<code>{html.escape(e.get('to',''))}</code>"
+            f"{(' · ' + html.escape(e['when'])) if e.get('when') else ''}</li>"
+            for e in g.get("edges") or []
+        )
+        req = ", ".join(f"<code>{html.escape(s)}</code>" for s in (g.get("requires") or {}).get("skills") or []) or "—"
+        cond = g.get("conductor") or "—"
+        cards.append(
+            f"""
+        <section class="p-5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3">
+          <div class="flex items-baseline justify-between gap-3">
+            <h2 class="font-display text-white text-lg">{html.escape(g.get('title') or name)}</h2>
+            <code class="text-xs text-emerald-300">{html.escape(name)}.json</code>
+          </div>
+          <p class="text-sm text-slate-400">{html.escape(g.get('description') or '')}</p>
+          <p class="text-xs text-slate-500">conductor: <code>{html.escape(str(cond))}</code> · catalog skills: {req}</p>
+          <div class="grid md:grid-cols-2 gap-4 text-sm">
+            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Nodes</h3><ul class="space-y-1 font-mono text-xs text-slate-300">{nodes}</ul></div>
+            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Edges</h3><ul class="space-y-1 font-mono text-xs text-slate-300">{edges}</ul></div>
+          </div>
+          <pre class="text-xs text-emerald-300/90 overflow-x-auto">{html.escape(mermaid(g))}</pre>
+        </section>"""
+        )
+    checks = "".join(
+        f'<div class="text-emerald-400 text-sm">✓ {html.escape(m)}</div>' for m in c.ok
+    ) + "".join(f'<div class="text-red-400 text-sm">✗ {html.escape(m)}</div>' for m in c.bad)
+    path.write_text(
+        f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>crossr-loops graphs v0</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap");
+    body {{ font-family: Inter, system-ui, sans-serif; }}
+    .font-display {{ font-family: "Space Grotesk", Inter, system-ui, sans-serif; }}
+    code, pre {{ font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }}
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-200">
+  <main class="max-w-5xl mx-auto px-6 py-10 space-y-8">
+    <header class="flex items-start justify-between gap-4">
+      <div>
+        <p class="text-xs uppercase tracking-widest text-slate-500 mb-2">sycamore-hq / crossr-loops</p>
+        <h1 class="font-display text-3xl font-semibold text-white">Graphs v0</h1>
+        <p class="text-slate-400 mt-2 max-w-2xl text-sm leading-relaxed">
+          Topology only. SKILL.md remains the law. Catalog skills by name.
+          No Rhai. No OpenCode-native executor.
+        </p>
+      </div>
+      <div class="px-3 py-1 rounded-full border {badge} text-xs">{status}</div>
+    </header>
+    <p class="text-sm text-slate-500">If a graph and a SKILL.md disagree, SKILL.md wins. Map, not runtime.</p>
+    {"".join(cards)}
+    <section class="p-5 rounded-2xl border border-zinc-800 space-y-1">
+      <h2 class="font-display text-white mb-2">verify-graphs</h2>
+      {checks}
+    </section>
+  </main>
+</body>
+</html>
+"""
+    )
+    print(f"  → HTML report at {path.relative_to(ROOT)} ({status})")
+
+
+def main() -> int:
+    html_out = "--html" in sys.argv
+    if not GRAPHS.is_dir():
+        print("✗ missing graphs/")
+        return 1
+    print("→ Verifying graphs/")
+    schema = GRAPHS / SCHEMA_NAME
+    c = Check()
+    if schema.is_file():
+        json.loads(schema.read_text())
+        c.pass_(f"{SCHEMA_NAME} parses")
+    else:
+        c.fail("missing schema.json")
+    graphs = load_graphs()
+    if not graphs:
+        c.fail("no graph JSON files")
+    names = set(graphs)
+    for name in sorted(graphs):
+        validate(name, graphs[name], names, c)
+    if html_out:
+        write_html(graphs, c, GRAPHS / "index.html")
+    print()
+    if c.bad:
+        print(f"✗ {len(c.bad)} graph check(s) failed.")
+        return 1
+    print(f"✓ {len(graphs)} graphs OK.")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

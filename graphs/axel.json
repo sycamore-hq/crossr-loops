@@ -1,0 +1,32 @@
+{
+  "apiVersion": "crossr-loops/v0",
+  "kind": "Graph",
+  "name": "axel",
+  "title": "AXEL — Execution Loop",
+  "description": "Blessed-intake only. Inner Rust cycle is the rust-team-lead graph. SKILL.md is the law.",
+  "conductor": "axel",
+  "nodes": [
+    {"id": "intake", "role": "gate"},
+    {"id": "plan", "role": "generator", "uses": {"persona": "axel-conductor-agent"}},
+    {"id": "rust-gan", "role": "graph", "uses": {"graph": "rust-team-lead"}},
+    {"id": "ac-evidence", "role": "gate"},
+    {"id": "done", "role": "terminal"}
+  ],
+  "edges": [
+    {"from": "intake", "to": "plan", "when": "blessed"},
+    {"from": "plan", "to": "rust-gan"},
+    {"from": "rust-gan", "to": "ac-evidence", "when": "BLESS"},
+    {"from": "ac-evidence", "to": "done", "when": "evidenced"},
+    {"from": "ac-evidence", "to": "rust-gan", "when": "missing-evidence"}
+  ],
+  "requires": {
+    "skills": [
+      "code-writer",
+      "agent-harness",
+      "rust-code-writer",
+      "rust-code-reviewer",
+      "rust-code-tester",
+      "rust-architect"
+    ]
+  }
+}

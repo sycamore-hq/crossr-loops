@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>crossr-loops graphs v0</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap");
+    body { font-family: Inter, system-ui, sans-serif; }
+    .font-display { font-family: "Space Grotesk", Inter, system-ui, sans-serif; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-200">
+  <main class="max-w-5xl mx-auto px-6 py-10 space-y-8">
+    <header class="flex items-start justify-between gap-4">
+      <div>
+        <p class="text-xs uppercase tracking-widest text-slate-500 mb-2">sycamore-hq / crossr-loops</p>
+        <h1 class="font-display text-3xl font-semibold text-white">Graphs v0</h1>
+        <p class="text-slate-400 mt-2 max-w-2xl text-sm leading-relaxed">
+          Topology only. SKILL.md remains the law. Catalog skills by name.
+          No Rhai. No OpenCode-native executor.
+        </p>
+      </div>
+      <div class="px-3 py-1 rounded-full border border-emerald-500/40 text-emerald-300 text-xs">PASS</div>
+    </header>
+    <p class="text-sm text-slate-500">If a graph and a SKILL.md disagree, SKILL.md wins. Map, not runtime.</p>
+    
+        <section class="p-5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3">
+          <div class="flex items-baseline justify-between gap-3">
+            <h2 class="font-display text-white text-lg">AVRIL — Planning GAN</h2>
+            <code class="text-xs text-emerald-300">avril.json</code>
+          </div>
+          <p class="text-sm text-slate-400">Intent to unanimously blessed Product Backlog. Planning-only stop. SKILL.md is the law.</p>
+          <p class="text-xs text-slate-500">conductor: <code>avril</code> · catalog skills: <code>code-writer</code></p>
+          <div class="grid md:grid-cols-2 gap-4 text-sm">
+            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Nodes</h3><ul class="space-y-1 font-mono text-xs text-slate-300"><li><code>generator</code> generator {&quot;persona&quot;:&quot;planning-architect-agent&quot;}</li><li><code>po</code> adversary {&quot;persona&quot;:&quot;product-owner-agent&quot;}</li><li><code>qa</code> adversary {&quot;persona&quot;:&quot;qa-architect-agent&quot;}</li><li><code>cto</code> adversary {&quot;persona&quot;:&quot;visionary-cto-agent&quot;}</li><li><code>stop</code> terminal {}</li></ul></div>
+            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Edges</h3><ul class="space-y-1 font-mono text-xs text-slate-300"><li><code>generator</code> → <code>po</code></li><li><code>po</code> → <code>qa</code> · BLESS</li><li><code>po</code> → <code>generator</code> · REJECT</li><li><code>qa</code> → <code>cto</code> · BLESS</li><li><code>qa</code> → <code>generator</code> · REJECT</li><li><code>cto</code> → <code>stop</code> · BLESS</li><li><code>cto</code> → <code>generator</code> · REJECT</li></ul></div>
+          </div>
+          <pre class="text-xs text-emerald-300/90 overflow-x-auto">flowchart LR
+  generator --&gt; po
+  po --&gt;|BLESS| qa
+  po --&gt;|REJECT| generator
+  qa --&gt;|BLESS| cto
+  qa --&gt;|REJECT| generator
+  cto --&gt;|BLESS| stop
+  cto --&gt;|REJECT| generator</pre>
+        </section>
+        <section class="p-5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3">
+          <div class="flex items-baseline justify-between gap-3">
+            <h2 class="font-display text-white text-lg">AXEL — Execution Loop</h2>
+            <code class="text-xs text-emerald-300">axel.json</code>
+          </div>
+          <p class="text-sm text-slate-400">Blessed-intake only. Inner Rust cycle is the rust-team-lead graph. SKILL.md is the law.</p>
+          <p class="text-xs text-slate-500">conductor: <code>axel</code> · catalog skills: <code>code-writer</code>, <code>agent-harness</code>, <code>rust-code-writer</code>, <code>rust-code-reviewer</code>, <code>rust-code-tester</code>, <code>rust-architect</code></p>
+          <div class="grid md:grid-cols-2 gap-4 text-sm">
+            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Nodes</h3><ul class="space-y-1 font-mono text-xs text-slate-300"><li><code>intake</code> gate {}</li><li><code>plan</code> generator {&quot;persona&quot;:&quot;axel-conductor-agent&quot;}</li><li><code>rust-gan</code> graph {&quot;graph&quot;:&quot;rust-team-lead&quot;}</li><li><code>ac-evidence</code> gate {}</li><li><code>done</code> terminal {}</li></ul></div>
+            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Edges</h3><ul class="space-y-1 font-mono text-xs text-slate-300"><li><code>intake</code> → <code>plan</code> · blessed</li><li><code>plan</code> → <code>rust-gan</code></li><li><code>rust-gan</code> → <code>ac-evidence</code> · BLESS</li><li><code>ac-evidence</code> → <code>done</code> · evidenced</li><li><code>ac-evidence</code> → <code>rust-gan</code> · missing-evidence</li></ul></div>
+          </div>
+          <pre class="text-xs text-emerald-300/90 overflow-x-auto">flowchart LR
+  intake --&gt;|blessed| plan
+  plan --&gt; rust_gan
+  rust_gan --&gt;|BLESS| ac_evidence
+  ac_evidence --&gt;|evidenced| done
+  ac_evidence --&gt;|missing-evidence| rust_gan</pre>
+        </section>
+        <section class="p-5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3">
+          <div class="flex items-baseline justify-between gap-3">
+            <h2 class="font-display text-white text-lg">BRICK — stage pipeline</h2>
+            <code class="text-xs text-emerald-300">brick.json</code>
+          </div>
+          <p class="text-sm text-slate-400">Informal spec to mutation-verified code. Stage skills stay in the catalog. SKILL.md is the law.</p>
+          <p class="text-xs text-slate-500">conductor: <code>brick</code> · catalog skills: <code>code-writer</code>, <code>brick-specifier</code>, <code>brick-coder</code>, <code>brick-refactorer</code>, <code>brick-mutator</code></p>
+          <div class="grid md:grid-cols-2 gap-4 text-sm">
+            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Nodes</h3><ul class="space-y-1 font-mono text-xs text-slate-300"><li><code>task-division</code> stage {}</li><li><code>tasks-gate</code> gate {}</li><li><code>specifier</code> stage {&quot;skill&quot;:&quot;brick-specifier&quot;,&quot;persona&quot;:&quot;brick-specifier-agent&quot;}</li><li><code>gherkin-gate</code> gate {}</li><li><code>coder</code> stage {&quot;skill&quot;:&quot;brick-coder&quot;,&quot;persona&quot;:&quot;brick-coder-agent&quot;}</li><li><code>refactorer</code> stage {&quot;skill&quot;:&quot;brick-refactorer&quot;,&quot;persona&quot;:&quot;brick-refactorer-agent&quot;}</li><li><code>mutator</code> stage {&quot;skill&quot;:&quot;brick-mutator&quot;,&quot;persona&quot;:&quot;brick-mutator-agent&quot;}</li><li><code>done-gate</code> gate {}</li><li><code>stop</code> terminal {}</li></ul></div>
+            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Edges</h3><ul class="space-y-1 font-mono text-xs text-slate-300"><li><code>task-division</code> → <code>tasks-gate</code></li><li><code>tasks-gate</code> → <code>specifier</code> · human</li><li><code>specifier</code> → <code>gherkin-gate</code></li><li><code>gherkin-gate</code> → <code>coder</code> · human</li><li><code>coder</code> → <code>refactorer</code> · green</li><li><code>refactorer</code> → <code>mutator</code> · green</li><li><code>mutator</code> → <code>done-gate</code> · zero-survivors</li><li><code>done-gate</code> → <code>stop</code> · human</li></ul></div>
+          </div>
+          <pre class="text-xs text-emerald-300/90 overflow-x-auto">flowchart LR
+  task_division --&gt; tasks_gate
+  tasks_gate --&gt;|human| specifier
+  specifier --&gt; gherkin_gate
+  gherkin_gate --&gt;|human| coder
+  coder --&gt;|green| refactorer
+  refactorer --&gt;|green| mutator
+  mutator --&gt;|zero-survivors| done_gate
+  done_gate --&gt;|human| stop</pre>
+        </section>
+        <section class="p-5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3">
+          <div class="flex items-baseline justify-between gap-3">
+            <h2 class="font-display text-white text-lg">Intent → AVRIL → AXEL → Done</h2>
+            <code class="text-xs text-emerald-300">flagship.json</code>
+          </div>
+          <p class="text-sm text-slate-400">Flagship pipeline. BRICK is the alternative (graphs/brick.json), not a node here.</p>
+          <p class="text-xs text-slate-500">conductor: <code>—</code> · catalog skills: —</p>
+          <div class="grid md:grid-cols-2 gap-4 text-sm">
+            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Nodes</h3><ul class="space-y-1 font-mono text-xs text-slate-300"><li><code>intent</code> gate {}</li><li><code>avril</code> graph {&quot;graph&quot;:&quot;avril&quot;}</li><li><code>axel</code> graph {&quot;graph&quot;:&quot;axel&quot;}</li><li><code>done</code> terminal {}</li></ul></div>
+            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Edges</h3><ul class="space-y-1 font-mono text-xs text-slate-300"><li><code>intent</code> → <code>avril</code></li><li><code>avril</code> → <code>axel</code> · blessed-backlog</li><li><code>axel</code> → <code>done</code> · ac-evidenced</li></ul></div>
+          </div>
+          <pre class="text-xs text-emerald-300/90 overflow-x-auto">flowchart LR
+  intent --&gt; avril
+  avril --&gt;|blessed-backlog| axel
+  axel --&gt;|ac-evidenced| done</pre>
+        </section>
+        <section class="p-5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3">
+          <div class="flex items-baseline justify-between gap-3">
+            <h2 class="font-display text-white text-lg">Rust Team Lead — inner code GAN</h2>
+            <code class="text-xs text-emerald-300">rust-team-lead.json</code>
+          </div>
+          <p class="text-sm text-slate-400">Generator then Reviewer → Tester → Architect. Catalog skills by name. SKILL.md is the law.</p>
+          <p class="text-xs text-slate-500">conductor: <code>rust-team-lead</code> · catalog skills: <code>code-writer</code>, <code>rust-code-writer</code>, <code>rust-code-reviewer</code>, <code>rust-code-tester</code>, <code>rust-architect</code></p>
+          <div class="grid md:grid-cols-2 gap-4 text-sm">
+            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Nodes</h3><ul class="space-y-1 font-mono text-xs text-slate-300"><li><code>generate</code> generator {&quot;skill&quot;:&quot;rust-code-writer&quot;}</li><li><code>reviewer</code> adversary {&quot;skill&quot;:&quot;rust-code-reviewer&quot;,&quot;persona&quot;:&quot;rust-reviewer-agent&quot;}</li><li><code>tester</code> adversary {&quot;skill&quot;:&quot;rust-code-tester&quot;,&quot;persona&quot;:&quot;rust-tester-agent&quot;}</li><li><code>architect</code> adversary {&quot;skill&quot;:&quot;rust-architect&quot;,&quot;persona&quot;:&quot;rust-architect-agent&quot;}</li><li><code>commit</code> gate {}</li></ul></div>
+            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Edges</h3><ul class="space-y-1 font-mono text-xs text-slate-300"><li><code>generate</code> → <code>reviewer</code></li><li><code>reviewer</code> → <code>tester</code> · BLESS</li><li><code>reviewer</code> → <code>generate</code> · REJECT</li><li><code>tester</code> → <code>architect</code> · BLESS</li><li><code>tester</code> → <code>generate</code> · REJECT</li><li><code>architect</code> → <code>commit</code> · BLESS</li><li><code>architect</code> → <code>generate</code> · REJECT</li></ul></div>
+          </div>
+          <pre class="text-xs text-emerald-300/90 overflow-x-auto">flowchart LR
+  generate --&gt; reviewer
+  reviewer --&gt;|BLESS| tester
+  reviewer --&gt;|REJECT| generate
+  tester --&gt;|BLESS| architect
+  tester --&gt;|REJECT| generate
+  architect --&gt;|BLESS| commit
+  architect --&gt;|REJECT| generate</pre>
+        </section>
+    <section class="p-5 rounded-2xl border border-zinc-800 space-y-1">
+      <h2 class="font-display text-white mb-2">verify-graphs</h2>
+      <div class="text-emerald-400 text-sm">✓ schema.json parses</div><div class="text-emerald-400 text-sm">✓ avril: 5 nodes, 7 edges</div><div class="text-emerald-400 text-sm">✓ axel: 5 nodes, 5 edges</div><div class="text-emerald-400 text-sm">✓ brick: 9 nodes, 8 edges</div><div class="text-emerald-400 text-sm">✓ flagship: 4 nodes, 3 edges</div><div class="text-emerald-400 text-sm">✓ rust-team-lead: 5 nodes, 7 edges</div>
+    </section>
+  </main>
+</body>
+</html>
