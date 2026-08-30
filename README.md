@@ -6,8 +6,7 @@ These are the loops (and later, the graphs) that compose skills from
 [`crossr-skills`](https://github.com/sycamore-hq/crossr-skills) by name.
 This remote does not own skill text. It is pinned from a harness lockfile.
 
-**Extract in progress (split-03).** Tree copied from `sycamore-hq/crossr-skills`.
-The catalog still ships these files until dual-publish. See [MIGRATION.md](MIGRATION.md).
+**Dogfood is live (split-08).** First published pin: [`v0`](https://github.com/sycamore-hq/crossr-loops/releases/tag/v0). Lockfile: `skills = "v0-last-monolith"`, `loops = "v0"`. Process files came from `crossr-harness --process-only` — they are a consumer instance, not loop law.
 
 Charter: [`skills-loops-harness-split.html`](https://github.com/sycamore-hq/crossr-skills/blob/main/docs/plans/skills-loops-harness-split.html).
 
@@ -32,18 +31,18 @@ Charter: [`skills-loops-harness-split.html`](https://github.com/sycamore-hq/cros
 
 ### OpenCode prompt bodies
 
-`templates/harness/opencode/{agent,command}/{avril,axel}.md` — loops owns the text; harness bootstrap will install them.
+`templates/harness/opencode/{agent,command}/{avril,axel}.md` — loops owns the text; harness bootstrap installs them.
 
 ### Pipeline law
 
-`book/src/pipeline/{overview,avril,axel,brick}.md` is the SSOT for those chapters. Copied as-is (no rewrite).
+`book/src/pipeline/{overview,avril,axel,brick}.md` is the SSOT for those chapters.
 
 ## Not here
 
 - BRICK stage skills (`brick-specifier`, `brick-coder`, `brick-refactorer`, `brick-mutator`) — catalog
 - `skill-evaluator` + skill GAN agents — catalog
-- `dashboard-prompt`, `chief-of-staff` — harness (split-04)
-- `HARNESS-SPEC.md`, bootstrap, dashboard — harness (split-04)
+- `dashboard-prompt`, `chief-of-staff` — harness
+- `HARNESS-SPEC.md`, bootstrap, dashboard — harness
 
 ## Sibling remotes
 

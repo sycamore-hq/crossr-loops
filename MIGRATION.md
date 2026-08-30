@@ -11,7 +11,7 @@ History stays on skills. This remote is a snapshot plus new work.
 | Method | clean copy (no filter-branch, no rewrite) |
 | Skills copies | kept until split-07 (dual-publish, then delete) |
 
-Do not treat this SHA as a lockfile pin. Harness will pin published tags later.
+Do not treat this SHA as a lockfile pin. Pins are published tags (`loops = "v0"` as of split-08).
 
 ## Copied (26 files)
 
@@ -65,4 +65,4 @@ Copied byte-identical. Pipeline chapters still point at `scull7/crossr-skills` U
 
 ## Consumers
 
-Until split-06 dual-publish, install from `crossr-skills`. This remote is not yet a pin target.
+Install from [`sycamore-hq/crossr-harness`](https://github.com/sycamore-hq/crossr-harness) (`harness-bootstrap`). Lockfile pin: `loops = "v0"`. This repo's `AGENTS.md` / `features.json` / `progress.md` / `justfile` / `lockfile.toml` are a `--process-only` consumer instance (split-08), not loop law.
