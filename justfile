@@ -9,3 +9,9 @@ check:
 
 test:
     cargo test --workspace 2>/dev/null || echo "(no tests)"
+
+graphs-verify:
+    @./scripts/verify-graphs
+
+graphs-verify-html:
+    @./scripts/verify-graphs --html

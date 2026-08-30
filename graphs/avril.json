@@ -1,0 +1,27 @@
+{
+  "apiVersion": "crossr-loops/v0",
+  "kind": "Graph",
+  "name": "avril",
+  "title": "AVRIL — Planning GAN",
+  "description": "Intent to unanimously blessed Product Backlog. Planning-only stop. SKILL.md is the law.",
+  "conductor": "avril",
+  "nodes": [
+    {"id": "generator", "role": "generator", "uses": {"persona": "planning-architect-agent"}},
+    {"id": "po", "role": "adversary", "uses": {"persona": "product-owner-agent"}},
+    {"id": "qa", "role": "adversary", "uses": {"persona": "qa-architect-agent"}},
+    {"id": "cto", "role": "adversary", "uses": {"persona": "visionary-cto-agent"}},
+    {"id": "stop", "role": "terminal"}
+  ],
+  "edges": [
+    {"from": "generator", "to": "po"},
+    {"from": "po", "to": "qa", "when": "BLESS"},
+    {"from": "po", "to": "generator", "when": "REJECT"},
+    {"from": "qa", "to": "cto", "when": "BLESS"},
+    {"from": "qa", "to": "generator", "when": "REJECT"},
+    {"from": "cto", "to": "stop", "when": "BLESS"},
+    {"from": "cto", "to": "generator", "when": "REJECT"}
+  ],
+  "requires": {
+    "skills": ["code-writer"]
+  }
+}
