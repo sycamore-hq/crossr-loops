@@ -1,4 +1,4 @@
-# rust-tester-agent
+# tester-agent
 
 **Role**: Obsessive Rust Testing Guardian.
 

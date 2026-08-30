@@ -16,19 +16,19 @@
       "id": "reviewer",
       "role": "adversary",
       "catalog": true,
-      "uses": {"skill": "rust-code-reviewer", "persona": "rust-reviewer-agent"}
+      "uses": {"skill": "rust-code-reviewer", "persona": "reviewer-agent"}
     },
     {
       "id": "tester",
       "role": "adversary",
       "catalog": true,
-      "uses": {"skill": "rust-code-tester", "persona": "rust-tester-agent"}
+      "uses": {"skill": "rust-code-tester", "persona": "tester-agent"}
     },
     {
       "id": "architect",
       "role": "adversary",
       "catalog": true,
-      "uses": {"skill": "architecture", "persona": "rust-architect-agent"}
+      "uses": {"skill": "architecture", "persona": "architect-agent"}
     },
     {"id": "commit", "role": "gate"}
   ],

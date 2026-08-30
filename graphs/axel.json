@@ -21,12 +21,8 @@
   ],
   "requires": {
     "skills": [
-      "code-writer",
-      "agent-harness",
-      "rust-code-writer",
-      "rust-code-reviewer",
-      "rust-code-tester",
-      "architecture"
+      "axel",
+      "gan-verdict"
     ]
   }
 }

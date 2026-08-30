@@ -24,7 +24,7 @@ This is a harness-layer execution orchestration skill. It coordinates delivery i
 - Tracking artifacts (`features.json` / `progress.md` or equivalent)
 - Session ritual + verification commands (`just test`, `just clippy`, etc., as disclosed)
 - Code GAN stack for the language in play (see Language stack below)
-- Agent personas under the harness agents directory (typical code trio: `rust-reviewer-agent`, `rust-tester-agent`, `rust-architect-agent`)
+- Agent personas under the harness agents directory (typical code trio: `reviewer-agent`, `tester-agent`, `architect-agent`)
 - Optional **decomposition mode** parameters (see Mitchell decomposition): `decomposition_mode` (bool, default false), `decomposition_loc_threshold` (number, default 1500)
 
 Concrete artifact names, column names, commit message format, and CLI flags are harness parameters disclosed at activation. The invariants (blessed intake only, PETC per unit, three-adversary code BLESS, AC evidence gate, orchestrator never touches code, small reviewable commits) are enforced uniformly. Decomposition mode is **off by default** and adds no steps when off.
@@ -65,7 +65,7 @@ Disclose at session start which code GAN applies:
 
 - Generator: `code-writer` + `rust-code-writer` + domain (`rust-axum-backend`, `rust-tui`, `rust-frontend`, `rust-errors`, …)
 - Adversaries (fixed order): `rust-code-reviewer` → `rust-code-tester` → `rust-architect`
-- Personas: `rust-reviewer-agent` → `rust-tester-agent` → `rust-architect-agent`
+- Personas: `reviewer-agent` → `tester-agent` → `architect-agent`
 - Preferred inner orchestrator: `rust-team-lead` for multi-phase Rust implementation inside a PBI
 
 **Other languages / mixed:**

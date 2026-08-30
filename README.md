@@ -28,7 +28,7 @@ Charter: [`skills-loops-harness-split.html`](https://github.com/sycamore-hq/cros
 
 - AVRIL: `planning-architect`, `product-owner`, `qa-architect`, `visionary-cto`
 - AXEL: `axel-conductor`
-- Rust GAN: `rust-reviewer`, `rust-tester`, `rust-architect`
+- Rust GAN: `reviewer`, `tester`, `architect`
 - BRICK stages: `brick-specifier`, `brick-coder`, `brick-refactorer`, `brick-mutator` *agents* (the stage *skills* stay in skills)
 
 ### OpenCode prompt bodies

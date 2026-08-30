@@ -16,5 +16,8 @@ graphs-verify:
 verify-protocol:
     @./scripts/verify-protocol
 
+verify-skill-refs:
+    @./scripts/verify-skill-refs
+
 graphs-verify-html:
     @./scripts/verify-graphs --html

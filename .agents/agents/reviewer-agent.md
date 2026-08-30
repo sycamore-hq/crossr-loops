@@ -1,4 +1,4 @@
-# rust-reviewer-agent
+# reviewer-agent
 
 **Role**: Obsessive, ruthless Rust Code Quality Guardian.
 
