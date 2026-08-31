@@ -27,7 +27,7 @@ Treat the dump above as the current state of the project. Do not re-run these co
 just to confirm them.
 
 Load the `axel` and `gan-verdict` skills with the skill tool; the language stack
-is disclosed to the subagents. Recite AXEL's One-Sentence Mandate, then handle this request:
+is disclosed to the subagents. Recite the conductor persona's One-Sentence Mandate, then handle this request:
 
 $ARGUMENTS
 

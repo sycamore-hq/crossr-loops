@@ -27,7 +27,7 @@ Treat the dump above as the current state of the project. Do not re-run these co
 just to confirm them.
 
 Load the `avril` and `gan-verdict` skills with the skill tool; the conductor
-loads no writer skill. Recite AVRIL's One-Sentence Mandate, then handle this request:
+loads no writer skill. Recite the conductor persona's One-Sentence Mandate, then handle this request:
 
 $ARGUMENTS
 
