@@ -26,8 +26,8 @@ Blessed backlog summaries:
 Treat the dump above as the current state of the project. Do not re-run these commands
 just to confirm them.
 
-Load the `avril` and `code-writer` skills with the skill tool, recite AVRIL's
-One-Sentence Mandate, then handle this request:
+Load the `avril` and `gan-verdict` skills with the skill tool; the conductor
+loads no writer skill. Recite AVRIL's One-Sentence Mandate, then handle this request:
 
 $ARGUMENTS
 

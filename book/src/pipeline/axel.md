@@ -36,7 +36,7 @@ AXEL starts only if one of:
 
 ## Activation
 
-> Using `code-writer` + `axel` (+ disclosed language/domain skills; Rust: `rust-code-writer`) to execute the next blessed PBI through PETC until AC are evidenced and the board is honest.
+> Using `axel` + `gan-verdict` to execute the next blessed PBI through PETC until AC are evidenced and the board is honest. Language/domain skills are disclosed to subagents; the conductor never loads them.
 
 ## Optional: Mitchell decomposition mode
 

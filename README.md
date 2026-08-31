@@ -25,14 +25,14 @@ Charter: [`skills-loops-harness-split.html`](https://github.com/sycamore-hq/cros
 
 ### Personas
 
-- AVRIL: `planning-architect`, `product-owner`, `qa-architect`, `visionary-cto`
+- AVRIL: `avril-conductor`, `planning-architect`, `product-owner`, `qa-architect`, `visionary-cto`
 - AXEL: `axel-conductor`
 - Code GAN: `reviewer`, `tester`, `architect`
 - BRICK stages: `brick-specifier`, `brick-coder`, `brick-refactorer`, `brick-mutator` *agents* (the stage *skills* stay in skills)
 
 ### OpenCode prompt bodies
 
-`templates/harness/opencode/agent/avril.md` is hand-written (AVRIL has no conductor persona; generation cannot replace it). The AXEL agent entrypoint is generated from `axel-conductor-agent`. Command bodies: `templates/harness/opencode/command/{avril,axel}.md`.
+Conductor agent entrypoints are generated from `axel-conductor-agent` and `avril-conductor-agent` (`<role>-conductor-agent` → `<role>`). Command bodies: `templates/harness/opencode/command/{avril,axel}.md`.
 
 ### Pipeline law
 

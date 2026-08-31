@@ -53,3 +53,17 @@ Plan: crossr-skills `docs/plans/gan-layer-separation-plan.md` §4 PR 2 / §3.2. 
 - `./scripts/verify-graphs`: PASS
 - `./scripts/verify-protocol`: PASS
 - `./scripts/verify-skill-refs`: PASS
+
+## gan-layer-separation — PR 4a (COMPLETED)
+
+Plan: crossr-skills `docs/plans/gan-layer-separation-plan.md` §4 PR 4 / §3.1 / §3.4. Card + `references/` split. Writer-stack window closed. `avril-conductor-agent` created (parked dual-source gap).
+
+- `axel/SKILL.md` 18,148 → 5,998. `avril/SKILL.md` 12,627 → 4,902. Gates stayed on the card.
+- Conductor load set is conductor card + `gan-verdict`. Language/domain stack disclosed to subagents.
+- One mandate per conductor role, on the persona. Skill-layer mandates deleted.
+- `templates/harness/opencode/agent/avril.md` deleted; generation produces `avril.md`.
+
+## Verification Status
+- `./scripts/verify-graphs`: PASS
+- `./scripts/verify-protocol`: PASS
+- `./scripts/verify-skill-refs`: PASS (`CROSSR_SKILLS_PATH` at `v1-gan-layers`)
