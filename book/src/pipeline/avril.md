@@ -2,7 +2,8 @@
 
 **AVRIL** = Automated Visionary Review Iteration Loop.
 
-Skill: `avril` · Personas: `planning-architect-agent`, `product-owner-agent`, `qa-architect-agent`, `visionary-cto-agent`
+Skill: `avril` · Persona: `avril-conductor-agent`  
+Planning GAN: `planning-architect-agent`, `product-owner-agent`, `qa-architect-agent`, `visionary-cto-agent`
 
 Normative detail: [HARNESS-SPEC.md §12](https://github.com/scull7/crossr-skills/blob/main/HARNESS-SPEC.md).
 
@@ -23,7 +24,7 @@ Advancement requires the exact token `BLESS`. Silence or “LGTM” is not enoug
 
 ## Activation
 
-> Using `code-writer` + `avril` to run the Automated Visionary Review Iteration Loop on the current intent until every PBI is triple-blessed.
+> Using `avril` + `gan-verdict` to run the Automated Visionary Review Iteration Loop on the current intent until every PBI is triple-blessed.
 
 ## Board
 
