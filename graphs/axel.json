@@ -3,21 +3,21 @@
   "kind": "Graph",
   "name": "axel",
   "title": "AXEL — Execution Loop",
-  "description": "Blessed-intake only. Inner Rust cycle is the rust-team-lead graph. SKILL.md is the law.",
+  "description": "Blessed-intake only. Inner cycle is the code-gan graph. SKILL.md is the law.",
   "conductor": "axel",
   "nodes": [
     {"id": "intake", "role": "gate"},
     {"id": "plan", "role": "generator", "uses": {"persona": "axel-conductor-agent"}},
-    {"id": "rust-gan", "role": "graph", "uses": {"graph": "rust-team-lead"}},
+    {"id": "code-gan", "role": "graph", "uses": {"graph": "code-gan"}},
     {"id": "ac-evidence", "role": "gate"},
     {"id": "done", "role": "terminal"}
   ],
   "edges": [
     {"from": "intake", "to": "plan", "when": "blessed"},
-    {"from": "plan", "to": "rust-gan"},
-    {"from": "rust-gan", "to": "ac-evidence", "when": "BLESS"},
+    {"from": "plan", "to": "code-gan"},
+    {"from": "code-gan", "to": "ac-evidence", "when": "BLESS"},
     {"from": "ac-evidence", "to": "done", "when": "evidenced"},
-    {"from": "ac-evidence", "to": "rust-gan", "when": "missing-evidence"}
+    {"from": "ac-evidence", "to": "code-gan", "when": "missing-evidence"}
   ],
   "requires": {
     "skills": [
