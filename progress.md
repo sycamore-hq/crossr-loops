@@ -63,7 +63,13 @@ Plan: crossr-skills `docs/plans/gan-layer-separation-plan.md` §4 PR 4 / §3.1 /
 - One mandate per conductor role, on the persona. Skill-layer mandates deleted.
 - `templates/harness/opencode/agent/avril.md` deleted; generation produces `avril.md`.
 
+Review follow-ups (4b / harness, not this merge):
+- §7 row correction must carry the 5,443-byte irreducible arithmetic, not just swap 3KB → 6KB.
+- Dashboard: re-litigate "lift into `agent-harness`". No conductor loads that skill since 2a; the parameterized pair may be the end state.
+- Harness loops pin must move to `v1-cards`. 4b as scoped (skills pin + plan record) does not cover it.
+- Stale-target remedy: an unmarked `.opencode/agent/avril.md` copied before that bump must be deleted by hand before regen.
+
 ## Verification Status
 - `./scripts/verify-graphs`: PASS
 - `./scripts/verify-protocol`: PASS
-- `./scripts/verify-skill-refs`: PASS (`CROSSR_SKILLS_PATH` at `v1-gan-layers`)
+- `./scripts/verify-skill-refs`: PASS (`CROSSR_SKILLS_PATH` set to a checkout of tag `v1-gan-layers`; empty var fails by design)

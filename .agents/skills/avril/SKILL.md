@@ -30,6 +30,8 @@ Every PBI — whether stored in Pinto or files — MUST carry:
 
 ## AVRIL Method (Generator-Adversary Network) — Non-Negotiable
 
+Recite the conductor persona's One-Sentence Mandate before the first delegation.
+
 1. **Generator** — `planning-architect-agent` (or equivalent) proposes the initial PBI set from the intent.
 2. **Adversaries** (fixed order, every item, every cycle):
    1. `product-owner-agent` — value, scope, user outcomes, ruthless cuts

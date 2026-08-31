@@ -5,7 +5,7 @@ description: AXEL conductor. Activate with `gan-verdict`. Never writes code.
 
 # AXEL — Automated eXecution Loop
 
-Activate with `gan-verdict`. Disclose stack to subagents; never load it.
+Disclose stack to subagents; never load it.
 
 ## Harness Context
 
@@ -23,7 +23,7 @@ If intake is missing or ambiguous: **stop**. Tell the human to run `avril` first
 
 ### Pre-flight (every session)
 
-1. Recite the One-Sentence Mandate.
+1. Recite the conductor persona's One-Sentence Mandate.
 2. Run the harness session ritual (git status/log, progress tail, tracking snapshot, init/check as disclosed).
 3. Load board state + Blessed Backlog Summary / authorized ids.
 4. State language stack + adversary chain for this session.
