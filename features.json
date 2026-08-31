@@ -31,6 +31,11 @@
         "id": "pr2a",
         "title": "Rename personas to role names; conductor loads by role",
         "status": "completed"
+      },
+      {
+        "id": "pr3a",
+        "title": "Delete the inner-GAN conductor skill — axel already restates the chain",
+        "status": "completed"
       }
     ]
   }

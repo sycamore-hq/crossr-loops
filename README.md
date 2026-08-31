@@ -1,6 +1,6 @@
 # crossr-loops
 
-AVRIL, AXEL, BRICK, rust-team-lead, and orchestrator-prompt live here.
+AVRIL, AXEL, BRICK, and orchestrator-prompt live here.
 
 These are the loops (and later, the graphs) that compose skills from
 [`crossr-skills`](https://github.com/sycamore-hq/crossr-skills) by name.
@@ -21,19 +21,18 @@ Charter: [`skills-loops-harness-split.html`](https://github.com/sycamore-hq/cros
 | `avril` | Planning GAN — blessed PBIs (PO → QA → CTO) |
 | `axel` | Execution loop — blessed PBI → PETC + code GAN |
 | `brick` | BRICK conductor only — stages stay in the catalog |
-| `rust-team-lead` | Inner GAN for Rust plan execution |
 | `orchestrator-prompt` | Generate a stateless loop-runner prompt |
 
 ### Personas
 
 - AVRIL: `planning-architect`, `product-owner`, `qa-architect`, `visionary-cto`
 - AXEL: `axel-conductor`
-- Rust GAN: `reviewer`, `tester`, `architect`
+- Code GAN: `reviewer`, `tester`, `architect`
 - BRICK stages: `brick-specifier`, `brick-coder`, `brick-refactorer`, `brick-mutator` *agents* (the stage *skills* stay in skills)
 
 ### OpenCode prompt bodies
 
-`templates/harness/opencode/{agent,command}/{avril,axel}.md` — loops owns the text; harness bootstrap installs them.
+`templates/harness/opencode/agent/avril.md` is hand-written (AVRIL has no conductor persona; generation cannot replace it). The AXEL agent entrypoint is generated from `axel-conductor-agent`. Command bodies: `templates/harness/opencode/command/{avril,axel}.md`.
 
 ### Pipeline law
 
@@ -41,7 +40,7 @@ Charter: [`skills-loops-harness-split.html`](https://github.com/sycamore-hq/cros
 
 ### Graphs (topology)
 
-[`graphs/`](graphs/) — `avril`, `axel`, `brick`, `rust-team-lead`, `flagship`. Catalog skills by name. No Rhai. `just graphs-verify`.
+[`graphs/`](graphs/) — `avril`, `axel`, `brick`, `code-gan`, `flagship`. Catalog skills by name. No Rhai. `just graphs-verify`.
 
 ## Not here
 

@@ -13,7 +13,7 @@ Schema: [`schema.json`](schema.json). Gates: `just graphs-verify`, `just verify-
 | File | What |
 |------|------|
 | `avril.json` | Planning GAN — generator → PO → QA → CTO → stop |
-| `rust-team-lead.json` | Inner Rust code GAN |
-| `axel.json` | Execution loop; inner cycle is the `rust-team-lead` graph |
+| `code-gan.json` | Inner code GAN (generate → reviewer → tester → architect → commit) |
+| `axel.json` | Execution loop; inner cycle is the `code-gan` graph |
 | `brick.json` | Stage pipeline; stage *skills* are catalog |
 | `flagship.json` | Intent → AVRIL → AXEL → Done. BRICK is the alternative, not a node here. |

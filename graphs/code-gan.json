@@ -1,10 +1,10 @@
 {
   "apiVersion": "crossr-loops/v0",
   "kind": "Graph",
-  "name": "rust-team-lead",
-  "title": "Rust Team Lead — inner code GAN",
+  "name": "code-gan",
+  "title": "Code GAN — inner implementation cycle",
   "description": "Generator then Reviewer → Tester → Architect. Catalog skills by name. SKILL.md is the law.",
-  "conductor": "rust-team-lead",
+  "conductor": "axel",
   "nodes": [
     {
       "id": "generate",

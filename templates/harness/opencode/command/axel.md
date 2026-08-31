@@ -26,8 +26,8 @@ Blessed backlog summaries:
 Treat the dump above as the current state of the project. Do not re-run these commands
 just to confirm them.
 
-Load the `axel` and `code-writer` skills (plus the disclosed language/domain stack)
-with the skill tool, recite AXEL's One-Sentence Mandate, then handle this request:
+Load the `axel` and `gan-verdict` skills with the skill tool; the language stack
+is disclosed to the subagents. Recite AXEL's One-Sentence Mandate, then handle this request:
 
 $ARGUMENTS
 

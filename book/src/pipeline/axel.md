@@ -3,7 +3,7 @@
 **AXEL** = Automated eXecution Loop.
 
 Skill: `axel` · Persona: `axel-conductor-agent`  
-Rust inner GAN: `rust-team-lead` (Reviewer → Tester → Architect)
+Inner GAN: Reviewer → Tester → Architect (`graphs/code-gan.json`)
 
 Normative detail: [HARNESS-SPEC.md §13](https://github.com/scull7/crossr-skills/blob/main/HARNESS-SPEC.md).
 
@@ -36,12 +36,7 @@ AXEL starts only if one of:
 
 ## Activation
 
-> Using `code-writer` + `axel` (+ disclosed language/domain skills; Rust: `rust-code-writer` + `rust-team-lead` as inner GAN) to execute the next blessed PBI through PETC until AC are evidenced and the board is honest.
-
-## Rust pairing
-
-- **AXEL** owns intake, board, AC evidence, tracking.  
-- **`rust-team-lead`** is the preferred inner code GAN for implementation phases.
+> Using `code-writer` + `axel` (+ disclosed language/domain skills; Rust: `rust-code-writer`) to execute the next blessed PBI through PETC until AC are evidenced and the board is honest.
 
 ## Optional: Mitchell decomposition mode
 
