@@ -6,7 +6,7 @@ These are the loops (and later, the graphs) that compose skills from
 [`crossr-skills`](https://github.com/sycamore-hq/crossr-skills) by name.
 This remote does not own skill text. It is pinned from a harness lockfile.
 
-**Dogfood is live (split-08).** First published pin: [`v0`](https://github.com/sycamore-hq/crossr-loops/releases/tag/v0). Current lockfile: `skills = "v1-gan-layers"`, `loops = "v0"`. Process files came from `crossr-harness --process-only` — they are a consumer instance, not loop law.
+**Dogfood is live (split-08).** First published pin: [`v0`](https://github.com/sycamore-hq/crossr-loops/releases/tag/v0). Current consumer pins: `skills = "v1-gan-layers"`, `loops = "v1-cards"` ([lockfile.toml](lockfile.toml)). Process files came from `crossr-harness --process-only` — they are a consumer instance, not loop law.
 
 **Graphs (split-09).** JSON nodes+edges under [`graphs/`](graphs/). Map, not a runtime. SKILL.md stays the law. Human view: [`graphs/index.html`](graphs/index.html).
 
