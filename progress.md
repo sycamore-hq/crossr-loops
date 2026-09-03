@@ -73,3 +73,16 @@ Review follow-ups (4b / harness, not this merge):
 - `./scripts/verify-graphs`: PASS
 - `./scripts/verify-protocol`: PASS
 - `./scripts/verify-skill-refs`: PASS (`CROSSR_SKILLS_PATH` set to a checkout of tag `v1-gan-layers`; empty var fails by design)
+
+## hygiene — loops-lockfile (COMPLETED)
+
+`lockfile.toml` is a consumer pin (harness-bootstrap / `--process-only` dogfood), same contract as harness and skills. It is not a self-advertisement of this remote's tag. Left at split-08 `v0` after harness and skills moved to `v1-cards`.
+
+- `lockfile.toml`: `loops = "v1-cards"` (skills pin unchanged).
+- README + MIGRATION current-pin lines moved with it. Split-08 history (`loops = "v0"` as of that cut) stays.
+- Graphs note: `v0` has no graphs; `v1-cards` does. Bootstrap still does not copy `graphs/`.
+
+## Verification Status
+- `./scripts/verify-graphs`: PASS
+- `./scripts/verify-protocol`: PASS
+- README current pins == `lockfile.toml`

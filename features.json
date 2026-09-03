@@ -41,6 +41,14 @@
         "id": "pr4a",
         "title": "Card + references/ split on axel and avril; conductor mandates lift",
         "status": "completed"
+      },
+      {
+        "id": "loops-lockfile",
+        "title": "Consumer pin loops = v1-cards (match harness/skills)",
+        "status": "completed",
+        "features": [
+          "lockfile_loops_v1_cards"
+        ]
       }
     ]
   }

@@ -65,9 +65,9 @@ Copied byte-identical. Pipeline chapters still point at `scull7/crossr-skills` U
 
 ## Consumers
 
-Install from [`sycamore-hq/crossr-harness`](https://github.com/sycamore-hq/crossr-harness) (`harness-bootstrap`). Lockfile pin: `loops = "v0"`. This repo's `AGENTS.md` / `features.json` / `progress.md` / `justfile` / `lockfile.toml` are a `--process-only` consumer instance (split-08), not loop law.
+Install from [`sycamore-hq/crossr-harness`](https://github.com/sycamore-hq/crossr-harness) (`harness-bootstrap`). Current consumer pin: `loops = "v1-cards"` (split-08 first pin was `v0`). This repo's `AGENTS.md` / `features.json` / `progress.md` / `justfile` / `lockfile.toml` are a `--process-only` consumer instance (split-08), not loop law.
 
 ## Graphs (split-09)
 
-JSON nodes+edges in `graphs/`. Topology only. Conductor `SKILL.md` files were not rewritten. Pin `v0` does not include graphs; consumers pick them up from `main` until a later loops tag.
+JSON nodes+edges in `graphs/`. Topology only. Conductor `SKILL.md` files were not rewritten. Pin `v0` does not include graphs. Pin `v1-cards` does. Bootstrap still does not copy `graphs/`.
 
