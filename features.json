@@ -47,7 +47,7 @@
         "title": "Consumer pin loops = v1-cards (match harness/skills)",
         "status": "completed",
         "features": [
-          "lockfile_loops_v1_cards"
+          "lockfile-loops-v1-cards"
         ]
       }
     ]
