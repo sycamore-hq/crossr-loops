@@ -86,5 +86,27 @@ class BookMarker(unittest.TestCase):
         self.assertFalse(vsr.is_book_frontmatter(fields))
 
 
+class ConsumerBooks(unittest.TestCase):
+    def test_missing_key_is_none(self):
+        text = 'skills = "v1-one-law"\nloops = "v1-cards"\n'
+        self.assertIsNone(vsr.parse_lockfile_books(text))
+
+    def test_empty_array_is_empty_list(self):
+        text = 'skills = "v1-one-law"\nbooks = []\n'
+        self.assertEqual(vsr.parse_lockfile_books(text), [])
+
+    def test_empty_array_with_comment(self):
+        text = 'books = []     # disclosed language books\n'
+        self.assertEqual(vsr.parse_lockfile_books(text), [])
+
+    def test_named_books(self):
+        text = 'books = ["rust", "ocaml"]\n'
+        self.assertEqual(vsr.parse_lockfile_books(text), ["rust", "ocaml"])
+
+    def test_loops_self_pin_has_no_books_key(self):
+        text = (ROOT / "lockfile.toml").read_text()
+        self.assertIsNone(vsr.parse_lockfile_books(text))
+
+
 if __name__ == "__main__":
     unittest.main()

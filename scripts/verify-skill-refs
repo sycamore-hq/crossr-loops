@@ -11,6 +11,10 @@ is a catalog directory whose SKILL.md frontmatter has `metadata.book: "true"`
 (the same marker extract-rules selects on). Membership is not inferred from
 RULES.md or a `## Rules` heading.
 
+A consumer lockfile may be supplied via `CROSSR_CONSUMER_LOCKFILE`. That is
+never the loops self-pin. `requires.book: true` plus an explicit `books = []`
+is a failure. Absence of the `books` key is not.
+
 Catalog resolution (no silent substitutes):
 
 - Local `.agents/skills/` in this checkout is always consulted.
@@ -38,6 +42,8 @@ LOCAL_SKILLS = ROOT / ".agents" / "skills"
 SCHEMA_NAME = "schema.json"
 LOCKFILE = ROOT / "lockfile.toml"
 FRONTMATTER_RE = re.compile(r"^---\n(.*?)\n---\n", re.S)
+CONSUMER_LOCKFILE_ENV = "CROSSR_CONSUMER_LOCKFILE"
+BOOKS_RE = re.compile(r"(?m)^\s*books\s*=\s*\[(.*?)\]")
 
 
 class Check:
@@ -89,8 +95,44 @@ def is_book_frontmatter(fields: dict[str, str]) -> bool:
     return raw.strip("\"'").lower() in {"true", "yes", "1"}
 
 
+def parse_lockfile_books(text: str) -> list[str] | None:
+    """Return the books array when the key is present; None when absent."""
+    match = BOOKS_RE.search(text)
+    if not match:
+        return None
+    inner = match.group(1).strip()
+    if not inner:
+        return []
+    return [part.strip().strip("\"'") for part in inner.split(",") if part.strip()]
+
+
 def requires_book(g: dict) -> bool:
     return bool((g.get("requires") or {}).get("book"))
+
+
+def verify_consumer_books(graphs: dict[str, dict], c: Check) -> None:
+    raw = os.environ.get(CONSUMER_LOCKFILE_ENV)
+    if not raw:
+        return
+    path = Path(raw)
+    if not path.is_file():
+        c.fail(f"{CONSUMER_LOCKFILE_ENV}={path} is not a file")
+        return
+    books = parse_lockfile_books(path.read_text())
+    if books is None:
+        c.pass_(f"consumer lockfile has no books key ({path})")
+        return
+    if books:
+        c.pass_(f"consumer lockfile books = {books}")
+        return
+    named = [name for name, g in sorted(graphs.items()) if requires_book(g)]
+    if not named:
+        c.pass_("consumer lockfile books = [] and no graph requires.book")
+        return
+    c.fail(
+        "requires.book: true + books = [] — disclose a language book "
+        f"(graphs: {', '.join(named)})"
+    )
 
 
 def resolve_catalog(c: Check, pin: str | None) -> Path | None:
@@ -200,6 +242,7 @@ def main() -> int:
     if catalog is not None:
         for name in sorted(graphs):
             verify(name, graphs[name], catalog, c)
+        verify_consumer_books(graphs, c)
 
     print()
     if c.bad:
