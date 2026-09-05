@@ -5,7 +5,7 @@
 Skill: `axel` · Persona: `axel-conductor-agent`  
 Inner GAN: Reviewer → Tester → Architect (`graphs/code-gan.json`)
 
-Normative detail: [HARNESS-SPEC.md §13](https://github.com/scull7/crossr-skills/blob/main/HARNESS-SPEC.md).
+Normative detail: [HARNESS-SPEC.md §13](https://github.com/sycamore-hq/crossr-harness/blob/main/HARNESS-SPEC.md).
 
 ## Purpose
 

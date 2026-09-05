@@ -41,16 +41,20 @@ Concrete artifact names, column names, commit message format, and CLI flags are 
 
 ### Language stack (stratified)
 
-Disclose at session start which code GAN applies. The conductor discloses this stack to Generator and adversary subagents; it never loads the writer or adversary skills itself.
+The harness discloses `books` from the consumer repo's `lockfile.toml` at session start (pre-flight step 4). The conductor discloses this stack to Generator and adversary subagents; it never loads the writer or adversary skills itself.
 
-**Rust (default when the repo is Rust / harness says so):**
+**When `books` names one book:**
 
-- Generator: `code-writer` + `rust-code-writer` + domain (`rust-axum-backend`, `rust-tui`, `rust-frontend`, `rust-errors`, …)
-- Adversaries (fixed order): `rust-code-reviewer` → `rust-code-tester` → `architecture`
+- Generator loads: `code-writer` + `<book>` (card + the references for the situation) + domain skills
+- Adversaries load: the gate card + `<book>/RULES.md`. Never `<book>/references/`
+- Test verifier: rules tagged `test` in that same `RULES.md`
+- Adversaries (fixed order): `code-review` → `testing` → `architecture`
 - Personas: `reviewer-agent` → `tester-agent` → `architect-agent`
 
-**Other languages / mixed:**
+**When `books` names more than one book:**
 
-- Generator: `code-writer` + harness-disclosed language/domain skills
-- Adversaries: harness-disclosed reviewer → tester → architect skills/personas in that order
-- If no code GAN is disclosed, **stop** and ask the human — do not invent gates
+Disclose which book applies **per PBI**. If unspecified, stop and ask. Do not default to first-listed.
+
+**When `books` is missing or empty:**
+
+**Stop** and ask the human — do not invent gates.

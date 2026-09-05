@@ -26,7 +26,7 @@ Topology (not law): [`graphs/flagship.json`](https://github.com/sycamore-hq/cros
 1. **Planning stop** — AVRIL does not implement code. When every PBI is triple-blessed, emit a Blessed Backlog Summary and stop.
 2. **Intake gate** — AXEL refuses unblessed work unless the human explicitly authorizes a finite id set.
 3. **Scope changes** mid-execution return to AVRIL — AXEL does not re-bless product intent.
-4. **Canon** lives in [HARNESS-SPEC.md](https://github.com/scull7/crossr-skills/blob/main/HARNESS-SPEC.md) §12–13. This book is a thin progressive lens, not a second law.
+4. **Canon** lives in [HARNESS-SPEC.md](https://github.com/sycamore-hq/crossr-harness/blob/main/HARNESS-SPEC.md) §12–13. This book is a thin progressive lens, not a second law.
 
 ## Next
 
