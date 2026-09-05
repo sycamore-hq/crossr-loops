@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import importlib.machinery
 import importlib.util
+import os
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -103,9 +105,57 @@ class ConsumerBooks(unittest.TestCase):
         text = 'books = ["rust", "ocaml"]\n'
         self.assertEqual(vsr.parse_lockfile_books(text), ["rust", "ocaml"])
 
+    def test_multiline_empty_is_empty_list(self):
+        text = "books = [\n]\n"
+        self.assertEqual(vsr.parse_lockfile_books(text), [])
+
+    def test_multiline_named(self):
+        text = 'books = [\n  "rust",\n]\n'
+        self.assertEqual(vsr.parse_lockfile_books(text), ["rust"])
+
+    def test_string_value_is_raw_string(self):
+        self.assertEqual(vsr.parse_lockfile_books('books = "rust"\n'), "rust")
+
     def test_loops_self_pin_has_no_books_key(self):
         text = (ROOT / "lockfile.toml").read_text()
         self.assertIsNone(vsr.parse_lockfile_books(text))
+
+
+def _gate(text: str) -> vsr.Check:
+    """Run verify_consumer_books against one lockfile. Action: tempfile + env."""
+    graphs = {"code-gan": {"requires": {"book": True}}}
+    check = vsr.Check()
+    with tempfile.NamedTemporaryFile("w", suffix=".toml", delete=False) as handle:
+        handle.write(text)
+        path = handle.name
+    previous = os.environ.get(vsr.CONSUMER_LOCKFILE_ENV)
+    os.environ[vsr.CONSUMER_LOCKFILE_ENV] = path
+    try:
+        vsr.verify_consumer_books(graphs, check)
+    finally:
+        if previous is None:
+            os.environ.pop(vsr.CONSUMER_LOCKFILE_ENV, None)
+        else:
+            os.environ[vsr.CONSUMER_LOCKFILE_ENV] = previous
+        Path(path).unlink()
+    return check
+
+
+class ConsumerBooksGate(unittest.TestCase):
+    def test_multiline_empty_fails_requires_book(self):
+        check = _gate("books = [\n]\n")
+        self.assertTrue(check.bad)
+        self.assertTrue(any("books = []" in msg for msg in check.bad))
+
+    def test_multiline_named_is_reported(self):
+        check = _gate('books = [\n  "rust",\n]\n')
+        self.assertFalse(check.bad)
+        self.assertTrue(any("['rust']" in msg for msg in check.ok))
+
+    def test_string_value_fails(self):
+        check = _gate('books = "rust"\n')
+        self.assertTrue(check.bad)
+        self.assertTrue(any("array of strings" in msg for msg in check.bad))
 
 
 PERSONA_WITH_TICKS = """# reviewer-agent
