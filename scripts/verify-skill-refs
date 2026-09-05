@@ -8,7 +8,8 @@ Every `uses.graph` must resolve to `graphs/<name>.json`.
 
 A graph with `requires.book: true` must not name a book skill. A book skill
 is a catalog directory whose SKILL.md frontmatter has `metadata.book: "true"`
-(the same marker extract-rules selects on). Membership is not inferred from
+(or, during transition, a top-level `book:` — the same markers extract-rules
+selects on; `true` / `yes` / `1` all count). Membership is not inferred from
 RULES.md or a `## Rules` heading.
 
 A consumer lockfile may be supplied via `CROSSR_CONSUMER_LOCKFILE`. That is
@@ -37,6 +38,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -47,7 +49,6 @@ SCHEMA_NAME = "schema.json"
 LOCKFILE = ROOT / "lockfile.toml"
 FRONTMATTER_RE = re.compile(r"^---\n(.*?)\n---\n", re.S)
 CONSUMER_LOCKFILE_ENV = "CROSSR_CONSUMER_LOCKFILE"
-BOOKS_RE = re.compile(r"(?m)^\s*books\s*=\s*\[(.*?)\]")
 REQUIRED_SKILLS_RE = re.compile(
     r"(?ms)^## Required Skills[^\n]*\n(.*?)(?=^## |\Z)"
 )
@@ -111,15 +112,12 @@ def extract_required_skills(text: str) -> list[str]:
     return SKILL_TICK_RE.findall(match.group(1))
 
 
-def parse_lockfile_books(text: str) -> list[str] | None:
-    """Return the books array when the key is present; None when absent."""
-    match = BOOKS_RE.search(text)
-    if not match:
+def parse_lockfile_books(text: str) -> object | None:
+    """Return the `books` value when the key is present; None when absent."""
+    data = tomllib.loads(text)
+    if "books" not in data:
         return None
-    inner = match.group(1).strip()
-    if not inner:
-        return []
-    return [part.strip().strip("\"'") for part in inner.split(",") if part.strip()]
+    return data["books"]
 
 
 def requires_book(g: dict) -> bool:
@@ -156,6 +154,9 @@ def verify_consumer_books(graphs: dict[str, dict], c: Check) -> None:
     books = parse_lockfile_books(path.read_text())
     if books is None:
         c.pass_(f"consumer lockfile has no books key ({path})")
+        return
+    if not isinstance(books, list) or not all(isinstance(b, str) for b in books):
+        c.fail(f"consumer lockfile books must be an array of strings ({path})")
         return
     if books:
         c.pass_(f"consumer lockfile books = {books}")
