@@ -10,19 +10,19 @@
       "id": "generate",
       "role": "generator",
       "catalog": true,
-      "uses": {"skill": "rust-code-writer"}
+      "uses": {"skill": "code-writer"}
     },
     {
       "id": "reviewer",
       "role": "adversary",
       "catalog": true,
-      "uses": {"skill": "rust-code-reviewer", "persona": "reviewer-agent"}
+      "uses": {"skill": "code-review", "persona": "reviewer-agent"}
     },
     {
       "id": "tester",
       "role": "adversary",
       "catalog": true,
-      "uses": {"skill": "rust-code-tester", "persona": "tester-agent"}
+      "uses": {"skill": "testing", "persona": "tester-agent"}
     },
     {
       "id": "architect",
@@ -44,10 +44,10 @@
   "requires": {
     "skills": [
       "code-writer",
-      "rust-code-writer",
-      "rust-code-reviewer",
-      "rust-code-tester",
+      "code-review",
+      "testing",
       "architecture"
-    ]
+    ],
+    "book": true
   }
 }
