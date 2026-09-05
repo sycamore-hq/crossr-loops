@@ -146,7 +146,7 @@ def validate(name: str, g: dict, all_names: set[str], c: Check) -> None:
         if not sk.is_file():
             c.fail(f"{name}: conductor {conductor!r} has no SKILL.md")
     req = g.get("requires") or {}
-    extra_r = set(req) - {"skills"}
+    extra_r = set(req) - {"skills", "book"}
     if extra_r:
         c.fail(f"{name}: requires unknown keys {sorted(extra_r)}")
     if len(c.bad) == start:
