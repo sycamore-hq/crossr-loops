@@ -8,7 +8,8 @@ check:
     cargo check --workspace 2>/dev/null || echo "(no Rust crates)"
 
 test:
-    cargo test --workspace 2>/dev/null || echo "(no tests)"
+    python3 -m unittest discover -s test -v
+    cargo test --workspace 2>/dev/null || echo "(no Rust crates)"
 
 graphs-verify:
     @./scripts/verify-graphs

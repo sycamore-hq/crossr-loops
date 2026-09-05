@@ -6,6 +6,11 @@ to `.agents/skills/<name>/SKILL.md` in this checkout or the catalog.
 Every `uses.persona` must resolve to `.agents/agents/<name>.md`.
 Every `uses.graph` must resolve to `graphs/<name>.json`.
 
+A graph with `requires.book: true` must not name a book skill. A book skill
+is a catalog directory whose SKILL.md frontmatter has `metadata.book: "true"`
+(the same marker extract-rules selects on). Membership is not inferred from
+RULES.md or a `## Rules` heading.
+
 Catalog resolution (no silent substitutes):
 
 - Local `.agents/skills/` in this checkout is always consulted.
@@ -32,6 +37,7 @@ AGENTS = ROOT / ".agents" / "agents"
 LOCAL_SKILLS = ROOT / ".agents" / "skills"
 SCHEMA_NAME = "schema.json"
 LOCKFILE = ROOT / "lockfile.toml"
+FRONTMATTER_RE = re.compile(r"^---\n(.*?)\n---\n", re.S)
 
 
 class Check:
@@ -63,6 +69,28 @@ def lockfile_skills_pin() -> str | None:
         return None
     m = re.search(r'(?m)^\s*skills\s*=\s*"([^"]+)"', LOCKFILE.read_text())
     return m.group(1) if m else None
+
+
+def parse_frontmatter(text: str) -> dict[str, str]:
+    match = FRONTMATTER_RE.match(text)
+    if not match:
+        return {}
+    fields: dict[str, str] = {}
+    for line in match.group(1).splitlines():
+        if ":" not in line:
+            continue
+        key, value = line.split(":", 1)
+        fields[key.strip()] = value.strip()
+    return fields
+
+
+def is_book_frontmatter(fields: dict[str, str]) -> bool:
+    raw = fields.get("book") or ""
+    return raw.strip("\"'").lower() in {"true", "yes", "1"}
+
+
+def requires_book(g: dict) -> bool:
+    return bool((g.get("requires") or {}).get("book"))
 
 
 def resolve_catalog(c: Check, pin: str | None) -> Path | None:
@@ -100,6 +128,13 @@ def skill_path(name: str, catalog: Path | None) -> Path | None:
     return None
 
 
+def skill_is_book(name: str, catalog: Path | None) -> bool:
+    path = skill_path(name, catalog)
+    if path is None:
+        return False
+    return is_book_frontmatter(parse_frontmatter(path.read_text()))
+
+
 def collect_names(g: dict) -> tuple[set[str], set[str], set[str]]:
     skills: set[str] = set((g.get("requires") or {}).get("skills") or [])
     personas: set[str] = set()
@@ -126,6 +161,11 @@ def verify(name: str, g: dict, catalog: Path | None, c: Check) -> None:
             c.fail(
                 f"{name}: skill {skill!r} has no .agents/skills/{skill}/SKILL.md "
                 f"in {trees}"
+            )
+        elif requires_book(g) and skill_is_book(skill, catalog):
+            c.fail(
+                f"{name}: requires.book forbids book skill {skill!r} "
+                "(metadata.book = true)"
             )
     for persona in sorted(personas):
         p = AGENTS / f"{persona}.md"
