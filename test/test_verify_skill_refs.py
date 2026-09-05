@@ -157,6 +157,11 @@ class ConsumerBooksGate(unittest.TestCase):
         self.assertTrue(check.bad)
         self.assertTrue(any("array of strings" in msg for msg in check.bad))
 
+    def test_malformed_toml_fails(self):
+        check = _gate("books = [\n")
+        self.assertTrue(check.bad)
+        self.assertTrue(any("not valid TOML" in msg for msg in check.bad))
+
 
 PERSONA_WITH_TICKS = """# reviewer-agent
 

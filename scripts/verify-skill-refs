@@ -151,7 +151,11 @@ def verify_consumer_books(graphs: dict[str, dict], c: Check) -> None:
     if not path.is_file():
         c.fail(f"{CONSUMER_LOCKFILE_ENV}={path} is not a file")
         return
-    books = parse_lockfile_books(path.read_text())
+    try:
+        books = parse_lockfile_books(path.read_text())
+    except tomllib.TOMLDecodeError as err:
+        c.fail(f"consumer lockfile is not valid TOML ({path}): {err}")
+        return
     if books is None:
         c.pass_(f"consumer lockfile has no books key ({path})")
         return
