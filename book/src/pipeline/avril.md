@@ -5,7 +5,7 @@
 Skill: `avril` · Persona: `avril-conductor-agent`  
 Planning GAN: `planning-architect-agent`, `product-owner-agent`, `qa-architect-agent`, `visionary-cto-agent`
 
-Normative detail: [HARNESS-SPEC.md §12](https://github.com/scull7/crossr-skills/blob/main/HARNESS-SPEC.md).
+Normative detail: [HARNESS-SPEC.md §12](https://github.com/sycamore-hq/crossr-harness/blob/main/HARNESS-SPEC.md).
 
 ## Purpose
 
