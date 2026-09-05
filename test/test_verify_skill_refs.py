@@ -108,5 +108,59 @@ class ConsumerBooks(unittest.TestCase):
         self.assertIsNone(vsr.parse_lockfile_books(text))
 
 
+PERSONA_WITH_TICKS = """# reviewer-agent
+
+## Required Skills (must be active)
+
+- `code-review`
+- `gan-verdict`
+
+## Personality
+"""
+
+PERSONA_WITH_PROSE = """# brick-coder-agent
+
+## Required Skills (must be active)
+
+- `code-writer`
+- `brick-coder`
+- the disclosed book
+
+## Contract
+"""
+
+PERSONA_NO_SECTION = """# architect-agent
+
+## Personality
+"""
+
+
+class RequiredSkills(unittest.TestCase):
+    def test_extracts_backtick_names(self):
+        self.assertEqual(
+            vsr.extract_required_skills(PERSONA_WITH_TICKS),
+            ["code-review", "gan-verdict"],
+        )
+
+    def test_skips_prose_without_backticks(self):
+        self.assertEqual(
+            vsr.extract_required_skills(PERSONA_WITH_PROSE),
+            ["code-writer", "brick-coder"],
+        )
+
+    def test_missing_section_is_empty(self):
+        self.assertEqual(vsr.extract_required_skills(PERSONA_NO_SECTION), [])
+
+    def test_does_not_read_verdict_format_line(self):
+        text = PERSONA_WITH_TICKS + (
+            "\n**Verdict format** (per `gan-verdict`): "
+            "`code-review: BLESS | REJECT`\n"
+        )
+        self.assertEqual(
+            vsr.extract_required_skills(text),
+            ["code-review", "gan-verdict"],
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

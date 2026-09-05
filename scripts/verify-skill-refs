@@ -15,6 +15,10 @@ A consumer lockfile may be supplied via `CROSSR_CONSUMER_LOCKFILE`. That is
 never the loops self-pin. `requires.book: true` plus an explicit `books = []`
 is a failure. Absence of the `books` key is not.
 
+Persona `## Required Skills` lines are resolved the same way as graph
+skills. Only backtick-quoted names count; prose such as "the disclosed
+book" is ignored.
+
 Catalog resolution (no silent substitutes):
 
 - Local `.agents/skills/` in this checkout is always consulted.
@@ -44,6 +48,10 @@ LOCKFILE = ROOT / "lockfile.toml"
 FRONTMATTER_RE = re.compile(r"^---\n(.*?)\n---\n", re.S)
 CONSUMER_LOCKFILE_ENV = "CROSSR_CONSUMER_LOCKFILE"
 BOOKS_RE = re.compile(r"(?m)^\s*books\s*=\s*\[(.*?)\]")
+REQUIRED_SKILLS_RE = re.compile(
+    r"(?ms)^## Required Skills[^\n]*\n(.*?)(?=^## |\Z)"
+)
+SKILL_TICK_RE = re.compile(r"`([a-z][a-z0-9-]*)`")
 
 
 class Check:
@@ -95,6 +103,14 @@ def is_book_frontmatter(fields: dict[str, str]) -> bool:
     return raw.strip("\"'").lower() in {"true", "yes", "1"}
 
 
+def extract_required_skills(text: str) -> list[str]:
+    """Backtick-quoted skill names under ## Required Skills. Prose is ignored."""
+    match = REQUIRED_SKILLS_RE.search(text)
+    if not match:
+        return []
+    return SKILL_TICK_RE.findall(match.group(1))
+
+
 def parse_lockfile_books(text: str) -> list[str] | None:
     """Return the books array when the key is present; None when absent."""
     match = BOOKS_RE.search(text)
@@ -108,6 +124,25 @@ def parse_lockfile_books(text: str) -> list[str] | None:
 
 def requires_book(g: dict) -> bool:
     return bool((g.get("requires") or {}).get("book"))
+
+
+def verify_persona_skills(catalog: Path | None, c: Check) -> None:
+    if not AGENTS.is_dir():
+        return
+    trees = trees_checked(catalog)
+    for path in sorted(AGENTS.glob("*.md")):
+        names = extract_required_skills(path.read_text())
+        if not names:
+            continue
+        start = len(c.bad)
+        for skill in names:
+            if skill_path(skill, catalog) is None:
+                c.fail(
+                    f"persona {path.name}: skill {skill!r} has no "
+                    f".agents/skills/{skill}/SKILL.md in {trees}"
+                )
+        if len(c.bad) == start:
+            c.pass_(f"persona {path.stem}: {len(names)} required skill(s) resolve")
 
 
 def verify_consumer_books(graphs: dict[str, dict], c: Check) -> None:
@@ -243,6 +278,7 @@ def main() -> int:
         for name in sorted(graphs):
             verify(name, graphs[name], catalog, c)
         verify_consumer_books(graphs, c)
+        verify_persona_skills(catalog, c)
 
     print()
     if c.bad:
