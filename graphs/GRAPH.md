@@ -13,7 +13,7 @@ Schema: [`schema.json`](schema.json). Gates: `just graphs-verify`, `just verify-
 | File | What |
 |------|------|
 | `avril.json` | Planning GAN — generator → PO → QA → CTO → stop |
-| `code-gan.json` | Inner code GAN (generate → reviewer → tester → architect → commit) |
-| `axel.json` | Execution loop; inner cycle is the `code-gan` graph |
+| `code-gan.json` | Inner code GAN (generate → mechanical → tester → reviewer → commit; architect on unsatisfiable-claim only) |
+| `axel.json` | Execution loop; plan-write → plan-audit → plan-architect → `code-gan` |
 | `brick.json` | Stage pipeline; stage *skills* are catalog |
 | `flagship.json` | Intent → AVRIL → AXEL → Done. BRICK is the alternative, not a node here. |

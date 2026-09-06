@@ -19,7 +19,7 @@ AXEL starts only when **one** of these is true:
 2. Board items carry the harness-disclosed blessed marker (typical label: `avril-blessed`), or
 3. The human explicitly authorizes a finite set of PBI ids for execution
 
-If intake is missing or ambiguous: **stop**. Tell the human to run `avril` first or authorize ids. Never “bless while executing.”
+If intake is missing or ambiguous: **stop**. Tell the human to run `avril` first or authorize ids. Never “bless while executing.” AXEL does not re-bless product intent.
 
 ### Pre-flight (every session)
 
@@ -32,86 +32,79 @@ If intake is missing or ambiguous: **stop**. Tell the human to run `avril` first
 
 ## AXEL Method — Per PBI
 
-For the selected PBI id:
+### 1. Plan (Generator + `plan-writer`)
 
-### 1. Plan
+Delegate. This conductor does not write the plan. Artifact: `docs/plans/pbi/<id>.plan.md` (or the disclosed fallback). Phases live inside the plan. Blocking questions → stop. Do not guess product intent.
 
-- Emit a concise plan: goal, approach, files/areas likely touched, test strategy, risk.
-- End with a bulleted list of unresolved questions.
-- If any question is blocking, stop for the human. Do not guess product intent.
+### 2. Mechanical plan audit
 
-### 2. Board → in-progress
+Run `audit-plan` on the artifact. Red → back to Generator. No LLM. Zero tokens.
 
-- Move the PBI to in-progress only after the plan is accepted (no blocking questions, or human answered them).
+### 3. Architect (plan time)
 
-### 3. Decompose
+Delegate `architect-agent` + `architecture` on the plan. REJECT for underspecification. Three REJECTs on one plan → stop for the human. BLESS → commit the plan (immutable) → board in-progress.
 
-- Split the PBI into the **smallest semantic phases** that still leave the tree buildable/testable.
-- State “Phase k of n” explicitly every handoff.
-- Spikes: produce the decision artifact named in AC; do not “also implement the feature.”
-
-### 4. PETC + code GAN (each phase)
+### 4. Execute + code GAN (each blessed phase)
 
 ```
-Plan (phase) → Generate → [decomposition check if mode on] → Reviewer → Tester → Architect → Commit + track
+Generate → Mechanical → Tester → Reviewer → Commit
 ```
 
-1. **Generate** — Delegate implementation + tests to the Generator stack.
-2. **Decomposition check (only if decomposition mode is on)** — See `references/decomposition-mode.md`. If over threshold, **do not proceed to adversaries/commit**; enter decompose path first.
-3. **Reviewer** — Code quality / style / simplicity. Requires explicit `BLESS`.
-4. **Tester** — Coverage of calculations and AC-relevant paths; error paths. Requires explicit `BLESS`.
-5. **Architect** — Stratification, long-term coherence (final gate). Requires explicit `BLESS`.
-6. On any `REJECT` or missing `BLESS`: re-delegate minimal fix to Generator; **restart the full three-adversary chain** for that phase (prior blessings do not carry across material change).
-7. **Commit** — Small, reviewable commit whose message references the PBI id (and phase id if any).
-8. **Track** — Update harness tracking artifacts (features.json entry / progress.md append or equivalent) with PBI id traceability.
+1. **Generate** — `code-writer` + book + domain. Implement the blessed claims.
+2. **Mechanical** — fmt / clippy / build / test as disclosed. Red → Generator. No LLM.
+3. **Tester** — AC coverage + zero regressions. `BLESS` required.
+4. **Reviewer** — plan/AC conformance + ≤3 unanticipated-risk findings. `BLESS` required.
+5. **Architect (code time)** — only when claim N is unsatisfiable. Then the full chain.
+6. On REJECT: Architect (plan) → re-plan. Mechanical → Generator. Tester → mechanical + tester; Reviewer only if production code changed. Reviewer → Reviewer only. Escalated Architect → full chain. Scope change → `avril`.
+7. **Commit + track** — PBI id in the message. Plan commit precedes the first implementation commit.
 
 Orchestrator emits **zero** code, **zero** review prose, **zero** test implementations — only sequence, record, and gate.
 
 ### 5. Acceptance Criteria evidence gate
 
-After all phases for the PBI are triple-blessed:
+After all phases for the PBI are blessed:
 
 1. Re-read every AC checkbox on the PBI.
-2. For each AC, record **evidence** (test name, command output summary, observable behavior). Missing evidence = not done.
-3. Run the harness verification matrix (disclosed `just test` / `just clippy` / `just check` / etc.). Failure = re-enter phase loop.
-4. Only when every AC has evidence and the matrix is green: mark AC checkboxes complete on the board body if the backend supports it.
+2. For each AC, record **evidence**. Missing evidence = not done.
+3. Run the harness verification matrix. Failure = re-enter phase loop.
+4. Mark AC checkboxes complete only when every AC has evidence and the matrix is green.
 
 ### 6. Board → review → done
 
-1. Move to `review` with the evidence bundle attached (progress note or PBI body section `## Execution Evidence`).
-2. Move to `done` only when AC are complete. Incomplete AC is a hard stop.
-3. Optional human review column: leave in `review` if the harness or human requires a flesh-and-blood gate.
+1. Move to `review` with the evidence bundle (`## Execution Evidence`).
+2. Move to `done` only when AC are complete.
+3. Optional human review column: leave in `review` if required.
 
 ### 7. Next
 
-- Emit a one-screen PBI Completion Record (`references/completion-record.md`).
-- Select the next ready PBI or stop if none remain / human budget exhausted.
+- Emit a PBI Completion Record (`references/completion-record.md`), including `## Plan`.
+- Select the next ready PBI or stop.
 
 ## Strict Orchestration Rules
 
-- **Blessed intake only.** No freelancing new scope mid-execution; scope changes return to `avril`.
-- **One PBI at a time** (unless the human explicitly authorizes a parallel set — still one GAN chain per unit).
-- **PETC never skipped.** No “quick fix” without plan + adversaries + commit discipline.
+- **Blessed intake only.** Scope changes return to `avril`. AXEL does not re-bless product intent.
+- **One PBI at a time** (unless the human authorizes a parallel set — still one GAN chain per unit).
+- **PETC never skipped.** Plan + mechanical + adversaries + commit.
 - **Adversary order fixed.** Never collapse Reviewer/Tester/Architect into one voice.
-- **BLESS token required** from each code adversary (same discipline as AVRIL). Silence ≠ approval.
-- **Traceability:** PBI id in commits, tests names where natural, tracking artifacts, and board links.
-- **Stacked reviewability:** each commit reviewable in < 10 minutes deep review.
+- **BLESS token required.** Silence ≠ approval.
+- **Traceability:** PBI id in commits, tracking, board links.
+- **Stacked reviewability:** each commit reviewable in < 10 minutes.
 - **Decomposition mode (opt-in):** over-threshold diffs never commit; mode-off adds no steps.
 - **Do not open a PR** unless the human explicitly asks.
-- **Fail loud:** missing deps, red matrix, incomplete AC, undisclosed language stack → stop and surface.
+- **Fail loud:** missing deps, red matrix, incomplete AC, undisclosed language stack → stop.
 
 ## Ruthless Checklist (Fail Any = Do Not Advance)
 
-- Intake gate satisfied for this PBI  
-- Plan emitted with unresolved questions handled  
-- Board in-progress before generation  
-- Generator → Reviewer → Tester → Architect on every phase  
-- Three explicit `BLESS` marks before commit  
-- Commit + tracking updated before next phase  
-- Every AC evidenced  
-- Harness verification matrix green  
-- Board status matches reality  
-- Orchestrator wrote no production code  
+- Intake gate satisfied for this PBI
+- Plan written with `plan-writer`; audit pass; Architect BLESS; plan committed
+- Board in-progress after the blessed plan
+- Generate → Mechanical → Tester → Reviewer on every phase
+- Code-time Architect only on an unsatisfiable claim
+- Commit + tracking updated before next phase
+- Every AC evidenced
+- Harness verification matrix green
+- Board status matches reality
+- Orchestrator wrote no production code
 
-**Activation Statement**  
-> Using `axel` + `gan-verdict` to execute the next blessed PBI through PETC.
+**Activation Statement**
+> Using `axel` + `gan-verdict` to execute the next blessed PBI through plan-first PETC.

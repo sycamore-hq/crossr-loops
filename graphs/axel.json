@@ -3,18 +3,34 @@
   "kind": "Graph",
   "name": "axel",
   "title": "AXEL — Execution Loop",
-  "description": "Blessed-intake only. Inner cycle is the code-gan graph. SKILL.md is the law.",
+  "description": "Blessed-intake only. Plan-first: Generator writes the plan, mechanical audit, Architect blesses, then code-gan. SKILL.md is the law.",
   "conductor": "axel",
   "nodes": [
     {"id": "intake", "role": "gate"},
-    {"id": "plan", "role": "generator", "uses": {"persona": "axel-conductor-agent"}},
+    {
+      "id": "plan-write",
+      "role": "generator",
+      "catalog": true,
+      "uses": {"skill": "plan-writer"}
+    },
+    {"id": "plan-audit", "role": "gate"},
+    {
+      "id": "plan-architect",
+      "role": "adversary",
+      "catalog": true,
+      "uses": {"skill": "architecture", "persona": "architect-agent"}
+    },
     {"id": "code-gan", "role": "graph", "uses": {"graph": "code-gan"}},
     {"id": "ac-evidence", "role": "gate"},
     {"id": "done", "role": "terminal"}
   ],
   "edges": [
-    {"from": "intake", "to": "plan", "when": "blessed"},
-    {"from": "plan", "to": "code-gan"},
+    {"from": "intake", "to": "plan-write", "when": "blessed"},
+    {"from": "plan-write", "to": "plan-audit"},
+    {"from": "plan-audit", "to": "plan-architect", "when": "pass"},
+    {"from": "plan-audit", "to": "plan-write", "when": "fail"},
+    {"from": "plan-architect", "to": "code-gan", "when": "BLESS"},
+    {"from": "plan-architect", "to": "plan-write", "when": "REJECT"},
     {"from": "code-gan", "to": "ac-evidence", "when": "BLESS"},
     {"from": "ac-evidence", "to": "done", "when": "evidenced"},
     {"from": "ac-evidence", "to": "code-gan", "when": "missing-evidence"}
@@ -22,7 +38,10 @@
   "requires": {
     "skills": [
       "axel",
-      "gan-verdict"
-    ]
+      "gan-verdict",
+      "plan-writer",
+      "architecture"
+    ],
+    "book": true
   }
 }

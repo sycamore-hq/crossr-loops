@@ -90,3 +90,12 @@ Review follow-ups (4b / harness, not this merge):
 ## gan-layer-separation — close 0–4b (COMPLETED)
 
 Every recorded child commit was already completed (`pr1b`..`pr4a`, `loops-lockfile`). Phase left `in_progress`, so the dashboard counted an active phase with 0 in-progress commits. Status is `completed`. 5d is a later unit and already on main.
+
+### gan-layer-separation — PR 6b (COMPLETED)
+
+Plan-first AXEL. Per crossr-skills `docs/plans/gan-layer-separation-plan.md` §4 PR 6 / work#11.
+
+- `graphs/axel.json`: `plan-write` uses catalog `plan-writer` (not the conductor). Mechanical `plan-audit` before `plan-architect`. Architect BLESS → `code-gan`.
+- `graphs/code-gan.json`: generate → mechanical → tester → reviewer → commit. Architect only on `unsatisfiable-claim`.
+- `axel/SKILL.md`: decompose lives inside the plan; three-REJECT trip; mechanical before LLM; scope change → AVRIL; AXEL does not re-bless.
+- Personas, completion record `## Plan`, book + `/axel` command retargeted.

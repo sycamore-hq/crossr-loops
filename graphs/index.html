@@ -52,15 +52,19 @@
             <h2 class="font-display text-white text-lg">AXEL — Execution Loop</h2>
             <code class="text-xs text-emerald-300">axel.json</code>
           </div>
-          <p class="text-sm text-slate-400">Blessed-intake only. Inner cycle is the code-gan graph. SKILL.md is the law.</p>
-          <p class="text-xs text-slate-500">conductor: <code>axel</code> · catalog skills: <code>axel</code>, <code>gan-verdict</code></p>
+          <p class="text-sm text-slate-400">Blessed-intake only. Plan-first: Generator writes the plan, mechanical audit, Architect blesses, then code-gan. SKILL.md is the law.</p>
+          <p class="text-xs text-slate-500">conductor: <code>axel</code> · catalog skills: <code>axel</code>, <code>gan-verdict</code>, <code>plan-writer</code>, <code>architecture</code></p>
           <div class="grid md:grid-cols-2 gap-4 text-sm">
-            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Nodes</h3><ul class="space-y-1 font-mono text-xs text-slate-300"><li><code>intake</code> gate {}</li><li><code>plan</code> generator {&quot;persona&quot;:&quot;axel-conductor-agent&quot;}</li><li><code>code-gan</code> graph {&quot;graph&quot;:&quot;code-gan&quot;}</li><li><code>ac-evidence</code> gate {}</li><li><code>done</code> terminal {}</li></ul></div>
-            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Edges</h3><ul class="space-y-1 font-mono text-xs text-slate-300"><li><code>intake</code> → <code>plan</code> · blessed</li><li><code>plan</code> → <code>code-gan</code></li><li><code>code-gan</code> → <code>ac-evidence</code> · BLESS</li><li><code>ac-evidence</code> → <code>done</code> · evidenced</li><li><code>ac-evidence</code> → <code>code-gan</code> · missing-evidence</li></ul></div>
+            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Nodes</h3><ul class="space-y-1 font-mono text-xs text-slate-300"><li><code>intake</code> gate {}</li><li><code>plan-write</code> generator {&quot;skill&quot;:&quot;plan-writer&quot;}</li><li><code>plan-audit</code> gate {}</li><li><code>plan-architect</code> adversary {&quot;skill&quot;:&quot;architecture&quot;,&quot;persona&quot;:&quot;architect-agent&quot;}</li><li><code>code-gan</code> graph {&quot;graph&quot;:&quot;code-gan&quot;}</li><li><code>ac-evidence</code> gate {}</li><li><code>done</code> terminal {}</li></ul></div>
+            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Edges</h3><ul class="space-y-1 font-mono text-xs text-slate-300"><li><code>intake</code> → <code>plan-write</code> · blessed</li><li><code>plan-write</code> → <code>plan-audit</code></li><li><code>plan-audit</code> → <code>plan-architect</code> · pass</li><li><code>plan-audit</code> → <code>plan-write</code> · fail</li><li><code>plan-architect</code> → <code>code-gan</code> · BLESS</li><li><code>plan-architect</code> → <code>plan-write</code> · REJECT</li><li><code>code-gan</code> → <code>ac-evidence</code> · BLESS</li><li><code>ac-evidence</code> → <code>done</code> · evidenced</li><li><code>ac-evidence</code> → <code>code-gan</code> · missing-evidence</li></ul></div>
           </div>
           <pre class="text-xs text-emerald-300/90 overflow-x-auto">flowchart LR
-  intake --&gt;|blessed| plan
-  plan --&gt; code_gan
+  intake --&gt;|blessed| plan_write
+  plan_write --&gt; plan_audit
+  plan_audit --&gt;|pass| plan_architect
+  plan_audit --&gt;|fail| plan_write
+  plan_architect --&gt;|BLESS| code_gan
+  plan_architect --&gt;|REJECT| plan_write
   code_gan --&gt;|BLESS| ac_evidence
   ac_evidence --&gt;|evidenced| done
   ac_evidence --&gt;|missing-evidence| code_gan</pre>
@@ -91,19 +95,22 @@
             <h2 class="font-display text-white text-lg">Code GAN — inner implementation cycle</h2>
             <code class="text-xs text-emerald-300">code-gan.json</code>
           </div>
-          <p class="text-sm text-slate-400">Generator then Reviewer → Tester → Architect. Catalog skills by name. SKILL.md is the law.</p>
+          <p class="text-sm text-slate-400">Generate → mechanical → tester → reviewer → commit. Architect only on an unsatisfiable claim. Catalog skills by name. SKILL.md is the law.</p>
           <p class="text-xs text-slate-500">conductor: <code>axel</code> · catalog skills: <code>code-writer</code>, <code>code-review</code>, <code>testing</code>, <code>architecture</code></p>
           <div class="grid md:grid-cols-2 gap-4 text-sm">
-            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Nodes</h3><ul class="space-y-1 font-mono text-xs text-slate-300"><li><code>generate</code> generator {&quot;skill&quot;:&quot;code-writer&quot;}</li><li><code>reviewer</code> adversary {&quot;skill&quot;:&quot;code-review&quot;,&quot;persona&quot;:&quot;reviewer-agent&quot;}</li><li><code>tester</code> adversary {&quot;skill&quot;:&quot;testing&quot;,&quot;persona&quot;:&quot;tester-agent&quot;}</li><li><code>architect</code> adversary {&quot;skill&quot;:&quot;architecture&quot;,&quot;persona&quot;:&quot;architect-agent&quot;}</li><li><code>commit</code> gate {}</li></ul></div>
-            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Edges</h3><ul class="space-y-1 font-mono text-xs text-slate-300"><li><code>generate</code> → <code>reviewer</code></li><li><code>reviewer</code> → <code>tester</code> · BLESS</li><li><code>reviewer</code> → <code>generate</code> · REJECT</li><li><code>tester</code> → <code>architect</code> · BLESS</li><li><code>tester</code> → <code>generate</code> · REJECT</li><li><code>architect</code> → <code>commit</code> · BLESS</li><li><code>architect</code> → <code>generate</code> · REJECT</li></ul></div>
+            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Nodes</h3><ul class="space-y-1 font-mono text-xs text-slate-300"><li><code>generate</code> generator {&quot;skill&quot;:&quot;code-writer&quot;}</li><li><code>mechanical</code> gate {}</li><li><code>tester</code> adversary {&quot;skill&quot;:&quot;testing&quot;,&quot;persona&quot;:&quot;tester-agent&quot;}</li><li><code>reviewer</code> adversary {&quot;skill&quot;:&quot;code-review&quot;,&quot;persona&quot;:&quot;reviewer-agent&quot;}</li><li><code>architect</code> adversary {&quot;skill&quot;:&quot;architecture&quot;,&quot;persona&quot;:&quot;architect-agent&quot;}</li><li><code>commit</code> gate {}</li></ul></div>
+            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Edges</h3><ul class="space-y-1 font-mono text-xs text-slate-300"><li><code>generate</code> → <code>mechanical</code></li><li><code>mechanical</code> → <code>tester</code> · pass</li><li><code>mechanical</code> → <code>generate</code> · fail</li><li><code>tester</code> → <code>reviewer</code> · BLESS</li><li><code>tester</code> → <code>generate</code> · REJECT</li><li><code>reviewer</code> → <code>commit</code> · BLESS</li><li><code>reviewer</code> → <code>generate</code> · REJECT</li><li><code>generate</code> → <code>architect</code> · unsatisfiable-claim</li><li><code>architect</code> → <code>mechanical</code> · BLESS</li><li><code>architect</code> → <code>generate</code> · REJECT</li></ul></div>
           </div>
           <pre class="text-xs text-emerald-300/90 overflow-x-auto">flowchart LR
-  generate --&gt; reviewer
-  reviewer --&gt;|BLESS| tester
-  reviewer --&gt;|REJECT| generate
-  tester --&gt;|BLESS| architect
+  generate --&gt; mechanical
+  mechanical --&gt;|pass| tester
+  mechanical --&gt;|fail| generate
+  tester --&gt;|BLESS| reviewer
   tester --&gt;|REJECT| generate
-  architect --&gt;|BLESS| commit
+  reviewer --&gt;|BLESS| commit
+  reviewer --&gt;|REJECT| generate
+  generate --&gt;|unsatisfiable-claim| architect
+  architect --&gt;|BLESS| mechanical
   architect --&gt;|REJECT| generate</pre>
         </section>
         <section class="p-5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3">
@@ -124,7 +131,7 @@
         </section>
     <section class="p-5 rounded-2xl border border-zinc-800 space-y-1">
       <h2 class="font-display text-white mb-2">verify-graphs</h2>
-      <div class="text-emerald-400 text-sm">✓ schema.json parses</div><div class="text-emerald-400 text-sm">✓ avril: 5 nodes, 7 edges</div><div class="text-emerald-400 text-sm">✓ axel: 5 nodes, 5 edges</div><div class="text-emerald-400 text-sm">✓ brick: 9 nodes, 8 edges</div><div class="text-emerald-400 text-sm">✓ code-gan: 5 nodes, 7 edges</div><div class="text-emerald-400 text-sm">✓ flagship: 4 nodes, 3 edges</div>
+      <div class="text-emerald-400 text-sm">✓ schema.json parses</div><div class="text-emerald-400 text-sm">✓ avril: 5 nodes, 7 edges</div><div class="text-emerald-400 text-sm">✓ axel: 7 nodes, 9 edges</div><div class="text-emerald-400 text-sm">✓ brick: 9 nodes, 8 edges</div><div class="text-emerald-400 text-sm">✓ code-gan: 6 nodes, 10 edges</div><div class="text-emerald-400 text-sm">✓ flagship: 4 nodes, 3 edges</div>
     </section>
   </main>
 </body>

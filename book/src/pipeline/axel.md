@@ -3,7 +3,7 @@
 **AXEL** = Automated eXecution Loop.
 
 Skill: `axel` · Persona: `axel-conductor-agent`  
-Inner GAN: Reviewer → Tester → Architect (`graphs/code-gan.json`)
+Plan-first: `plan-writer` → audit → Architect, then generate → mechanical → tester → reviewer (`graphs/code-gan.json`)
 
 Normative detail: [HARNESS-SPEC.md §13](https://github.com/sycamore-hq/crossr-harness/blob/main/HARNESS-SPEC.md).
 
@@ -26,10 +26,10 @@ AXEL starts only if one of:
 ## Per-PBI loop
 
 1. **Select** one ready PBI (deps done; prefer `pinto next`).
-2. **Plan** — concise; unresolved questions blocking → stop for human.
-3. Board → **in-progress**.
-4. **Decompose** into small phases (“phase k of n”).
-5. Each phase: Generator → **Reviewer → Tester → Architect** (each must `BLESS`) → commit + tracking.
+2. **Plan** — Generator + `plan-writer`; phases live inside the plan; blocking questions → stop.
+3. Mechanical audit, then Architect at plan time. Three REJECTs → human. BLESS → commit the plan.
+4. Board → **in-progress**.
+5. Each phase: Generator → mechanical → Tester → Reviewer (each LLM gate must `BLESS`) → commit + tracking. Architect at code time only on an unsatisfiable claim.
 6. **AC evidence** — every checkbox needs recorded evidence; verification matrix green.
 7. Board → review → **done** only when AC complete.
 8. PBI Completion Record → next or stop.
