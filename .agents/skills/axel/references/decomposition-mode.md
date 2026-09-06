@@ -8,23 +8,27 @@
 
 ### Threshold
 
-- Measure phase (or uncommitted) diff with `git diff --numstat`.
-- **LOC** = sum of added + deleted numeric columns (default definition).
-- **Threshold T** = harness `decomposition_loc_threshold` or **1500**.
-- If LOC **> T** (or the blob is clearly unreviewable in &lt;10 minutes): **halt the commit path**.
+- **T** = harness `decomposition_loc_threshold` or **1500**.
+- **LOC** = added + deleted (`git diff --numstat` columns; same definition as a phase's `est. LOC`).
+- **Plan time:** each phase states `est. LOC`. `audit-plan --loc-threshold T` compares those estimates. The plan Architect rejects a phase whose stated size exceeds T.
+- **Code time:** measure the phase (or uncommitted) diff with `git diff --numstat`.
 
 ### Over-threshold path (mandatory when mode on)
 
+**Plan time**
+
+1. Architect **REJECT**. Rewrite the plan (smaller phases or superseding claims). Do not start implementation.
+
+**Code time**
+
 1. **Do not commit** the oversize blob.
-2. **Decompose** into atomic incremental tasks (still under the current blessed PBI or return to AVRIL if new product scope appears).
-3. **Massage** task titles/AC into general maintainable slices — not “the hack shape we just produced.”
-4. Execute each chunk through PETC + code GAN; **re-measure** each chunk; recurse if still over T.
-5. **Parallel** Task subagents are optional when available; **sequential fallback is always valid and required** if parallel is unavailable or unclear.
-6. Optional **bounded re-owl**: another exploratory spike to rediscover a thinner path. Results still need intake (no new unblessed scope), GAN BLESS, and AC evidence. Re-owl **never** bypasses the intake gate or adversary chain.
+2. **Return to the plan** with superseding claims (ids append-only). The plan Architect re-blesses the new phase boundaries.
+3. Nobody splits the phase at code time. A re-split after BLESS creates unblessed phase boundaries.
+4. If the measure reveals new product scope, route through `avril`.
 
 ### Draw-the-owl spike
 
-Allowed only as a **time-boxed spike** to discover seams. Spike output is learning + candidate decomposition — not a license to merge a mega-diff. If the spike invents new product scope, route through `avril` before treating it as blessed work.
+Allowed only as a **time-boxed spike** to discover seams. Spike output is learning + candidate phase cuts for the plan — not a license to merge a mega-diff or to split a blessed phase at code time. If the spike invents new product scope, route through `avril` before treating it as blessed work.
 
 ### HITL
 

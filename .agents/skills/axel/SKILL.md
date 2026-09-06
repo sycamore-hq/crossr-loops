@@ -38,11 +38,11 @@ Delegate. This conductor does not write the plan. Artifact: `docs/plans/pbi/<id>
 
 ### 2. Mechanical plan audit
 
-Run `audit-plan` on the artifact. Red → back to Generator. No LLM. Zero tokens.
+Run `audit-plan` on the artifact. Decomposition mode on → `--loc-threshold` with the disclosed T (default 1500). Red → back to Generator. No LLM. Zero tokens.
 
 ### 3. Architect (plan time)
 
-Delegate `architect-agent` + `architecture` on the plan. REJECT for underspecification. Three REJECTs on one plan → stop for the human. BLESS → commit the plan (immutable) → board in-progress.
+Delegate `architect-agent` + `architecture` on the plan. REJECT for underspecification, including a phase whose stated size exceeds T when mode is on. Three REJECTs on one plan → stop for the human. BLESS → commit the plan (immutable) → board in-progress.
 
 ### 4. Execute + code GAN (each blessed phase)
 
@@ -89,7 +89,7 @@ After all phases for the PBI are blessed:
 - **BLESS token required.** Silence ≠ approval.
 - **Traceability:** PBI id in commits, tracking, board links.
 - **Stacked reviewability:** each commit reviewable in < 10 minutes.
-- **Decomposition mode (opt-in):** over-threshold diffs never commit; mode-off adds no steps.
+- **Decomposition mode (opt-in):** stated-size check at the plan audit + Architect; a code-time `git diff --numstat` over T halts the commit and returns to the plan with superseding claims. Nobody splits at code time. Mode-off adds no steps.
 - **Do not open a PR** unless the human explicitly asks.
 - **Fail loud:** missing deps, red matrix, incomplete AC, undisclosed language stack → stop.
 

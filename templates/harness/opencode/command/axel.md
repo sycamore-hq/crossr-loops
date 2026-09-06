@@ -51,7 +51,7 @@ use, and stop. Do not select work, do not move the board.
 
 Decomposition mode is **off by default**. If the user asks for it in `$ARGUMENTS`
 (e.g. "with decomposition"), pass that through to the `axel` skill, which owns the
-threshold and the decompose loop; contract:
+threshold; over-threshold returns to the plan. Contract:
 `docs/plans/mitchell-decomposition-contract.html`. Never enable it on your own.
 
 Hard rules: intake gate (AVRIL-blessed work only — planning is `/avril`); conductor

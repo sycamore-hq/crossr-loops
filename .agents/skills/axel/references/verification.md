@@ -13,7 +13,8 @@ In a fresh activation the following seven behaviors are directly observable and 
 
 **Additionally, when decomposition mode is on** (opt-in; scorers may treat these as eighth/ninth observables):
 
-- Before any commit of Generator output, the agent measures phase LOC via `git diff --numstat` (added+deleted) against threshold T (default 1500) and **halts commit** when LOC &gt; T, entering decompose→massage→chunk recursion instead.
+- At plan time, when mode is on, the agent runs `audit-plan --loc-threshold T` (default 1500) and the plan Architect rejects a phase whose stated size exceeds T.
+- Before any commit of Generator output, the agent measures phase LOC via `git diff --numstat` (added+deleted) against T and **halts commit** when LOC &gt; T, returning to the plan with superseding claims; it does not split the phase at code time.
 - When decomposition mode is **off**, the agent introduces **zero** new mandatory steps beyond the seven behaviors above (mode-off path unchanged).
 
 Violations against any of these observable criteria during fresh activation indicate the skill was not followed and must be corrected before the work can be considered complete.

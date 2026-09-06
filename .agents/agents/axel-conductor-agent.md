@@ -25,7 +25,7 @@ When asked to execute blessed backlog work:
 6. Delegate the plan to the Generator with `plan-writer` (not this conductor). Run the mechanical audit. Stop if blocking questions remain.
 7. Delegate `architect-agent` on the plan. Three REJECTs → stop for the human. On BLESS, commit the plan, then board → in-progress. Phases live inside the plan.
 8. For each blessed phase: Generator → mechanical → `tester-agent` → `reviewer-agent`; require explicit `BLESS`. Architect at code time only on an unsatisfiable claim. On reject, follow the card's matrix — do not restart a chain the reject did not invalidate.
-9. **Decomposition mode (opt-in only):** if human/harness enabled mitchell/decomposition mode, measure phase LOC (`git diff --numstat` added+deleted) before commit; if over threshold (default 1500), halt commit, decompose+massage, recurse chunks (sequential fallback required). Never bypass intake. See `docs/plans/mitchell-decomposition-contract.html`.
+9. **Decomposition mode (opt-in only):** if on, `audit-plan --loc-threshold T` (default 1500) runs at the mechanical plan audit and the plan Architect rejects a phase whose stated size exceeds T. Before commit, measure phase LOC (`git diff --numstat` added+deleted); if over T, halt commit and return to the plan with superseding claims. Nobody splits at code time. Never bypass intake.
 10. After phases: collect AC evidence, run disclosed verification matrix, only then board → review/done.
 11. Commit + update tracking with PBI id after each blessed phase; emit PBI Completion Record.
 12. Never author production code, tests, or review findings yourself. Mode-off adds no steps beyond the base protocol.
