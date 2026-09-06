@@ -151,6 +151,9 @@ class LiveTree(unittest.TestCase):
         ).read_text()
         cls.features = json.loads((ROOT / "features.json").read_text())
         cls.progress = (ROOT / "progress.md").read_text()
+        cls.params = (
+            ROOT / ".agents" / "skills" / "axel" / "references" / "harness-parameters.md"
+        ).read_text()
 
     def test_plan_node_is_plan_writer_not_the_conductor(self):
         self.assertFalse(conductor_writes_the_plan(self.axel))
@@ -203,7 +206,7 @@ class LiveTree(unittest.TestCase):
 
     def test_axel_card_moves_decompose_into_the_plan(self):
         self.assertRegex(self.card, r"(?i)plan-writer")
-        self.assertRegex(self.card, r"(?i)inside the plan|plan content|Phases")
+        self.assertRegex(self.card, r"(?i)phases live inside the plan")
         self.assertNotIn("restart the full three-adversary chain", self.card)
 
     def test_axel_card_caps_the_plan_loop(self):
@@ -237,9 +240,14 @@ class LiveTree(unittest.TestCase):
         self.assertRegex(self.tester, r"(?i)regression")
 
     def test_docs_describe_the_v2_chain(self):
-        for text in (self.graph_md, self.book, self.command, self.verification):
+        for text in (self.graph_md, self.book, self.command, self.verification, self.params):
             self.assertNotIn("Reviewer → Tester → Architect", text)
             self.assertNotIn("reviewer → tester → architect", text)
+        for text in (self.card, self.params, self.completion):
+            self.assertNotIn("triple-blessed", text)
+            self.assertNotIn("three-adversary", text)
+        self.assertRegex(self.params, r"(?i)plan-time Architect|architecture")
+        self.assertNotRegex(self.params, r"(?i)per-phase Architect")
 
     def test_features_records_pr6b(self):
         phase = self.features["gan-layer-separation"]

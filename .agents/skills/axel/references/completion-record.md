@@ -14,7 +14,7 @@
 - C-02: …
 
 ## Phases
-- phase-1: BLESS reviewer | tester | architect — commit <sha>
+- phase-1: BLESS tester | reviewer — commit <sha> (architect: <claim id> BLESS | REJECT, only if escalated)
 - …
 
 ## AC Evidence

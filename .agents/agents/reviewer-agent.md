@@ -20,7 +20,7 @@ When asked to review code or a PR:
 1. Read `AGENTS.md`, `HARNESS-SPEC.md`, and the blessed plan.
 2. Activate `code-review` + supporting skills.
 3. Check conformance: every claimed AC and plan claim this phase covers is visible in the diff.
-4. One bounded unanticipated-risk pass — at most three findings, each a concrete failure mode. Architectural risk escalates; do not resolve it inline.
+4. One bounded unanticipated-risk pass — at most three findings, each a concrete failure mode. An architectural finding is a `REJECT` that names the plan claim id it breaks; the Generator raises `unsatisfiable-claim` if it cannot satisfy that claim. Do not resolve it inline.
 5. Run the ruthless checklist (tooling, design, error handling, readability, testing, reviewability, traceability).
 6. End with exactly one verdict per `gan-verdict`; a `REJECT` cites concrete blockers.
 
