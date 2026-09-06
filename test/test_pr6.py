@@ -154,6 +154,9 @@ class LiveTree(unittest.TestCase):
         cls.params = (
             ROOT / ".agents" / "skills" / "axel" / "references" / "harness-parameters.md"
         ).read_text()
+        cls.decomp = (
+            ROOT / ".agents" / "skills" / "axel" / "references" / "decomposition-mode.md"
+        ).read_text()
 
     def test_plan_node_is_plan_writer_not_the_conductor(self):
         self.assertFalse(conductor_writes_the_plan(self.axel))
@@ -208,6 +211,24 @@ class LiveTree(unittest.TestCase):
         self.assertRegex(self.card, r"(?i)plan-writer")
         self.assertRegex(self.card, r"(?i)phases live inside the plan")
         self.assertNotIn("restart the full three-adversary chain", self.card)
+
+    def test_axel_card_routes_over_threshold_back_to_the_plan(self):
+        self.assertRegex(self.card, r"(?i)--loc-threshold")
+        self.assertRegex(self.card, r"(?i)stated size exceeds")
+        self.assertRegex(self.card, r"(?i)halts the commit")
+        self.assertRegex(self.card, r"(?i)superseding claims")
+        self.assertRegex(self.card, r"(?i)nobody splits")
+        for text in (
+            self.card,
+            self.decomp,
+            self.conductor,
+            self.verification,
+            self.book,
+            self.params,
+            self.command,
+        ):
+            self.assertNotIn("decompose→massage", text)
+            self.assertNotIn("decompose+massage", text)
 
     def test_axel_card_caps_the_plan_loop(self):
         self.assertRegex(self.card, r"(?i)three.*REJECT")

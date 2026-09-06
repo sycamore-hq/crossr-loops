@@ -19,7 +19,7 @@ Concrete artifact names, column names, commit message format, and CLI flags are 
 | `avril` | **Upstream.** Produces the blessed backlog. AXEL refuses unblessed work. |
 | `agent-harness` | Supplies PETC, stacked-PR, and session-ritual discipline AXEL obeys. |
 | `code-writer` (+ language/domain) | **Generator** stack for implementation. Disclosed to the Generator; the conductor never loads it. |
-| Mitchell decomposition (opt-in) | When **decomposition mode** is on, oversize phase diffs are halted and forced through decompose→massage→chunk loops. Contract: `docs/plans/mitchell-decomposition-contract.html`. Full contract: `decomposition-mode.md`. |
+| Mitchell decomposition (opt-in) | When **decomposition mode** is on, the plan Architect rejects an over-threshold phase; a code-time measure over T halts the commit and returns to the plan. Nobody splits at code time. Contract: `docs/plans/mitchell-decomposition-contract.html`. Full contract: `decomposition-mode.md`. |
 
 ### Board backend (stratified)
 

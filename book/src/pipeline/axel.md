@@ -40,6 +40,6 @@ AXEL starts only if one of:
 
 ## Optional: Mitchell decomposition mode
 
-**Default off.** When enabled (“mitchell” / decomposition mode / harness `decomposition_mode`), AXEL measures phase diffs (`git diff --numstat`, added+deleted) against a threshold (default **1500** LOC). Over-threshold work does **not** commit: decompose → massage tasks → execute chunks (recurse). Parallel subagents optional; sequential always OK. Does not bypass intake or code GAN.
+**Default off.** When enabled (“mitchell” / decomposition mode / harness `decomposition_mode`), the plan Architect rejects a phase whose stated size exceeds T (default **1500**). `audit-plan --loc-threshold T` is the mechanical compare. A code-time measure (`git diff --numstat`, added+deleted) over T does **not** commit: halt and return to the plan with superseding claims. Nobody splits at code time. Does not bypass intake or code GAN.
 
 Normative contract: [mitchell-decomposition-contract.html](https://github.com/scull7/crossr-skills/blob/main/docs/plans/mitchell-decomposition-contract.html) (issue #43).
