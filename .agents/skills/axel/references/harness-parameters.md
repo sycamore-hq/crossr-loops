@@ -10,7 +10,7 @@ This is a harness-layer execution orchestration skill. It coordinates delivery i
 - Agent personas under the harness agents directory (typical code trio: `reviewer-agent`, `tester-agent`, `architect-agent`)
 - Optional **decomposition mode** parameters (see Mitchell decomposition): `decomposition_mode` (bool, default false), `decomposition_loc_threshold` (number, default 1500)
 
-Concrete artifact names, column names, commit message format, and CLI flags are harness parameters disclosed at activation. The invariants (blessed intake only, PETC per unit, three-adversary code BLESS, AC evidence gate, orchestrator never touches code, small reviewable commits) are enforced uniformly. Decomposition mode is **off by default** and adds no steps when off.
+Concrete artifact names, column names, commit message format, and CLI flags are harness parameters disclosed at activation. The invariants (blessed intake only, PETC per unit, plan-time Architect then per-phase mechanical → `testing` → `code-review`, AC evidence gate, orchestrator never touches code, small reviewable commits) are enforced uniformly. Decomposition mode is **off by default** and adds no steps when off.
 
 ### Relationship to other skills
 
@@ -28,7 +28,7 @@ Concrete artifact names, column names, commit message format, and CLI flags are 
 1. Confirm `pinto --version` and the correct board (`.pinto/config.toml`).
 2. Inspect with JSON: `pinto list --json`, `pinto show <id> --json`, `pinto next --json`, `pinto board --json`, `pinto dod`.
 3. Select work with dependency-aware readiness (`pinto next` or equivalent filter: unstarted, deps in done column).
-4. Transition deliberately: move to the harness `in-progress` column when execution starts; to `review` when code GAN is triple-blessed and AC evidence is attached; to `done_column` only after AC checkboxes are satisfied (Pinto warns on incomplete AC — treat incomplete AC as a hard stop even if move would succeed).
+4. Transition deliberately: move to the harness `in-progress` column when execution starts; to `review` when Tester and Reviewer have BLESS and AC evidence is attached; to `done_column` only after AC checkboxes are satisfied (Pinto warns on incomplete AC — treat incomplete AC as a hard stop even if move would succeed).
 5. Optional: `pinto link add` / `pinto link sync` when the harness wants commit↔PBI linkage.
 6. Multi-command plans: `pinto automate --plan … --dry-run --json` before real writes when user authorized board mutation.
 7. Installed CLI help and any disclosed `pinto-workflow` skill are authoritative for flags.
@@ -45,11 +45,12 @@ The harness discloses `books` from the consumer repo's `lockfile.toml` at sessio
 
 **When `books` names one book:**
 
-- Generator loads: `code-writer` + `<book>` (card + the references for the situation) + domain skills
+- Generator (plan) loads: `plan-writer` + `<book>/RULES.md` + the PBI. Do not load `code-writer`.
+- Generator (execute) loads: `code-writer` + `<book>` (card + the references for the situation) + domain skills
 - Adversaries load: the gate card + `<book>/RULES.md`. Never `<book>/references/`
 - Test verifier: rules tagged `test` in that same `RULES.md`
-- Adversaries (fixed order): `code-review` → `testing` → `architecture`
-- Personas: `reviewer-agent` → `tester-agent` → `architect-agent`
+- Plan gate: `architecture` + `architect-agent`. Per-phase: mechanical → `testing` → `code-review`
+- Personas: `tester-agent` → `reviewer-agent`; `architect-agent` at plan time (code time only on an unsatisfiable claim)
 
 **When `books` names more than one book:**
 

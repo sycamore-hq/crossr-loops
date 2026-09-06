@@ -54,8 +54,8 @@ Generate → Mechanical → Tester → Reviewer → Commit
 2. **Mechanical** — fmt / clippy / build / test as disclosed. Red → Generator. No LLM.
 3. **Tester** — AC coverage + zero regressions. `BLESS` required.
 4. **Reviewer** — plan/AC conformance + ≤3 unanticipated-risk findings. `BLESS` required.
-5. **Architect (code time)** — only when claim N is unsatisfiable. Then the full chain.
-6. On REJECT: Architect (plan) → re-plan. Mechanical → Generator. Tester → mechanical + tester; Reviewer only if production code changed. Reviewer → Reviewer only. Escalated Architect → full chain. Scope change → `avril`.
+5. **Architect (code time)** — only when claim N is unsatisfiable. REJECT = claim stands; Generator implements it as planned. BLESS = deviation accepted; append a superseding claim to the plan (ids append-only), record it under `## Plan` in the Completion Record, then the full chain.
+6. On REJECT: Architect (plan) → re-plan. Mechanical → Generator. Tester → mechanical + tester. Reviewer → mechanical + Reviewer. Escalated Architect → full chain. Scope change → `avril`.
 7. **Commit + track** — PBI id in the message. Plan commit precedes the first implementation commit.
 
 Orchestrator emits **zero** code, **zero** review prose, **zero** test implementations — only sequence, record, and gate.
