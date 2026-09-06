@@ -86,3 +86,7 @@ Review follow-ups (4b / harness, not this merge):
 - `./scripts/verify-graphs`: PASS
 - `./scripts/verify-protocol`: PASS
 - README current pins == `lockfile.toml`
+
+## gan-layer-separation — close 0–4b (COMPLETED)
+
+Every recorded child commit was already completed (`pr1b`..`pr4a`, `loops-lockfile`). Phase left `in_progress`, so the dashboard counted an active phase with 0 in-progress commits. Status is `completed`. 5d is a later unit and already on main.
