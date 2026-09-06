@@ -3,7 +3,7 @@
   "kind": "Graph",
   "name": "code-gan",
   "title": "Code GAN — inner implementation cycle",
-  "description": "Generator then Reviewer → Tester → Architect. Catalog skills by name. SKILL.md is the law.",
+  "description": "Generate → mechanical → tester → reviewer → commit. Architect only on an unsatisfiable claim. Catalog skills by name. SKILL.md is the law.",
   "conductor": "axel",
   "nodes": [
     {
@@ -12,17 +12,18 @@
       "catalog": true,
       "uses": {"skill": "code-writer"}
     },
-    {
-      "id": "reviewer",
-      "role": "adversary",
-      "catalog": true,
-      "uses": {"skill": "code-review", "persona": "reviewer-agent"}
-    },
+    {"id": "mechanical", "role": "gate"},
     {
       "id": "tester",
       "role": "adversary",
       "catalog": true,
       "uses": {"skill": "testing", "persona": "tester-agent"}
+    },
+    {
+      "id": "reviewer",
+      "role": "adversary",
+      "catalog": true,
+      "uses": {"skill": "code-review", "persona": "reviewer-agent"}
     },
     {
       "id": "architect",
@@ -33,12 +34,15 @@
     {"id": "commit", "role": "gate"}
   ],
   "edges": [
-    {"from": "generate", "to": "reviewer"},
-    {"from": "reviewer", "to": "tester", "when": "BLESS"},
-    {"from": "reviewer", "to": "generate", "when": "REJECT"},
-    {"from": "tester", "to": "architect", "when": "BLESS"},
+    {"from": "generate", "to": "mechanical"},
+    {"from": "mechanical", "to": "tester", "when": "pass"},
+    {"from": "mechanical", "to": "generate", "when": "fail"},
+    {"from": "tester", "to": "reviewer", "when": "BLESS"},
     {"from": "tester", "to": "generate", "when": "REJECT"},
-    {"from": "architect", "to": "commit", "when": "BLESS"},
+    {"from": "reviewer", "to": "commit", "when": "BLESS"},
+    {"from": "reviewer", "to": "generate", "when": "REJECT"},
+    {"from": "generate", "to": "architect", "when": "unsatisfiable-claim"},
+    {"from": "architect", "to": "mechanical", "when": "BLESS"},
     {"from": "architect", "to": "generate", "when": "REJECT"}
   ],
   "requires": {

@@ -55,5 +55,6 @@ threshold and the decompose loop; contract:
 `docs/plans/mitchell-decomposition-contract.html`. Never enable it on your own.
 
 Hard rules: intake gate (AVRIL-blessed work only — planning is `/avril`); conductor
-never writes or reviews code; Reviewer → Tester → Architect BLESS before every commit;
-every acceptance criterion evidenced before done; no PR unless explicitly asked.
+never writes or reviews code; Architect BLESS on the plan, then Tester and Reviewer
+BLESS before every commit; every acceptance criterion evidenced before done; no PR
+unless explicitly asked.

@@ -49,6 +49,18 @@
         "features": [
           "lockfile-loops-v1-cards"
         ]
+      },
+      {
+        "id": "pr6b",
+        "title": "plan-first AXEL: plan-writer node, architect at plan time",
+        "status": "completed",
+        "features": [
+          "plan-write-node",
+          "plan-audit-gate",
+          "plan-architect",
+          "code-gan-mechanical-first",
+          "architect-escalation-only"
+        ]
       }
     ]
   }

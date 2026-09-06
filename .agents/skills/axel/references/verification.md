@@ -4,8 +4,8 @@ In a fresh activation the following seven behaviors are directly observable and 
 
 - The agent recites the One-Sentence Mandate verbatim before selecting work or moving a board item.
 - The agent enforces the intake gate (AVRIL blessing, blessed marker, or explicit human ids) and refuses unblessed scope; board/tracking details are treated as harness-disclosed parameters with Pinto preferred when present.
-- The agent runs PETC per phase, delegates generation to the disclosed Generator stack, and sequences Reviewer → Tester → Architect without skip or reorder.
-- The agent requires explicit `BLESS` from all three code adversaries before commit; on `REJECT` or silence it re-delegates and restarts the full adversary chain for that phase.
+- The agent runs plan-first PETC: Generator + `plan-writer`, mechanical audit, Architect at plan time, then Generate → Mechanical → Tester → Reviewer per phase.
+- The agent requires explicit `BLESS` from the plan Architect before implementation, and from Tester and Reviewer before commit; on `REJECT` or silence it follows the card's matrix (not a full-chain restart).
 - The agent itself emits zero code, zero edits, and zero adversary review content; it only sequences, records evidence, updates board/tracking via delegation or explicit post-bless ritual direction, and gates.
 - The agent blocks `done` until every acceptance criterion has recorded evidence and the disclosed verification matrix is green, then emits a PBI Completion Record before advancing.
 
