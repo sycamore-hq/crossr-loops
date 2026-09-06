@@ -13,7 +13,6 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-PHASE = "gan-layer-separation"
 
 
 def all_commits_completed(phase: dict) -> bool:
@@ -55,13 +54,14 @@ class Calculations(unittest.TestCase):
 
 
 class LiveTree(unittest.TestCase):
-    def test_gan_phase_is_not_left_open(self):
+    def test_no_phase_is_left_open(self):
         features = json.loads((ROOT / "features.json").read_text())
-        phase = features[PHASE]
-        self.assertFalse(
-            phase_left_open(phase),
-            "gan-layer-separation is in_progress with every child commit completed",
-        )
+        for name, phase in features.items():
+            with self.subTest(phase=name):
+                self.assertFalse(
+                    phase_left_open(phase),
+                    f"{name} is in_progress with every child commit completed",
+                )
 
 
 if __name__ == "__main__":
