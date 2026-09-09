@@ -167,6 +167,9 @@ class LiveTree(unittest.TestCase):
         cls.summary = (
             ROOT / ".agents" / "skills" / "avril" / "references" / "blessed-backlog-summary.md"
         ).read_text()
+        cls.batch_review = (
+            ROOT / ".agents" / "skills" / "avril" / "references" / "batch-review.md"
+        ).read_text()
         cls.params = (
             ROOT / ".agents" / "skills" / "axel" / "references" / "harness-parameters.md"
         ).read_text()
@@ -225,6 +228,18 @@ class LiveTree(unittest.TestCase):
         self.assertNotRegex(
             self.avril_card,
             r"(?i)max(imum)? (batch|set) size|at most \d+ (items|PBIs)",
+        )
+        self.assertIn("waits at PO", self.avril_card)
+        self.assertIn("QA reviews the full PO-complete set", self.avril_card)
+
+    def test_batch_review_qa_waits_for_po_complete_set(self):
+        self.assertNotIn("the set then in play", self.batch_review)
+        self.assertIn("Do not delegate QA or CTO on `{T-1, T-3}`", self.batch_review)
+        self.assertIn("QA reviews `{T-1, T-2, T-3}`", self.batch_review)
+        self.assertIn("PO reviews T-2 again", self.batch_review)
+        self.assertIn(
+            "Do not delegate QA or CTO until every id in the set has a current PO BLESS",
+            self.avril_conductor,
         )
 
     def test_blessed_backlog_summary_has_cycle_template(self):

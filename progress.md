@@ -106,7 +106,7 @@ AVRIL set review + AXEL packet ritual. Per crossr-skills `docs/plans/gan-layer-s
 
 - Pin `skills = v1-packets` (lockfile + README).
 - `batch: true` on avril po / qa / cto. Schema + `verify-graphs` + `verify-protocol` per-item verdict declaration.
-- AVRIL: one verdict line per id; `REJECT <id>` loops that id; siblings keep BLESS; cycle set-size line in the blessing log. No batch-size cap.
+- AVRIL: one verdict line per id; `REJECT <id>` waits at PO; siblings keep BLESS; QA/CTO review the full set after it is PO-complete; cycle set-size line in the blessing log. No batch-size cap.
 - AXEL: audited handoff packet before each adversary; drop review prose after commit.
 
 ## Verification Status

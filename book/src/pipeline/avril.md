@@ -22,7 +22,7 @@ Turn product/technical intent into a **unanimously blessed** Product Backlog. Pl
 
 Advancement requires the exact token `BLESS`. Silence or “LGTM” is not enough.
 
-Adversaries review the active set in one delegation each (PO the set → QA the set → CTO the set). Each id gets its own verdict line; a bare BLESS over a set is not a verdict. `REJECT` loops that id; unchanged siblings keep their BLESS. Each cycle writes a set-size line to the blessing log.
+Adversaries review the active set in one delegation each (PO the set → QA the set → CTO the set). Each id gets its own verdict line; a bare BLESS over a set is not a verdict. `REJECT` loops that id; unchanged siblings keep their BLESS. QA and CTO start only when every id has a current PO BLESS; they then review the full set. Each cycle writes a set-size line to the blessing log.
 
 ## Activation
 
