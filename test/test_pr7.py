@@ -88,45 +88,6 @@ def batch_nodes(graph: dict) -> set[str]:
     }
 
 
-def persona_declares_per_item(text: str) -> bool:
-    return (
-        "BLESS <id>" in text
-        and "REJECT <id>" in text
-        and DECISION_3 in text
-    )
-
-
-def persona_mixes_protocols(text: str) -> bool:
-    return persona_declares_per_item(text) and vp.declares_single_gate(text)
-
-
-def cycle_line(
-    n: int,
-    size: int,
-    po: tuple[int, int],
-    qa: tuple[int, int],
-    cto: tuple[int, int],
-) -> str:
-    return (
-        f"- cycle {n}: set {size} · PO {po[0]}/{po[1]} · "
-        f"QA {qa[0]}/{qa[1]} · CTO {cto[0]}/{cto[1]}"
-    )
-
-
-def parse_cycle_line(line: str) -> dict:
-    match = CYCLE_LINE_RE.match(line)
-    if not match:
-        raise ValueError(f"not a cycle line: {line!r}")
-    n, size, pb, pr, qb, qr, cb, cr = (int(g) for g in match.groups())
-    return {
-        "n": n,
-        "size": size,
-        "po": (pb, pr),
-        "qa": (qb, qr),
-        "cto": (cb, cr),
-    }
-
-
 class Calculations(unittest.TestCase):
     def test_batch_nodes_returns_batch_true_ids(self):
         graph = {
@@ -139,42 +100,47 @@ class Calculations(unittest.TestCase):
         }
         self.assertEqual(batch_nodes(graph), {"po", "qa", "cto"})
 
-    def test_persona_declares_per_item_needs_bless_id(self):
-        text = f"REJECT <id>\n{DECISION_3}\n"
-        self.assertFalse(persona_declares_per_item(text))
-
-    def test_persona_declares_per_item_needs_reject_id(self):
-        text = f"BLESS <id>\n{DECISION_3}\n"
-        self.assertFalse(persona_declares_per_item(text))
-
-    def test_persona_declares_per_item_needs_decision_3_sentence(self):
-        text = "BLESS <id>\nREJECT <id>\n"
-        self.assertFalse(persona_declares_per_item(text))
-
-    def test_persona_declares_per_item_when_all_three_present(self):
-        text = f"BLESS <id>\nREJECT <id>\n{DECISION_3}\n"
-        self.assertTrue(persona_declares_per_item(text))
-
-    def test_batch_persona_with_single_gate_is_flagged(self):
-        text = f"BLESS <id>\nREJECT <id>\n{DECISION_3}\n<gate>: BLESS\n"
-        self.assertTrue(persona_mixes_protocols(text))
-
-    def test_cycle_line_renders_decision_9_shape(self):
-        line = cycle_line(2, 3, (2, 1), (3, 0), (1, 2))
-        self.assertEqual(
-            line,
-            "- cycle 2: set 3 · PO 2/1 · QA 3/0 · CTO 1/2",
+    def test_batch_persona_with_only_testing_reject_fails(self):
+        text = f"BLESS <id>\nREJECT <id>\n{DECISION_3}\ntesting: REJECT\n"
+        check = vp.Check()
+        vp.check_batch_adversary("fixture", "qa", "qa-architect-agent", text, check)
+        self.assertTrue(
+            any("single-gate" in msg for msg in check.bad),
+            check.bad,
         )
 
-    def test_cycle_line_parser_round_trips(self):
-        args = {
-            "n": 4,
-            "size": 7,
-            "po": (5, 2),
-            "qa": (6, 1),
-            "cto": (4, 3),
+    def test_mixed_protocol_failure_names_surplus_not_absence(self):
+        text = f"BLESS <id>\nREJECT <id>\n{DECISION_3}\n<gate>: BLESS\n"
+        check = vp.Check()
+        vp.check_batch_adversary("fixture", "qa", "qa-architect-agent", text, check)
+        self.assertEqual(len(check.bad), 1, check.bad)
+        self.assertNotIn("lacks", check.bad[0])
+        self.assertIn(
+            "declares both per-item and single-gate verdict shapes (`<gate>: BLESS`)",
+            check.bad[0],
+        )
+
+    def test_verify_missing_batch_persona_is_one_failure(self):
+        graph = {
+            "nodes": [
+                {
+                    "id": "po",
+                    "role": "adversary",
+                    "batch": True,
+                    "uses": {"persona": "no-such-agent"},
+                }
+            ],
+            "edges": [
+                {"from": "po", "to": "qa", "when": "BLESS"},
+                {"from": "po", "to": "generator", "when": "REJECT"},
+            ],
         }
-        self.assertEqual(parse_cycle_line(cycle_line(**args)), args)
+        check = vp.Check()
+        vp.verify("fixture", graph, check)
+        persona_fails = [m for m in check.bad if "missing persona" in m]
+        batch_fails = [m for m in check.bad if "batch adversary" in m]
+        self.assertEqual(len(persona_fails), 1, check.bad)
+        self.assertEqual(batch_fails, [])
 
 
 class LiveTree(unittest.TestCase):
@@ -247,8 +213,8 @@ class LiveTree(unittest.TestCase):
 
     def test_each_batch_persona_declares_per_item(self):
         for text in (self.po, self.qa, self.cto):
-            self.assertTrue(persona_declares_per_item(text))
-            self.assertFalse(persona_mixes_protocols(text))
+            self.assertEqual(vp.batch_declaration_gaps(text), [])
+            self.assertFalse(vp.declares_single_gate(text))
 
     def test_avril_card_set_review_law(self):
         self.assertIn(DECISION_3, self.avril_card)
@@ -262,7 +228,16 @@ class LiveTree(unittest.TestCase):
         )
 
     def test_blessed_backlog_summary_has_cycle_template(self):
-        self.assertIn("- cycle <n>: set <size>", self.summary)
+        template = next(
+            line for line in self.summary.splitlines() if line.startswith("- cycle ")
+        )
+        filled = (
+            template.replace("<n>", "1")
+            .replace("<size>", "2")
+            .replace("<bless>", "3")
+            .replace("<reject>", "4")
+        )
+        self.assertRegex(filled, CYCLE_LINE_RE)
 
     def test_card_byte_caps(self):
         avril_n = (ROOT / ".agents" / "skills" / "avril" / "SKILL.md").stat().st_size
