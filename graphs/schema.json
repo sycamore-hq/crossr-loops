@@ -32,6 +32,10 @@
             "type": "boolean",
             "description": "uses.skill is owned by crossr-skills."
           },
+          "batch": {
+            "type": "boolean",
+            "description": "Adversary reviews a set; one verdict line per id (gan-verdict item 9)."
+          },
           "uses": {
             "type": "object",
             "additionalProperties": false,

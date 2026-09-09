@@ -99,3 +99,18 @@ Plan-first AXEL. Per crossr-skills `docs/plans/gan-layer-separation-plan.md` §4
 - `graphs/code-gan.json`: generate → mechanical → tester → reviewer → commit. Architect only on `unsatisfiable-claim`.
 - `axel/SKILL.md`: decompose lives inside the plan; three-REJECT trip; mechanical before LLM; scope change → AVRIL; AXEL does not re-bless.
 - Personas, completion record `## Plan`, book + `/axel` command retargeted.
+
+### gan-layer-separation — PR 7b (COMPLETED)
+
+AVRIL set review + AXEL packet ritual. Per crossr-skills `docs/plans/gan-layer-separation-plan.md` §3.3 / §3.8 / §4 PR 7 / work#12. Decisions 1, 3, 4, 5, 8, 9, 10.
+
+- Pin `skills = v1-packets` (lockfile + README).
+- `batch: true` on avril po / qa / cto. Schema + `verify-graphs` + `verify-protocol` per-item verdict declaration.
+- AVRIL: one verdict line per id; `REJECT <id>` loops that id; siblings keep BLESS; cycle set-size line in the blessing log. No batch-size cap.
+- AXEL: audited handoff packet before each adversary; drop review prose after commit.
+
+## Verification Status
+- `./scripts/verify-graphs`: PASS
+- `./scripts/verify-protocol`: PASS (batch lines for po / qa / cto)
+- `./scripts/verify-skill-refs`: PASS (`CROSSR_SKILLS_PATH` = tag `v1-packets`)
+- `python3 -m unittest discover -s test -v`: OK

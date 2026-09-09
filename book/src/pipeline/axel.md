@@ -29,7 +29,7 @@ AXEL starts only if one of:
 2. **Plan** — Generator + `plan-writer`; phases live inside the plan; blocking questions → stop.
 3. Mechanical audit, then Architect at plan time. Three REJECTs → human. BLESS → commit the plan.
 4. Board → **in-progress**.
-5. Each phase: Generator → mechanical → Tester → Reviewer (each LLM gate must `BLESS`) → commit + tracking. Architect at code time only on an unsatisfiable claim.
+5. Each phase: Generator → mechanical → Tester → Reviewer (each LLM gate must `BLESS`) → commit + tracking. Architect at code time only on an unsatisfiable claim. Each adversary receives an audited handoff packet and nothing else; after commit the conductor keeps the Completion Record and drops the review prose.
 6. **AC evidence** — every checkbox needs recorded evidence; verification matrix green.
 7. Board → review → **done** only when AC complete.
 8. PBI Completion Record → next or stop.
