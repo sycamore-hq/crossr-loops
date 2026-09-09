@@ -58,7 +58,7 @@ def load_graphs() -> dict[str, dict]:
 
 
 def validate(name: str, g: dict, all_names: set[str], c: Check) -> None:
-    start = len(c.bad)
+    bad_before = len(c.bad)
     extra = set(g) - ALLOWED_GRAPH
     if extra:
         c.fail(f"{name}: unknown keys {sorted(extra)}")
@@ -159,7 +159,7 @@ def validate(name: str, g: dict, all_names: set[str], c: Check) -> None:
     extra_r = set(req) - {"skills", "book"}
     if extra_r:
         c.fail(f"{name}: requires unknown keys {sorted(extra_r)}")
-    if len(c.bad) == start:
+    if len(c.bad) == bad_before:
         c.pass_(f"{name}: {len(ids)} nodes, {len(edges)} edges, start {g.get('start')}")
 
 
