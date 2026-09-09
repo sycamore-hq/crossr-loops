@@ -88,6 +88,18 @@
           "graph-start-keys",
           "verify-graphs-start"
         ]
+      },
+      {
+        "id": "gr-r1",
+        "title": "graph-runner: crate scaffold, typed graph model, check",
+        "status": "completed",
+        "features": [
+          "runner-crate",
+          "graph-model",
+          "load-checks",
+          "graphs-check",
+          "toolchain-pin"
+        ]
       }
     ]
   }

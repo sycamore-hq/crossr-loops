@@ -120,3 +120,14 @@ AVRIL set review + AXEL packet ritual. Per crossr-skills `docs/plans/gan-layer-s
 R0 — explicit `start` in schema, graphs, verify-graphs.
 
 Every graph names its entry node. `avril` and `code-gan` have no in-degree-0 node, so document order was never a rule a runner could recover. Schema requires the key; `verify-graphs` fails it missing or dangling.
+
+### R1 (COMPLETED)
+
+Crate scaffold, typed graph model, `check`. Per crossr-skills `docs/plans/graph-runner-prompt-set.md` decisions 1, 3, 7, 9. No stepping yet.
+
+- `runner/` crate `graph-runner` (edition 2021, `rust-version = "1.94"`), workspace `Cargo.toml`, `Cargo.lock` committed, `rust-toolchain.toml` pins `1.94.1` with rustfmt + clippy, `target/` ignored. Dependencies: `serde`, `serde_json`, `thiserror`. Argv hand-parsed.
+- `graph.rs` (data): `Graph` / `Node` / `Role` / `Edge` / `NodeId` / `Label` / `Uses` / `Requires`; `deny_unknown_fields` on every struct; `Label::NEXT` reserved. `role_enum_matches_schema` reads the schema's role enum and compares it to `Role::ALL`, in order.
+- `load.rs` (checks): typed `LoadError`, every variant names the graph and the node/edge. Refuses wrong `apiVersion` / `kind`, empty nodes, duplicate ids, dangling edge endpoints, a `start` naming no node, two out-edges of one node with the same `when` (or both unlabeled), `when: "next"`, `uses.graph` with `uses.skill`, self-reference. Mirrors `verify-graphs`; does not replace it. Persona / skill existence stays with `verify-skill-refs`.
+- `graph-runner check <dir>`: one `✓` line per graph (nodes, edges, start, sinks), `✓ 5 graphs OK`; `LoadError` → stderr, exit 1; bad argv → usage, exit 2.
+- `justfile`: both `|| echo "(no Rust crates)"` fallbacks deleted; `check` / `test` run cargo for real; `runner-check` (fmt, pedantic clippy `-D warnings`, test) and `graphs-check` added.
+- Graphs, `schema.json`, `.agents/`, `lockfile.toml` byte-identical. `verify-graphs` PASS, `verify-protocol` PASS, `verify-skill-refs` PASS (`v1-packets`), Python tests OK, Rust matrix green.

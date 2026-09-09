@@ -5,11 +5,19 @@ init:
     echo "environment ready"
 
 check:
-    cargo check --workspace 2>/dev/null || echo "(no Rust crates)"
+    cargo check --workspace --all-targets
 
 test:
     python3 -m unittest discover -s test -v
-    cargo test --workspace 2>/dev/null || echo "(no Rust crates)"
+    cargo test --workspace
+
+runner-check:
+    cargo fmt --all --check
+    cargo clippy --workspace --all-targets --all-features -- -D warnings -W clippy::pedantic
+    cargo test --workspace
+
+graphs-check:
+    cargo run -q -p graph-runner -- check graphs
 
 graphs-verify:
     @./scripts/verify-graphs
