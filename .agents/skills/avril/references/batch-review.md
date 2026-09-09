@@ -33,8 +33,10 @@ REJECT T-2 — no observable done; cut or add AC
 BLESS T-3 — scope_out names the extras
 ```
 
-T-2 returns to the Generator. T-1 and T-3 keep the PO BLESS. QA and CTO have not yet spoken on this cycle; when they do, they review the set then in play. A later material edit to T-1 invalidates T-1's three blessings only.
+T-2 returns to the Generator. T-1 and T-3 keep the PO BLESS. Do not delegate QA or CTO on `{T-1, T-3}`.
+
+After the Generator revises T-2, PO reviews T-2 again (item 3: fresh blessings on the revised item). When every id has a current PO BLESS, QA reviews `{T-1, T-2, T-3}`. CTO then reviews `{T-1, T-2, T-3}`. A later material edit to T-1 invalidates T-1's three blessings only.
 
 ## Decision 9
 
-No cap; the set-size log is the instrument; a cap is a later measured decision.
+No cap; the set-size log is the instrument; a cap is a later measured decision. `set <size>` is the PO-complete set QA and CTO reviewed.
