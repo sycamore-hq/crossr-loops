@@ -4,11 +4,16 @@
   "title": "crossr-loops Graph v0",
   "type": "object",
   "additionalProperties": false,
-  "required": ["apiVersion", "kind", "name", "nodes", "edges"],
+  "required": ["apiVersion", "kind", "name", "start", "nodes", "edges"],
   "properties": {
     "apiVersion": { "const": "crossr-loops/v0" },
     "kind": { "const": "Graph" },
     "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "start": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Entry node id. The runner starts here; document order is not the rule."
+    },
     "title": { "type": "string" },
     "description": { "type": "string" },
     "conductor": {

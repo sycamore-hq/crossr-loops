@@ -75,5 +75,20 @@
         ]
       }
     ]
+  },
+  "graph-runner": {
+    "status": "in_progress",
+    "commits": [
+      {
+        "id": "gr-r0",
+        "title": "explicit start in schema, graphs, verify-graphs",
+        "status": "in_progress",
+        "features": [
+          "schema-start",
+          "graph-start-keys",
+          "verify-graphs-start"
+        ]
+      }
+    ]
   }
 }

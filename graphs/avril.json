@@ -2,6 +2,7 @@
   "apiVersion": "crossr-loops/v0",
   "kind": "Graph",
   "name": "avril",
+  "start": "generator",
   "title": "AVRIL — Planning GAN",
   "description": "Intent to unanimously blessed Product Backlog. Planning-only stop. SKILL.md is the law.",
   "conductor": "avril",

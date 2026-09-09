@@ -17,6 +17,7 @@ ALLOWED_GRAPH = {
     "apiVersion",
     "kind",
     "name",
+    "start",
     "title",
     "description",
     "conductor",
@@ -133,6 +134,10 @@ def validate(name: str, g: dict, all_names: set[str], c: Check) -> None:
     if len(ids) != len(set(ids)):
         c.fail(f"{name}: duplicate node ids")
     idset = set(ids)
+    if "start" not in g:
+        c.fail(f"{name}: missing start")
+    elif g.get("start") not in idset:
+        c.fail(f"{name}: start {g.get('start')!r} is not a node")
     for i, edge in enumerate(edges):
         if not isinstance(edge, dict):
             c.fail(f"{name}: edge {i} not an object")
@@ -155,7 +160,7 @@ def validate(name: str, g: dict, all_names: set[str], c: Check) -> None:
     if extra_r:
         c.fail(f"{name}: requires unknown keys {sorted(extra_r)}")
     if len(c.bad) == start:
-        c.pass_(f"{name}: {len(ids)} nodes, {len(edges)} edges")
+        c.pass_(f"{name}: {len(ids)} nodes, {len(edges)} edges, start {g.get('start')}")
 
 
 def mermaid(g: dict) -> str:

@@ -2,6 +2,7 @@
   "apiVersion": "crossr-loops/v0",
   "kind": "Graph",
   "name": "flagship",
+  "start": "intent",
   "title": "Intent → AVRIL → AXEL → Done",
   "description": "Flagship pipeline. BRICK is the alternative (graphs/brick.json), not a node here.",
   "nodes": [

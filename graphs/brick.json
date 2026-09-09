@@ -2,6 +2,7 @@
   "apiVersion": "crossr-loops/v0",
   "kind": "Graph",
   "name": "brick",
+  "start": "task-division",
   "title": "BRICK — stage pipeline",
   "description": "Informal spec to mutation-verified code. Stage skills stay in the catalog. SKILL.md is the law.",
   "conductor": "brick",
