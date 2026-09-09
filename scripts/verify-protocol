@@ -29,7 +29,7 @@ RETIRED = re.compile(r"\b(BLESSED|PASSED|REJECTED|NACK)\b")
 DECISION_3 = "A bare BLESS over a set is not a verdict."
 BLESS_ID = "BLESS <id>"
 REJECT_ID = "REJECT <id>"
-SINGLE_GATE_RE = re.compile(r"(?:<gate>|[a-z][a-z0-9-]*): BLESS")
+SINGLE_GATE_RE = re.compile(r"(?:<gate>|[a-z][a-z0-9-]*): (?:BLESS|REJECT)")
 
 
 class Check:
@@ -105,7 +105,7 @@ def check_batch_adversary(
     if declares_single_gate(text):
         c.fail(
             f"{name}: batch adversary {nid} persona {persona} "
-            f"lacks per-item verdict declaration: mixed <gate>: BLESS"
+            f"declares both per-item and single-gate verdict shapes (`<gate>: BLESS`)"
         )
         return
     c.pass_(
@@ -140,11 +140,10 @@ def verify(name: str, g: dict, c: Check) -> int:
         check_adversary_edges(name, nid, edges, c)
         persona = (node.get("uses") or {}).get("persona")
         if persona:
+            path = AGENTS / f"{persona}.md"
             check_persona(name, nid, persona, c)
-            if node.get("batch") is True:
-                path = AGENTS / f"{persona}.md"
-                text = path.read_text() if path.is_file() else ""
-                check_batch_adversary(name, nid, persona, text, c)
+            if node.get("batch") is True and path.is_file():
+                check_batch_adversary(name, nid, persona, path.read_text(), c)
         else:
             c.fail(f"{name}: adversary {nid} has no persona — silence is not a protocol")
     return adversaries
