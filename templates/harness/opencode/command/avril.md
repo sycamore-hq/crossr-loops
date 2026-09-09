@@ -39,7 +39,7 @@ Routing hints (non-exclusive; free English always works):
 
 - `status` / `summary` / `state` → read-only project + backlog report
 - `plan` / `propose` / `backlog` → propose PBIs, Pinto preferred
-- `review <ids>` / `bless` → PO → QA → CTO blessing cycle on the named items
+- `review <ids>` / `bless` → PO → QA → CTO blessing cycle on the named items (one verdict line per id)
 - `help` → list what this conductor can do, and execute nothing
 
 Verb prefixes are optional shorthand, never required: `status`, `plan`, `review T-3`,

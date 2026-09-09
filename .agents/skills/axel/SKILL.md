@@ -50,6 +50,8 @@ Delegate `architect-agent` + `architecture` on the plan. REJECT for underspecifi
 Generate → Mechanical → Tester → Reviewer → Commit
 ```
 
+Before each adversary: packet (`references/handoff-packet.md`) → disclosed scratch path; `audit-packet brief` (zero tokens); red → fix the packet; green → persona + gate card + RULES.md + packet, envelope last. `audit-packet verdict --gate <gate>` on reply; keep the one-liner as the next packet's prior verdict.
+
 1. **Generate** — `code-writer` + book + domain. Implement the blessed claims.
 2. **Mechanical** — fmt / clippy / build / test as disclosed. Red → Generator. No LLM.
 3. **Tester** — AC coverage + zero regressions. `BLESS` required.
@@ -91,6 +93,7 @@ After all phases for the PBI are blessed:
 - **Stacked reviewability:** each commit reviewable in < 10 minutes.
 - **Decomposition mode (opt-in):** stated-size check at the plan audit + Architect; a code-time `git diff --numstat` over T halts the commit and returns to the plan with superseding claims. Nobody splits at code time. Mode-off adds no steps.
 - **Do not open a PR** unless the human explicitly asks.
+- Packets are audited before an adversary reads them; prose is dropped after commit.
 - **Fail loud:** missing deps, red matrix, incomplete AC, undisclosed language stack → stop.
 
 ## Ruthless Checklist (Fail Any = Do Not Advance)

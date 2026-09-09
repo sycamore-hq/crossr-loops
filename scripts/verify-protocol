@@ -26,6 +26,10 @@ AGENTS = ROOT / ".agents" / "agents"
 SCHEMA_NAME = "schema.json"
 TOKENS = {"BLESS", "REJECT"}
 RETIRED = re.compile(r"\b(BLESSED|PASSED|REJECTED|NACK)\b")
+DECISION_3 = "A bare BLESS over a set is not a verdict."
+BLESS_ID = "BLESS <id>"
+REJECT_ID = "REJECT <id>"
+SINGLE_GATE_RE = re.compile(r"(?:<gate>|[a-z][a-z0-9-]*): BLESS")
 
 
 class Check:
@@ -71,6 +75,44 @@ def check_persona(name: str, nid: str, persona: str, c: Check) -> None:
         c.pass_(f"{name}: persona {persona} declares BLESS/REJECT only")
 
 
+def batch_declaration_gaps(text: str) -> list[str]:
+    """Which per-item verdict declarations are missing from persona text."""
+    gaps = []
+    if BLESS_ID not in text:
+        gaps.append("`BLESS <id>`")
+    if REJECT_ID not in text:
+        gaps.append("`REJECT <id>`")
+    if DECISION_3 not in text:
+        gaps.append(DECISION_3)
+    return gaps
+
+
+def declares_single_gate(text: str) -> bool:
+    """True when the AXEL `<gate>: BLESS` shape is also present."""
+    return bool(SINGLE_GATE_RE.search(text))
+
+
+def check_batch_adversary(
+    name: str, nid: str, persona: str, text: str, c: Check
+) -> None:
+    gaps = batch_declaration_gaps(text)
+    if gaps:
+        c.fail(
+            f"{name}: batch adversary {nid} persona {persona} "
+            f"lacks per-item verdict declaration: {', '.join(gaps)}"
+        )
+        return
+    if declares_single_gate(text):
+        c.fail(
+            f"{name}: batch adversary {nid} persona {persona} "
+            f"lacks per-item verdict declaration: mixed <gate>: BLESS"
+        )
+        return
+    c.pass_(
+        f"{name}: batch adversary {nid} persona {persona} declares per-item verdicts"
+    )
+
+
 def check_adversary_edges(name: str, nid: str, edges: list[dict], c: Check) -> None:
     out = [e for e in edges if e.get("from") == nid]
     whens = [e.get("when") for e in out]
@@ -99,6 +141,10 @@ def verify(name: str, g: dict, c: Check) -> int:
         persona = (node.get("uses") or {}).get("persona")
         if persona:
             check_persona(name, nid, persona, c)
+            if node.get("batch") is True:
+                path = AGENTS / f"{persona}.md"
+                text = path.read_text() if path.is_file() else ""
+                check_batch_adversary(name, nid, persona, text, c)
         else:
             c.fail(f"{name}: adversary {nid} has no persona — silence is not a protocol")
     return adversaries

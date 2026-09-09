@@ -14,6 +14,7 @@
 - C-02: …
 
 ## Phases
+- retained: this record; review prose dropped (§3.8)
 - phase-1: BLESS tester | reviewer — commit <sha> (architect: <claim id> BLESS | REJECT, only if escalated)
 - …
 

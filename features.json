@@ -61,6 +61,18 @@
           "code-gan-mechanical-first",
           "architect-escalation-only"
         ]
+      },
+      {
+        "id": "pr7b",
+        "title": "AVRIL set review + AXEL packet ritual",
+        "status": "completed",
+        "features": [
+          "batch-topology",
+          "verify-protocol-batch",
+          "avril-set-review",
+          "set-size-log",
+          "axel-packet-ritual"
+        ]
       }
     ]
   }

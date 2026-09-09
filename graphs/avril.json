@@ -7,9 +7,9 @@
   "conductor": "avril",
   "nodes": [
     {"id": "generator", "role": "generator", "uses": {"persona": "planning-architect-agent"}},
-    {"id": "po", "role": "adversary", "uses": {"persona": "product-owner-agent"}},
-    {"id": "qa", "role": "adversary", "uses": {"persona": "qa-architect-agent"}},
-    {"id": "cto", "role": "adversary", "uses": {"persona": "visionary-cto-agent"}},
+    {"id": "po", "role": "adversary", "batch": true, "uses": {"persona": "product-owner-agent"}},
+    {"id": "qa", "role": "adversary", "batch": true, "uses": {"persona": "qa-architect-agent"}},
+    {"id": "cto", "role": "adversary", "batch": true, "uses": {"persona": "visionary-cto-agent"}},
     {"id": "stop", "role": "terminal"}
   ],
   "edges": [

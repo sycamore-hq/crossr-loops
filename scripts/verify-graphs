@@ -24,7 +24,7 @@ ALLOWED_GRAPH = {
     "edges",
     "requires",
 }
-ALLOWED_NODE = {"id", "role", "catalog", "uses"}
+ALLOWED_NODE = {"id", "role", "catalog", "uses", "batch"}
 ALLOWED_USES = {"skill", "persona", "graph"}
 ALLOWED_EDGE = {"from", "to", "when"}
 ALLOWED_ROLE = {"generator", "adversary", "stage", "gate", "terminal", "graph"}

@@ -24,7 +24,7 @@ When asked to execute blessed backlog work:
 5. Select one ready PBI (deps complete; `pinto next` when available).
 6. Delegate the plan to the Generator with `plan-writer` (not this conductor). Run the mechanical audit. Stop if blocking questions remain.
 7. Delegate `architect-agent` on the plan. Three REJECTs → stop for the human. On BLESS, commit the plan, then board → in-progress. Phases live inside the plan.
-8. For each blessed phase: Generator → mechanical → `tester-agent` → `reviewer-agent`; require explicit `BLESS`. Architect at code time only on an unsatisfiable claim. On reject, follow the card's matrix — do not restart a chain the reject did not invalidate.
+8. For each blessed phase: Generator → mechanical → `audit-packet brief` → `tester-agent` → `audit-packet verdict` → `audit-packet brief` → `reviewer-agent` → `audit-packet verdict`; require explicit `BLESS`. Write the handoff packet before Tester and Reviewer; run the verdict audit after each. Architect at code time only on an unsatisfiable claim. On reject, follow the card's matrix — do not restart a chain the reject did not invalidate.
 9. **Decomposition mode (opt-in only):** if on, `audit-plan --loc-threshold T` (default 1500) runs at the mechanical plan audit and the plan Architect rejects a phase whose stated size exceeds T. Before commit, measure phase LOC (`git diff --numstat` added+deleted); if over T, halt commit and return to the plan with superseding claims. Nobody splits at code time. Never bypass intake.
 10. After phases: collect AC evidence, run disclosed verification matrix, only then board → review/done.
 11. Commit + update tracking with PBI id after each blessed phase; emit PBI Completion Record.

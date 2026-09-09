@@ -18,6 +18,7 @@ When the loop completes, produce a concise summary (HTML preferred when the audi
 …
 
 ## Blessing log
+- cycle <n>: set <size> · PO <bless>/<reject> · QA <bless>/<reject> · CTO <bless>/<reject>
 - <id>: PO BLESS | QA BLESS | CTO BLESS
 ```
 

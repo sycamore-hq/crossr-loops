@@ -9,6 +9,7 @@ This is a harness-layer execution orchestration skill. It coordinates delivery i
 - Code GAN stack for the language in play (see Language stack below)
 - Agent personas under the harness agents directory (typical code trio: `reviewer-agent`, `tester-agent`, `architect-agent`)
 - Optional **decomposition mode** parameters (see Mitchell decomposition): `decomposition_mode` (bool, default false), `decomposition_loc_threshold` (number, default 1500)
+- Packet scratch path — disclosed by the harness (HARNESS-SPEC §12); fallback `${TMPDIR:-/tmp}/crossr-packets/<pbi-id>/`; never inside the repo, never committed.
 
 Concrete artifact names, column names, commit message format, and CLI flags are harness parameters disclosed at activation. The invariants (blessed intake only, PETC per unit, plan-time Architect then per-phase mechanical → `testing` → `code-review`, AC evidence gate, orchestrator never touches code, small reviewable commits) are enforced uniformly. Decomposition mode is **off by default** and adds no steps when off.
 
