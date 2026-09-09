@@ -39,4 +39,4 @@ After the Generator revises T-2, PO reviews T-2 again (item 3: fresh blessings o
 
 ## Decision 9
 
-No cap; the set-size log is the instrument; a cap is a later measured decision. `set <size>` is the PO-complete set QA and CTO reviewed.
+No cap; the set-size log is the instrument; a cap is a later measured decision. `set <size>` is the PO-complete set QA and CTO reviewed. `PO <bless>/<reject>` sums every PO delegation in the cycle, so the loop shows as rejects; the worked set logs `- cycle 1: set 3 · PO 3/1 · QA 3/0 · CTO 3/0`.

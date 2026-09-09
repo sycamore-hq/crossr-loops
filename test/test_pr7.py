@@ -241,6 +241,14 @@ class LiveTree(unittest.TestCase):
             "Do not delegate QA or CTO until every id in the set has a current PO BLESS",
             self.avril_conductor,
         )
+        self.assertIn(
+            "`PO <bless>/<reject>` sums every PO delegation in the cycle",
+            self.batch_review,
+        )
+        self.assertIn(
+            "- cycle 1: set 3 · PO 3/1 · QA 3/0 · CTO 3/0",
+            self.batch_review,
+        )
 
     def test_blessed_backlog_summary_has_cycle_template(self):
         template = next(
