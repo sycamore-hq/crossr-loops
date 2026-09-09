@@ -2,6 +2,7 @@
   "apiVersion": "crossr-loops/v0",
   "kind": "Graph",
   "name": "axel",
+  "start": "intake",
   "title": "AXEL — Execution Loop",
   "description": "Blessed-intake only. Plan-first: Generator writes the plan, mechanical audit, Architect blesses, then code-gan. SKILL.md is the law.",
   "conductor": "axel",

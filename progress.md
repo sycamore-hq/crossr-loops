@@ -114,3 +114,9 @@ AVRIL set review + AXEL packet ritual. Per crossr-skills `docs/plans/gan-layer-s
 - `./scripts/verify-protocol`: PASS (batch lines for po / qa / cto)
 - `./scripts/verify-skill-refs`: PASS (`CROSSR_SKILLS_PATH` = tag `v1-packets`)
 - `python3 -m unittest discover -s test -v`: OK
+
+## graph-runner
+
+R0 — explicit `start` in schema, graphs, verify-graphs.
+
+Every graph names its entry node. `avril` and `code-gan` have no in-degree-0 node, so document order was never a rule a runner could recover. Schema requires the key; `verify-graphs` fails it missing or dangling.

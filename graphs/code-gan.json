@@ -2,6 +2,7 @@
   "apiVersion": "crossr-loops/v0",
   "kind": "Graph",
   "name": "code-gan",
+  "start": "generate",
   "title": "Code GAN — inner implementation cycle",
   "description": "Generate → mechanical → tester → reviewer → commit. Architect only on an unsatisfiable claim. Catalog skills by name. SKILL.md is the law.",
   "conductor": "axel",
