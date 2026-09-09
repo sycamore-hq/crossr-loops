@@ -6,6 +6,7 @@ This is a harness-layer planning orchestration skill. It coordinates backlog con
 - Board / backlog backend (prefer **Pinto** when `pinto` is installed and a `.pinto/` board exists or may be initialized)
 - Tracking artifacts (features.json / progress.md or equivalent) for recording that planning completed
 - Agent personas under the harness agents directory (typical: `planning-architect-agent`, `product-owner-agent`, `qa-architect-agent`, `visionary-cto-agent`)
+- Verdict scratch path — disclosed by the harness (HARNESS-SPEC §12); fallback `${TMPDIR:-/tmp}/crossr-packets/<cycle-or-set-id>/<adversary>.verdict.md`; never in the tree.
 
 The skill definition itself is portable and harness-agnostic. Concrete artifact names, board commands, ID prefixes, and the exact pre-flight ritual are parameters of the invoking harness and are disclosed at activation. The invariants (strict Generator → three-adversary order, explicit BLESS language, planning-only stop, no silent scope creep) are enforced uniformly.
 

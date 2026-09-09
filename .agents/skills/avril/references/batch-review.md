@@ -19,7 +19,7 @@ Do not copy the grammar. One law, one home: `gan-verdict` `references/batch-verd
 
 Each id gets one line: `BLESS <id>` or `REJECT <id> — <blockers>`. A bare BLESS over a set is not a verdict.
 
-The conductor runs `audit-packet verdict --items <ids>` before reading a reply. Red → re-delegate that adversary.
+The conductor writes the reply to the disclosed verdict scratch path (`harness-parameters.md`; never in the tree) and runs `audit-packet verdict --items <ids> <that file>` before reading it. Red → re-delegate that adversary.
 
 ## Per-item loop
 

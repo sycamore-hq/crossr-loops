@@ -50,7 +50,7 @@ Delegate `architect-agent` + `architecture` on the plan. REJECT for underspecifi
 Generate → Mechanical → Tester → Reviewer → Commit
 ```
 
-Before each adversary: packet (`references/handoff-packet.md`) → disclosed scratch path; `audit-packet brief` (zero tokens); red → fix the packet; green → persona + gate card + RULES.md + packet, envelope last. `audit-packet verdict --gate <gate>` on reply; keep the one-liner as the next packet's prior verdict.
+Before each adversary: packet (`references/handoff-packet.md`) → disclosed scratch path; `audit-packet brief` (zero tokens); red → fix the packet; green → persona + gate card + RULES.md + packet, envelope last. `audit-packet verdict --gate <gate>` on reply; transcribe to the next packet's prior-verdict shape.
 
 1. **Generate** — `code-writer` + book + domain. Implement the blessed claims.
 2. **Mechanical** — fmt / clippy / build / test as disclosed. Red → Generator. No LLM.
