@@ -2,5 +2,5 @@
 # Same contract as harness and skills — consumer pins, not a self-advertisement
 # of this remote's published tag. Not a third tracker — features.json remains
 # the work log. No git submodules.
-skills = "v1-one-law"
+skills = "v1-packets"
 loops  = "v1-cards"
