@@ -91,6 +91,11 @@ def validate(name: str, g: dict, all_names: set[str], c: Check) -> None:
         role = node.get("role")
         if role is not None and role not in ALLOWED_ROLE:
             c.fail(f"{name}: node {nid} bad role {role!r}")
+        if "batch" in node and role != "adversary":
+            c.fail(
+                f"{name}: node {nid} sets batch on role {role!r} — "
+                "batch is adversary-only"
+            )
         uses = node.get("uses") or {}
         if uses:
             extra_u = set(uses) - ALLOWED_USES

@@ -37,7 +37,7 @@ Recite the conductor persona's One-Sentence Mandate before the first delegation.
    1. `product-owner-agent` — value, scope, user outcomes, ruthless cuts
    2. `qa-architect-agent` — testability, AC completeness, failure modes
    3. `visionary-cto-agent` — strategic fit, debt, 2-year trajectory (final gate)
-   PO the set → QA the set → CTO the set. One verdict line per id. A bare BLESS over a set is not a verdict. Run `audit-packet verdict --items <ids>` before reading a reply; red → re-delegate. `REJECT <id>` loops that id alone; unchanged siblings keep their BLESS (item 3; “Material edit … for that item”). See `references/batch-review.md`.
+   PO the set → QA the set → CTO the set. One verdict line per id. A bare BLESS over a set is not a verdict. Run `audit-packet verdict --items <ids>` on the reply (`references/harness-parameters.md`); red → re-delegate. `REJECT <id>` loops that id; siblings keep BLESS (item 3). See `references/batch-review.md`.
 3. **Rejection loop** — Any REJECT sends the minimal delta back to the Generator. Re-run the full three-adversary chain on the revised item (fresh blessings; prior BLESS does not carry forward after material change).
 4. **Blessing language** — Advancement requires the exact token `BLESS` from each adversary. Silence, hedge, or “LGTM” without `BLESS` counts as incomplete. `REJECT` must cite concrete blockers.
 5. **Small items only** — Split any PBI that cannot be reviewed in one short pass, that mixes multiple shippable outcomes, or that implies a multi-thousand-line blob (planning-time size bar aligned with &lt;10 minute deep review and AXEL’s optional ~1500 LOC threshold).

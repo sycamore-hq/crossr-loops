@@ -219,6 +219,25 @@ class LiveTree(unittest.TestCase):
     def test_verify_graphs_allowed_node_contains_batch(self):
         self.assertIn("batch", vg.ALLOWED_NODE)
 
+    def test_verify_graphs_rejects_batch_on_non_adversary(self):
+        graph = {
+            "apiVersion": "crossr-loops/v0",
+            "kind": "Graph",
+            "name": "fixture",
+            "nodes": [{"id": "intake", "role": "stage", "batch": True}],
+            "edges": [],
+        }
+        check = vg.Check()
+        vg.validate("fixture", graph, {"fixture"}, check)
+        self.assertTrue(
+            any(
+                "fixture: node intake sets batch on role 'stage' — "
+                "batch is adversary-only" in msg
+                for msg in check.bad
+            ),
+            check.bad,
+        )
+
     def test_avril_batch_nodes_are_exactly_po_qa_cto(self):
         self.assertEqual(batch_nodes(self.avril), {"po", "qa", "cto"})
 
@@ -236,6 +255,7 @@ class LiveTree(unittest.TestCase):
         self.assertRegex(self.avril_card, r"(?i)one verdict line per id")
         self.assertIn("audit-packet verdict", self.avril_card)
         self.assertIn("siblings", self.avril_card)
+        self.assertIn("harness-parameters", self.avril_card)
         self.assertNotRegex(
             self.avril_card,
             r"(?i)max(imum)? (batch|set) size|at most \d+ (items|PBIs)",
@@ -262,6 +282,16 @@ class LiveTree(unittest.TestCase):
     def test_harness_parameters_names_scratch_path(self):
         self.assertIn("Packet scratch path", self.params)
         self.assertIn("${TMPDIR:-/tmp}/", self.params)
+        avril_params = (
+            ROOT / ".agents" / "skills" / "avril" / "references" / "harness-parameters.md"
+        ).read_text()
+        self.assertIn("Verdict scratch path", avril_params)
+        self.assertIn("${TMPDIR:-/tmp}/", avril_params)
+        self.assertIn(".verdict.md", avril_params)
+
+    def test_handoff_packet_transcribes_prior_verdicts(self):
+        self.assertIn("transcribed to the prior-verdict line shape", self.handoff)
+        self.assertIn("- <gate> REJECT:", self.handoff)
 
     def test_no_packet_path_under_docs_or_pinto(self):
         hits = []
