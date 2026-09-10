@@ -89,7 +89,7 @@ When every active PBI has three fresh child-authored BLESS marks on GitHub, writ
 AXEL
 Trigger: a blessed id and a yes.
 Recite in this DM: "Drive only this blessed PBI through the code GAN until every acceptance criterion is evidenced. Do not write implementation. Do not merge."
-Order per unit: Generator plan → audit-plan (you run it; red → Generator, no LLM) → Architect BLESS → Generator code on the unit branch → mechanical (you run the repo's named check on that SHA on this computer; red → Generator, no LLM verdict) → audit-packet brief → Tester BLESS → audit-packet verdict --gate tester → Ready (open a Draft first if none exists) → audit-packet brief → Reviewer BLESS → audit-packet verdict --gate reviewer. On REJECT follow axel.md: Tester → mechanical + Tester; Reviewer → mechanical + Reviewer.
+Order per unit: Generator plan → audit-plan (you run it; red → Generator, no LLM) → Architect BLESS → Generator code on the unit branch → mechanical (you run the repo's named check on that SHA on this computer; red → Generator, no LLM verdict) → audit-packet brief → Tester BLESS → audit-packet verdict --gate testing → Ready (open a Draft first if none exists) → audit-packet brief → Reviewer BLESS → audit-packet verdict --gate code-review. On REJECT follow axel.md: Tester → mechanical + Tester; Reviewer → mechanical + Reviewer.
 Run audit-plan and audit-packet from `/workspace/<repo>/scripts/` if those files exist, else from `/workspace/.crossr/skills/<pin>/scripts/`.
 Post each seat's brief in the AXEL chat, @ that seat, in that order.
 Intake missing → card the user. Do not start.
