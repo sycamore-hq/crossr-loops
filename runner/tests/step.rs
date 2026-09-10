@@ -8,9 +8,9 @@ use serde_json::{json, Value};
 
 use graph_runner::event::{Event, Verdict};
 use graph_runner::graph::{Graph, Label, NodeId, Role};
-use graph_runner::load;
+use graph_runner::load::{self, Graphs};
 use graph_runner::step::{self, StepError, WalkError};
-use graph_runner::trace::End;
+use graph_runner::trace::{End, Step, Trace};
 
 fn graphs_dir() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR"))
@@ -22,6 +22,26 @@ fn graphs_dir() -> PathBuf {
 
 fn committed(name: &str) -> Graph {
     load::load_file(&graphs_dir().join(format!("{name}.json"))).expect("committed graph loads")
+}
+
+/// A descent-free walk: no graph here has a `role: graph` node, so an empty
+/// resolver is never consulted. Descent itself is `tests/descent.rs`.
+fn walk(g: &Graph, events: &[Event]) -> Result<Trace, WalkError> {
+    step::walk(g, &Graphs::new(), events, false)
+}
+
+fn from_of(step: &Step) -> &NodeId {
+    match step {
+        Step::Edge { from, .. } => from,
+        other => panic!("expected an edge step, got {other:?}"),
+    }
+}
+
+fn to_of(step: &Step) -> &NodeId {
+    match step {
+        Step::Edge { to, .. } => to,
+        other => panic!("expected an edge step, got {other:?}"),
+    }
 }
 
 fn id(s: &str) -> NodeId {
@@ -138,10 +158,10 @@ mod step_semantics {
         assert_eq!(g.nodes[0].id, id("decoy"));
         assert_eq!(g.start, id("a"));
 
-        let trace = step::walk(&g, &[Event::Next, BLESS]).expect("walk completes");
+        let trace = walk(&g, &[Event::Next, BLESS]).expect("walk completes");
         assert_eq!(
-            trace.steps[0].from,
-            id("a"),
+            from_of(&trace.steps[0]),
+            &id("a"),
             "the walk begins at start, not nodes[0]"
         );
         assert_eq!(
@@ -149,7 +169,7 @@ mod step_semantics {
             "fixture: a --next--> b\nfixture: b --BLESS--> stop\n"
         );
 
-        let err = step::walk(&g, &[Event::Next, Event::Next])
+        let err = walk(&g, &[Event::Next, Event::Next])
             .expect_err("decoy edge is unreachable from start");
         assert!(matches!(err, WalkError::Step { .. }), "{err}");
     }
@@ -192,7 +212,7 @@ mod step_semantics {
     #[test]
     fn walk_trailing_events_fail() {
         let g = parse(&fixture());
-        let err = step::walk(&g, &[Event::Next, BLESS, Event::Next, REJECT])
+        let err = walk(&g, &[Event::Next, BLESS, Event::Next, REJECT])
             .expect_err("events after the sink are an error");
         match &err {
             WalkError::TrailingEvents {
@@ -223,9 +243,11 @@ mod step_semantics {
     #[test]
     fn walk_incomplete_names_node() {
         let g = parse(&fixture());
-        let err = step::walk(&g, &[Event::Next]).expect_err("b is not a sink");
+        let err = walk(&g, &[Event::Next]).expect_err("b is not a sink");
         match &err {
-            WalkError::Incomplete { graph, trace, at } => {
+            WalkError::Incomplete {
+                graph, trace, at, ..
+            } => {
                 assert_eq!(graph, "fixture");
                 assert_eq!(at, &id("b"));
                 assert_eq!(trace.steps.len(), 1);
@@ -235,7 +257,7 @@ mod step_semantics {
         }
         assert_eq!(err.to_string(), "incomplete at fixture:b");
 
-        let err = step::walk(&g, &[]).expect_err("no events, start is not a sink");
+        let err = walk(&g, &[]).expect_err("no events, start is not a sink");
         assert_eq!(err.to_string(), "incomplete at fixture:a");
         assert!(err.trace().steps.is_empty());
     }
@@ -246,23 +268,22 @@ mod step_semantics {
 #[test]
 fn walk_happy_path_completes_on_the_sink() {
     let g = parse(&fixture());
-    let trace = step::walk(&g, &[Event::Next, BLESS]).expect("completes");
+    let trace = walk(&g, &[Event::Next, BLESS]).expect("completes");
     assert!(trace.is_complete());
     assert_eq!(trace.end, End::Complete { at: id("stop") });
     assert_eq!(trace.at(), &id("stop"));
 
-    let trace = step::walk(&g, &[Event::Next, REJECT, Event::Next, BLESS])
-        .expect("a REJECT loop then BLESS");
+    let trace =
+        walk(&g, &[Event::Next, REJECT, Event::Next, BLESS]).expect("a REJECT loop then BLESS");
     assert_eq!(trace.steps.len(), 4);
-    assert_eq!(trace.steps[1].to, id("a"));
+    assert_eq!(to_of(&trace.steps[1]), &id("a"));
     assert!(trace.is_complete());
 }
 
 #[test]
 fn walk_error_carries_the_partial_trace() {
     let g = parse(&fixture());
-    let err =
-        step::walk(&g, &[Event::Next, label("fail"), BLESS]).expect_err("fail at the adversary");
+    let err = walk(&g, &[Event::Next, label("fail"), BLESS]).expect_err("fail at the adversary");
     match &err {
         WalkError::Step { trace, source } => {
             assert_eq!(trace.steps.len(), 1);
@@ -299,7 +320,7 @@ fn no_edge_lists_accepted_labels_in_edge_order() {
 #[test]
 fn committed_avril_trace_follows_the_line_grammar() {
     let g = committed("avril");
-    let trace = step::walk(&g, &[Event::Next, BLESS, BLESS, BLESS]).expect("avril happy path");
+    let trace = walk(&g, &[Event::Next, BLESS, BLESS, BLESS]).expect("avril happy path");
     assert_eq!(
         trace.to_string(),
         "avril: generator --next--> po\n\
@@ -313,7 +334,7 @@ fn committed_avril_trace_follows_the_line_grammar() {
 fn committed_avril_bad_walk_names_po_and_the_verdicts() {
     // C-07 without the shell: `next` then `fail` at the po adversary.
     let g = committed("avril");
-    let err = step::walk(&g, &[Event::Next, label("fail")]).expect_err("po accepts a verdict only");
+    let err = walk(&g, &[Event::Next, label("fail")]).expect_err("po accepts a verdict only");
     let msg = err.to_string();
     assert!(msg.contains("po"), "{msg}");
     assert!(msg.contains("BLESS, REJECT"), "{msg}");

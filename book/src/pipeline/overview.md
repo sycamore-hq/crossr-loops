@@ -9,6 +9,7 @@ Intent → AVRIL (plan GAN) → Blessed Backlog → AXEL (PETC + code GAN) → D
 Most AI coding fails at the seam between “sounds good” and “shipped.” This pipeline makes that seam explicit.
 
 Topology (not law): [`graphs/flagship.json`](https://github.com/sycamore-hq/crossr-loops/blob/main/graphs/flagship.json). If a graph and a conductor `SKILL.md` disagree, the skill wins.
+The `graph-runner` in crossr-loops replays a walk against that topology and never runs one.
 
 
 ## Stages

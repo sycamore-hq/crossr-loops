@@ -1,0 +1,7 @@
+# code-gan — mechanical fails once: generate → mechanical → generate → mechanical → tester → reviewer → commit; red costs no adversary.
+next
+fail
+next
+pass
+BLESS
+BLESS

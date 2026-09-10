@@ -1,0 +1,11 @@
+# axel — happy path: intake → plan-write → plan-audit → plan-architect → code-gan (generate → mechanical → tester → reviewer → commit) → ac-evidence → done; every gate passes, every adversary blesses first time.
+blessed
+next
+pass
+BLESS
+next
+pass
+BLESS
+BLESS
+BLESS
+evidenced

@@ -19,6 +19,9 @@ runner-check:
 graphs-check:
     cargo run -q -p graph-runner -- check graphs
 
+graphs-cover:
+    cargo run -q -p graph-runner -- cover graphs
+
 graphs-verify:
     @./scripts/verify-graphs
 
