@@ -124,5 +124,20 @@
         ]
       }
     ]
+  },
+  "destinations": {
+    "status": "in_progress",
+    "commits": [
+      {
+        "id": "dest-grok-bot",
+        "title": "Destinations / Grok Bot + generator-agent",
+        "status": "in_progress",
+        "features": [
+          "generator-agent",
+          "grok-bot-chapter",
+          "grok-bot-profile"
+        ]
+      }
+    ]
   }
 }
