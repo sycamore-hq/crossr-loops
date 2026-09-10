@@ -28,17 +28,19 @@ user  ↔→  Chief-of-Staff (only human surface)
 
 Chief-of-Staff sequences. It never votes. A `BLESS` or `REJECT` it wrote is invalid.
 
+v1 uses one `gh` login for every Bot. GitHub author is not the discriminator. Child-authored means the seat wrote the token in the group chat. The witness body starts with `SEAT: <book name>` plus that seat's verdict line. Chief-of-Staff may copy the child's text onto GitHub so the URL exists. A comment it invented is still invalid.
+
 ## Add a project
 
 GitHub only in v1. Work runs on the Grok Bot computer under `/workspace`, not on the user's laptop.
 
 1. Ask for a GitHub URL, or offer `gh repo create` (private default; user confirms name and visibility).
-2. Clone to `/workspace/<name>`.
+2. Clone to `/workspace/<name>`. That is a working tree. It does not open a unit branch and it does not open a PR. `gh repo create` is the same: a tree, not a PR.
 3. Missing `lockfile.toml`: clone `sycamore-hq/crossr-harness` at its default branch into `/workspace/.crossr/harness` unless the user names a tag. Ask yes. Run `scripts/harness-bootstrap` from that checkout against `/workspace/<name>`. Show the command and the pins it wrote. Do not invent pins. Bootstrap copies personas into `/workspace/<name>/.agents/agents/` (OpenCode; mint does not read it) and copies `audit-plan` / `audit-packet` into `/workspace/<name>/scripts/` when the skills pin ships them.
-4. On every add-project (lockfile already present or just written): read that repo's `lockfile.toml` `loops` and `skills` pins. Ensure `sycamore-hq/crossr-loops` is checked out at the loops pin into `/workspace/.crossr/loops/<pin>/`. Ensure `sycamore-hq/crossr-skills` is checked out at the skills pin into `/workspace/.crossr/skills/<pin>/`. Mint and `PERSONA` lines use the loops tree. Audit scripts run from `/workspace/<name>/scripts/` if present, else `/workspace/.crossr/skills/<pin>/scripts/`. A second repo with a different pin gets its own directories. Do not reuse another pin's tree.
+4. On every add-project (lockfile already present or just written): read that repo's `lockfile.toml` `loops` and `skills` pins. Ensure `sycamore-hq/crossr-loops` is checked out at the loops pin into `/workspace/.crossr/loops/<pin>/`. Ensure `sycamore-hq/crossr-skills` is checked out at the skills pin into `/workspace/.crossr/skills/<pin>/`. Mint and `PERSONA` lines use the loops tree. `SKILLS` lines and Required Skills files use `/workspace/.crossr/skills/<pin>/.agents/skills/<name>/SKILL.md`. Audit scripts run from `/workspace/<name>/scripts/` if present, else `/workspace/.crossr/skills/<pin>/scripts/`. A second repo with a different pin gets its own directories. Do not reuse another pin's tree.
 5. Ask “Add another?” One team, many projects.
 
-GitLab and Codeberg: stop. A clone is not a draft PR.
+GitLab and Codeberg: stop.
 
 ## Stand the team
 
@@ -51,9 +53,11 @@ Explain names the pipeline and the eight seats, then “Stand all eight, AVRIL f
 
 Go mints all eight **when the active repo's pin contains every seat file**. Brick stays off until they name a Gherkin unit.
 
-Eight seats require a `loops` pin at or after the commit that adds `generator-agent.md`. The current published pin `v1-cards` does not have that file. On a pin missing any seat file: card the user. Do not mint a partial team. Do not invent a writer brief to paper over the hole.
+`generator-agent.md` is new in this PR. Published pins (`v1-cards`, harness main's `v1-packets-consumers`) do not have it. Until bootstrap writes a loops tag cut from this commit (or later main): card. Do not mint seven. Do not edit `lockfile.toml`. Do not clone this branch and call it a pin. Do not invent a writer brief. Route: merge → tag loops → bump harness `loops =` → bootstrap writes that tag.
 
 At mint, each sibling Description is the persona file body from `/workspace/.crossr/loops/<pin>/.agents/agents/<seat>-agent.md` for the active repo's pin. First line is that absolute path plus the pin. Do not paraphrase. Missing file → card; do not create that Bot; do not stand the rest of that GAN.
+
+A brief names `SKILLS: skills <pin> /workspace/.crossr/skills/<pin>/.agents/skills/`. The seat reads each name under `## Required Skills` from that root. Missing file, or a Bot that cannot load it → the seat cards Chief-of-Staff; Chief-of-Staff asks the user. Do not skip the skill. Do not paste skill bodies into Descriptions.
 
 Two chats: **AVRIL** (Chief-of-Staff + planning four) and **AXEL** (Chief-of-Staff + execution four). User stays in the Chief-of-Staff DM. Briefs go in the group chat, @ the seat. Receipts are quoted back to the DM.
 
@@ -64,7 +68,7 @@ Report the roster. Read the board.
 v1 Grok Bot board is a deliberate subset of the AXEL intake gate in [`axel.md`](../pipeline/axel.md). It reads only:
 
 - the GitHub issue on the active repo titled exactly `Blessed Backlog Summary`, or
-- GitHub comments with child-authored `BLESS <id>` from the AVRIL seats.
+- GitHub comments whose body starts with `SEAT: <AVRIL seat>` and a child-authored `BLESS <id>`.
 
 It does not honor `avril-blessed` board markers or a human-authorized id set. README, raw issues, `progress.md`, and `features.json` are empty.
 
@@ -76,7 +80,7 @@ It does not honor `avril-blessed` board markers or a human-authorized id set. RE
 
 Not pipeline law. Do not back-port into `avril.md` / `axel.md`.
 
-- Unit start = branch only. No PR.
+- Add-project is a tree at `/workspace/<name>`. Unit start is a branch on that tree. Neither is a PR.
 - Generator opens a Draft PR only as a durable save point.
 - At Reviewer handoff, if no Draft exists yet, Generator opens one, then marks Ready for review. Ready requires Tester `BLESS` on that SHA (or a brief that names the handoff). A Tester `REJECT` is a fix cycle, not a handoff.
 - v1: Chief-of-Staff @ Reviewer in the AXEL chat. Listening for `ready_for_review` is later.
