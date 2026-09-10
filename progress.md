@@ -131,3 +131,15 @@ Crate scaffold, typed graph model, `check`. Per crossr-skills `docs/plans/graph-
 - `graph-runner check <dir>`: one `✓` line per graph (nodes, edges, start, sinks), `✓ 5 graphs OK`; `LoadError` → stderr, exit 1; bad argv → usage, exit 2.
 - `justfile`: both `|| echo "(no Rust crates)"` fallbacks deleted; `check` / `test` run cargo for real; `runner-check` (fmt, pedantic clippy `-D warnings`, test) and `graphs-check` added.
 - Graphs, `schema.json`, `.agents/`, `lockfile.toml` byte-identical. `verify-graphs` PASS, `verify-protocol` PASS, `verify-skill-refs` PASS (`v1-packets`), Python tests OK, Rust matrix green.
+
+### R2 (COMPLETED)
+
+Stepper, `walk`, happy-path walks. Per crossr-skills `docs/plans/graph-runner-prompt-set.md` decisions 3, 4, 6. No descent: a `role: graph` node is opaque, so walks are committed only for `avril`, `code-gan`, `brick` (decision 5).
+
+- `event.rs` (data): `Event` = `Next` | `Verdict(Bless | Reject)` | `Label`; `FromStr` reads the walk-file token grammar (`next`, `BLESS`, `REJECT`, anything else a label; case-sensitive; one token per line).
+- `step.rs` (pure): `step(&Graph, &NodeId, &Event)` — `Next` fires the unlabeled edge, a verdict fires `BLESS` / `REJECT`, a label fires `when == label`; no match → `NoEdge { accepted }` listing the node's labels (`next` for unlabeled); an adversary given a non-verdict → `NotAVerdict` even when a label would have matched. `walk(&Graph, &[Event])` from `graph.start`: `Complete` on a sink with events exhausted; `TrailingEvents` / `Incomplete` / `Step` otherwise, each carrying the trace so far. No ambiguity variant — the loader forbids it.
+- `trace.rs` (data): `Trace { steps, end }`; renders `<graph>: <from> --<event>--> <to>` one line per step, the graphs' own vocabulary.
+- `walkfile.rs` (pure): `.walk` text → events; `#` comment lines, blank lines skipped; file-stem prefix before the first `.` names the graph.
+- `main.rs`: `walk <graph.json> <walk-file>` — trace to stdout; exit 0 complete, 1 any error (trace so far on stdout, error on stderr), 2 usage. File reads stay here.
+- `graphs/walks/{avril,code-gan,brick}.happy.walk`, each opening with a `#` story line. `tests/step.rs` (the six C-08 tests + grammar), `tests/walks.rs` `committed_walks` (every descent-free walk replays to a sink).
+- Graphs, `schema.json`, `.agents/`, `lockfile.toml` byte-identical. `verify-graphs` PASS, `verify-protocol` PASS, `verify-skill-refs` PASS (`v1-packets`), Python tests OK, Rust matrix green.

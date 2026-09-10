@@ -100,6 +100,17 @@
           "graphs-check",
           "toolchain-pin"
         ]
+      },
+      {
+        "id": "gr-r2",
+        "title": "graph-runner: stepper, walk, happy-path walks",
+        "status": "completed",
+        "features": [
+          "event-type",
+          "step-walk",
+          "trace",
+          "walk-files"
+        ]
       }
     ]
   }
