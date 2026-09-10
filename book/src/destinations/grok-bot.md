@@ -4,7 +4,7 @@ Stand the CrossR pipeline on Grok Bot so the library user talks to one Bot.
 
 Name: **Chief-of-Staff**. Job: **CrossR Chief-of-Staff**. Paste: [grok-bot-profile.md](grok-bot-profile.md).
 
-The colliding harness skill is `chief-of-staff` (renamed to `portfolio-brief` in a pending harness PR). The profile loads neither.
+The profile loads neither `chief-of-staff` nor `portfolio-brief`.
 
 ## What the user does
 
@@ -12,7 +12,7 @@ The colliding harness skill is `chief-of-staff` (renamed to `portfolio-brief` in
 2. Paste the [profile](grok-bot-profile.md) into Job / Description.
 3. Talk only to that Bot.
 
-GitHub plugin, Auto-review, and `gh auth` are account cards. Chief-of-Staff surfaces them. Merge stays the user.
+GitHub plugin, Auto-review, `gh auth`, and default-branch protection (require PR, require review, block direct push) are account cards. Chief-of-Staff surfaces them before stand-up. Merge stays the user.
 
 ## What Chief-of-Staff does
 
@@ -28,7 +28,7 @@ user  ↔→  Chief-of-Staff (only human surface)
 
 Chief-of-Staff sequences. It never votes. A `BLESS` or `REJECT` it wrote is invalid.
 
-v1 uses one `gh` login for every Bot. GitHub author is not the discriminator. Child-authored means the seat wrote the token in the group chat. The witness body starts with `SEAT: <book name>` plus that seat's verdict line. Chief-of-Staff may copy the child's text onto GitHub so the URL exists. A comment it invented is still invalid.
+v1 uses one `gh` login for every Bot. GitHub author is not the discriminator. Child-authored means the seat wrote the token in the group chat. The witness body starts with `SEAT: <book name>` plus that seat's verdict line. A URL whose comment lacks that seat line is not a witness. When no PR exists yet, Tester posts that line on the `Blessed Backlog Summary` issue, naming the SHA. Chief-of-Staff may copy the child's text onto GitHub so the URL exists. A comment it invented is still invalid.
 
 ## Add a project
 
@@ -53,9 +53,9 @@ Explain names the pipeline and the eight seats, then “Stand all eight, AVRIL f
 
 Go mints all eight **when the active repo's pin contains every seat file**. Brick stays off until they name a Gherkin unit.
 
-`generator-agent.md` is new in this PR. Published pins (`v1-cards`, harness main's `v1-packets-consumers`) do not have it. Until bootstrap writes a loops tag cut from this commit (or later main): card. Do not mint seven. Do not edit `lockfile.toml`. Do not clone this branch and call it a pin. Do not invent a writer brief. Route: merge → tag loops → bump harness `loops =` → bootstrap writes that tag.
+`generator-agent.md` is new in this PR. No published pin has it (`v1-cards`, `v1-packets-consumers`, the pin harness bootstrap writes today). Until bootstrap writes a loops tag cut from this commit (or later main): card. Do not mint seven. Do not edit `lockfile.toml`. Do not clone this branch and call it a pin. Do not invent a writer brief. Route: merge → tag loops → bump harness `loops =` → bootstrap writes that tag.
 
-At mint, each sibling Description is the persona file body from `/workspace/.crossr/loops/<pin>/.agents/agents/<seat>-agent.md` for the active repo's pin. First line is that absolute path plus the pin. Do not paraphrase. Missing file → card; do not create that Bot; do not stand the rest of that GAN.
+At mint, each sibling Description is the persona file body from `/workspace/.crossr/loops/<pin>/.agents/agents/<seat>-agent.md` for the active repo's pin. First line is exactly `<!-- loops <pin> /workspace/.crossr/loops/<pin>/.agents/agents/<file> -->`. Do not paraphrase. Missing file → card; do not create that Bot; do not stand the rest of that GAN.
 
 A brief names `SKILLS: skills <pin> /workspace/.crossr/skills/<pin>/.agents/skills/`. The seat reads each name under `## Required Skills` from that root. Missing file, or a Bot that cannot load it → the seat cards Chief-of-Staff; Chief-of-Staff asks the user. Do not skip the skill. Do not paste skill bodies into Descriptions.
 
@@ -68,7 +68,7 @@ Report the roster. Read the board.
 v1 Grok Bot board is a deliberate subset of the AXEL intake gate in [`axel.md`](../pipeline/axel.md). It reads only:
 
 - the GitHub issue on the active repo titled exactly `Blessed Backlog Summary`, or
-- GitHub comments whose body starts with `SEAT: <AVRIL seat>` and a child-authored `BLESS <id>`.
+- three GitHub comments on the same id and revision, each starting with `SEAT: Product Owner`, `SEAT: QA Architect`, or `SEAT: Visionary CTO` and that seat's `BLESS <id>`. None older than the id's last material edit. One seat is not enough.
 
 It does not honor `avril-blessed` board markers or a human-authorized id set. README, raw issues, `progress.md`, and `features.json` are empty.
 
@@ -81,8 +81,8 @@ It does not honor `avril-blessed` board markers or a human-authorized id set. RE
 Not pipeline law. Do not back-port into `avril.md` / `axel.md`.
 
 - Add-project is a tree at `/workspace/<name>`. Unit start is a branch on that tree. Neither is a PR.
-- Generator opens a Draft PR only as a durable save point.
-- At Reviewer handoff, if no Draft exists yet, Generator opens one, then marks Ready for review. Ready requires Tester `BLESS` on that SHA (or a brief that names the handoff). A Tester `REJECT` is a fix cycle, not a handoff.
+- Generator opens a Draft PR only as a durable save point. Those `gh pr` verbs live in the Generator brief's `DO:`, not in `generator-agent.md`.
+- At Reviewer handoff, if no Draft exists yet, the brief names `gh pr create --draft` then `gh pr ready`. Ready requires Tester `BLESS` on that SHA (or a brief that names the handoff). A Tester `REJECT` is a fix cycle, not a handoff.
 - v1: Chief-of-Staff @ Reviewer in the AXEL chat. Listening for `ready_for_review` is later.
 - After Reviewer `BLESS` plus the repo's named check transcript on that SHA, Chief-of-Staff announces the PR is ready to merge and nudges. The user merges.
 - Chief-of-Staff does not create, ready, or merge a PR unless the user names that verb this turn.
