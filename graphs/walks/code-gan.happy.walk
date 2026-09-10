@@ -1,0 +1,5 @@
+# code-gan — happy path: generate → mechanical → tester → reviewer → commit; mechanical passes, both adversaries bless, the architect is never called.
+next
+pass
+BLESS
+BLESS

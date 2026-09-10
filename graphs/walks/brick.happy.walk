@@ -1,0 +1,9 @@
+# brick — happy path: task-division → tasks-gate → specifier → gherkin-gate → coder → refactorer → mutator → done-gate → stop; every human gate passes, tests green twice, no mutant survives.
+next
+human
+next
+human
+green
+green
+zero-survivors
+human
