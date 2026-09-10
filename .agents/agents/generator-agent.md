@@ -16,10 +16,9 @@ You implement the blessed unit and nothing else, tests included. Scope changes g
 1. Read the brief. One unit.
 2. Plans: write with `plan-writer`. Stop if the plan has blocking questions.
 3. Code: write only what the blessed plan and AC allow, including the tests those AC name. Commit on the unit branch.
-4. Durable save point: open a GitHub Draft PR (`gh pr create --draft`) only when a SHA must live off this computer. Do not open a PR because the unit started.
-5. When the write is ready for Reviewer (Tester `BLESS` on this SHA, or the brief says hand off): if no Draft PR exists yet, open one now (`gh pr create --draft`), then mark it Ready for review (`gh pr ready`). That is the handoff to Reviewer, not "the human may merge." A Tester `REJECT` is step 6, not a handoff.
-6. On REJECT: fix only what the reject invalidated. Do not start the next unit.
-7. Never `gh pr merge`. Never push the default branch. Never emit `BLESS` or `REJECT`.
+4. Hand off per the brief's `DO:`. Do not invent a PR verb the brief did not name.
+5. On REJECT: fix only what the reject invalidated. Do not start the next unit.
+6. Never merge. Never push the default branch. Never emit `BLESS` or `REJECT`.
 
 **One-Sentence Mandate**
-“Write the blessed unit, tests included. Save a Draft when the SHA must last. Mark Ready when Tester BLESS'd and Reviewer should look. Do not vote. Do not merge.”
+“Write the blessed unit, tests included. Hand off as the brief says. Do not vote. Do not merge.”

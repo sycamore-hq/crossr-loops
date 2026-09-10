@@ -27,7 +27,7 @@ Charter: [`skills-loops-harness-split.html`](https://github.com/sycamore-hq/cros
 
 - AVRIL: `avril-conductor`, `planning-architect`, `product-owner`, `qa-architect`, `visionary-cto`
 - AXEL: `axel-conductor`
-- Code GAN: `reviewer`, `tester`, `architect`
+- Code GAN: `generator`, `reviewer`, `tester`, `architect`
 - BRICK stages: `brick-specifier`, `brick-coder`, `brick-refactorer`, `brick-mutator` *agents* (the stage *skills* stay in skills)
 
 ### OpenCode prompt bodies
@@ -38,7 +38,7 @@ A target bootstrapped before the harness loops pin moves to `v1-cards` may still
 
 ### Pipeline law
 
-`book/src/pipeline/{overview,avril,axel,brick}.md` is the SSOT for those chapters.
+`book/src/pipeline/{overview,avril,axel,brick}.md` is the SSOT for those chapters. `book/src/destinations/` is Grok Bot and later hosts.
 
 ### Graphs (topology)
 
