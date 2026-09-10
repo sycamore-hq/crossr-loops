@@ -34,8 +34,8 @@ GitHub only in v1. Work runs on the Grok Bot computer under `/workspace`, not on
 
 1. Ask for a GitHub URL, or offer `gh repo create` (private default; user confirms name and visibility).
 2. Clone to `/workspace/<name>`.
-3. Missing `lockfile.toml`: name `sycamore-hq/crossr-harness` `scripts/harness-bootstrap`, ask yes, run the official tool against that repo, show the pins it wrote. Do not invent pins. Bootstrap also copies personas into `/workspace/<name>/.agents/agents/`. That copy is the project's OpenCode tree. Mint does not read it.
-4. Clone `sycamore-hq/crossr-loops` at the `loops` pin into `/workspace/.crossr/loops`. This is the only persona root mint reads: `/workspace/.crossr/loops/.agents/agents/`.
+3. Missing `lockfile.toml`: clone `sycamore-hq/crossr-harness` at its default branch into `/workspace/.crossr/harness` unless the user names a tag. Ask yes. Run `scripts/harness-bootstrap` from that checkout against `/workspace/<name>`. Show the command and the pins it wrote. Do not invent pins. Bootstrap also copies personas into `/workspace/<name>/.agents/agents/`. That copy is the project's OpenCode tree. Mint does not read it.
+4. On every add-project (lockfile already present or just written): read that repo's `lockfile.toml` `loops` pin. Ensure `sycamore-hq/crossr-loops` is checked out at that pin into `/workspace/.crossr/loops/<pin>/`. Mint, briefs, and `PERSONA` lines for this repo use `/workspace/.crossr/loops/<pin>/.agents/agents/` only. A second repo with a different pin gets its own directory. Do not reuse another pin's tree.
 5. Ask “Add another?” One team, many projects.
 
 GitLab and Codeberg: stop. A clone is not a draft PR.
@@ -49,11 +49,11 @@ Ask once: “First time with CrossR, or stand the full team now?”
 
 Explain names the pipeline and the eight seats, then “Stand all eight, AVRIL first, or stop here?” Mint only what they picked.
 
-Go mints all eight **when the pin contains every seat file**. Brick stays off until they name a Gherkin unit.
+Go mints all eight **when the active repo's pin contains every seat file**. Brick stays off until they name a Gherkin unit.
 
 Eight seats require a `loops` pin at or after the commit that adds `generator-agent.md`. The current published pin `v1-cards` does not have that file. On a pin missing any seat file: card the user. Do not mint a partial team. Do not invent a writer brief to paper over the hole.
 
-At mint, each sibling Description is the persona file body from `/workspace/.crossr/loops/.agents/agents/<seat>-agent.md`. First line is that absolute path plus the pin. Do not paraphrase. Missing file → card; do not create that Bot; do not stand the rest of that GAN.
+At mint, each sibling Description is the persona file body from `/workspace/.crossr/loops/<pin>/.agents/agents/<seat>-agent.md` for the active repo's pin. First line is that absolute path plus the pin. Do not paraphrase. Missing file → card; do not create that Bot; do not stand the rest of that GAN.
 
 Two chats: **AVRIL** (Chief-of-Staff + planning four) and **AXEL** (Chief-of-Staff + execution four). User stays in the Chief-of-Staff DM. Briefs go in the group chat, @ the seat. Receipts are quoted back to the DM.
 
@@ -63,7 +63,7 @@ Report the roster. Read the board.
 
 v1 Grok Bot board is a deliberate subset of the AXEL intake gate in [`axel.md`](../pipeline/axel.md). It reads only:
 
-- a Blessed Backlog Summary in the repo, or
+- the GitHub issue on the active repo titled exactly `Blessed Backlog Summary`, or
 - GitHub comments with child-authored `BLESS <id>` from the AVRIL seats.
 
 It does not honor `avril-blessed` board markers or a human-authorized id set. README, raw issues, `progress.md`, and `features.json` are empty.
@@ -83,7 +83,7 @@ Not pipeline law. Do not back-port into `avril.md` / `axel.md`.
 - After Reviewer `BLESS` plus the repo's named check transcript on that SHA, Chief-of-Staff announces the PR is ready to merge and nudges. The user merges.
 - Chief-of-Staff does not create, ready, or merge a PR unless the user names that verb this turn.
 
-Mechanical green is whatever that repo's CrossR tooling names (usually `just check`). No recipe → card. Do not invent a check.
+Mechanical green is whatever that repo's CrossR tooling names (usually `just check`). Chief-of-Staff runs that check on this computer. No recipe → card. Do not invent a check. Red → back to Generator. No LLM verdict on a red check.
 
 ## Seats
 
@@ -91,4 +91,4 @@ AVRIL: Planning Architect, Product Owner, QA Architect, Visionary CTO.
 
 AXEL: Generator, Architect, Tester, Reviewer.
 
-Personas: `/workspace/.crossr/loops/.agents/agents/<seat>-agent.md` only. Do not mint the conductor agents.
+Personas: `/workspace/.crossr/loops/<pin>/.agents/agents/<seat>-agent.md` for the active repo's pin only. Do not mint the conductor agents.
