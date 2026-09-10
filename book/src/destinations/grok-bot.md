@@ -22,7 +22,7 @@ user  ↔→  Chief-of-Staff (only human surface)
                 ├─ add-project   GitHub URL or gh repo create → /workspace/<name>
                 ├─ stand-up      Explain or Go; mint seats; open AVRIL + AXEL chats
                 ├─ AVRIL         Planning Architect → Product Owner → QA Architect → Visionary CTO
-                ├─ AXEL          Generator (plan → Architect) → code → mechanical → Tester → Reviewer
+                ├─ AXEL          Generator plan → audit-plan → Architect → code → mechanical → audit-packet → Tester → Reviewer
                 └─ andon         card the user, wait
 ```
 
@@ -34,8 +34,8 @@ GitHub only in v1. Work runs on the Grok Bot computer under `/workspace`, not on
 
 1. Ask for a GitHub URL, or offer `gh repo create` (private default; user confirms name and visibility).
 2. Clone to `/workspace/<name>`.
-3. Missing `lockfile.toml`: clone `sycamore-hq/crossr-harness` at its default branch into `/workspace/.crossr/harness` unless the user names a tag. Ask yes. Run `scripts/harness-bootstrap` from that checkout against `/workspace/<name>`. Show the command and the pins it wrote. Do not invent pins. Bootstrap also copies personas into `/workspace/<name>/.agents/agents/`. That copy is the project's OpenCode tree. Mint does not read it.
-4. On every add-project (lockfile already present or just written): read that repo's `lockfile.toml` `loops` pin. Ensure `sycamore-hq/crossr-loops` is checked out at that pin into `/workspace/.crossr/loops/<pin>/`. Mint, briefs, and `PERSONA` lines for this repo use `/workspace/.crossr/loops/<pin>/.agents/agents/` only. A second repo with a different pin gets its own directory. Do not reuse another pin's tree.
+3. Missing `lockfile.toml`: clone `sycamore-hq/crossr-harness` at its default branch into `/workspace/.crossr/harness` unless the user names a tag. Ask yes. Run `scripts/harness-bootstrap` from that checkout against `/workspace/<name>`. Show the command and the pins it wrote. Do not invent pins. Bootstrap copies personas into `/workspace/<name>/.agents/agents/` (OpenCode; mint does not read it) and copies `audit-plan` / `audit-packet` into `/workspace/<name>/scripts/` when the skills pin ships them.
+4. On every add-project (lockfile already present or just written): read that repo's `lockfile.toml` `loops` and `skills` pins. Ensure `sycamore-hq/crossr-loops` is checked out at the loops pin into `/workspace/.crossr/loops/<pin>/`. Ensure `sycamore-hq/crossr-skills` is checked out at the skills pin into `/workspace/.crossr/skills/<pin>/`. Mint and `PERSONA` lines use the loops tree. Audit scripts run from `/workspace/<name>/scripts/` if present, else `/workspace/.crossr/skills/<pin>/scripts/`. A second repo with a different pin gets its own directories. Do not reuse another pin's tree.
 5. Ask “Add another?” One team, many projects.
 
 GitLab and Codeberg: stop. A clone is not a draft PR.
@@ -78,12 +78,12 @@ Not pipeline law. Do not back-port into `avril.md` / `axel.md`.
 
 - Unit start = branch only. No PR.
 - Generator opens a Draft PR only as a durable save point.
-- Generator marks Ready for review when handing the write to Reviewer. That is the Generator → Reviewer handoff, not permission to merge. Ready requires Tester `BLESS` on that SHA (or a brief that names the handoff). A Tester `REJECT` is a fix cycle, not a handoff.
+- At Reviewer handoff, if no Draft exists yet, Generator opens one, then marks Ready for review. Ready requires Tester `BLESS` on that SHA (or a brief that names the handoff). A Tester `REJECT` is a fix cycle, not a handoff.
 - v1: Chief-of-Staff @ Reviewer in the AXEL chat. Listening for `ready_for_review` is later.
 - After Reviewer `BLESS` plus the repo's named check transcript on that SHA, Chief-of-Staff announces the PR is ready to merge and nudges. The user merges.
 - Chief-of-Staff does not create, ready, or merge a PR unless the user names that verb this turn.
 
-Mechanical green is whatever that repo's CrossR tooling names (usually `just check`). Chief-of-Staff runs that check on this computer. No recipe → card. Do not invent a check. Red → back to Generator. No LLM verdict on a red check.
+Mechanical green is whatever that repo's CrossR tooling names (usually `just check`). Chief-of-Staff runs that check on this computer. Plan audit is `audit-plan`. Packet audit is `audit-packet`. No recipe → card. Do not invent a check. Red → back to Generator. No LLM verdict on a red check.
 
 ## Seats
 
