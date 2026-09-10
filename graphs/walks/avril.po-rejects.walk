@@ -1,0 +1,7 @@
+# avril — PO rejects once: generator → po → generator → po → qa → cto → stop; the plan goes back to the generator before the set passes.
+next
+REJECT
+next
+BLESS
+BLESS
+BLESS

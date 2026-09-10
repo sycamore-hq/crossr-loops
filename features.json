@@ -34,7 +34,7 @@
       },
       {
         "id": "pr3a",
-        "title": "Delete the inner-GAN conductor skill — axel already restates the chain",
+        "title": "Delete the inner-GAN conductor skill \u2014 axel already restates the chain",
         "status": "completed"
       },
       {
@@ -110,6 +110,17 @@
           "step-walk",
           "trace",
           "walk-files"
+        ]
+      },
+      {
+        "id": "gr-r3",
+        "title": "graph-runner: descent, cover, full edge coverage, docs",
+        "status": "completed",
+        "features": [
+          "descent",
+          "cover",
+          "full-walks",
+          "runner-docs"
         ]
       }
     ]

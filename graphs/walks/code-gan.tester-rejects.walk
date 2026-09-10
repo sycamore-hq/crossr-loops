@@ -1,0 +1,8 @@
+# code-gan — tester rejects once: generate → mechanical → tester → generate → mechanical → tester → reviewer → commit.
+next
+pass
+REJECT
+next
+pass
+BLESS
+BLESS

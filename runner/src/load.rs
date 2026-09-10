@@ -5,7 +5,7 @@
 //! (decision 7). Persona and skill *existence* are not checked here — that is
 //! `verify-skill-refs`' job and needs the catalog.
 
-use std::collections::HashSet;
+use std::collections::{BTreeMap, HashSet};
 use std::ffi::OsStr;
 use std::fmt;
 use std::fs;
@@ -14,9 +14,20 @@ use std::path::{Path, PathBuf};
 use thiserror::Error;
 
 use crate::graph::{Graph, Label, NodeId};
+use crate::step::{self, Resolve};
 
 /// The schema file, skipped by [`load_dir`].
 pub const SCHEMA_FILE: &str = "schema.json";
+
+/// Every graph of one directory, keyed by file stem — the name a
+/// `uses.graph` refers to. Sorted, so iteration is file-name order.
+pub type Graphs = BTreeMap<String, Graph>;
+
+impl Resolve for Graphs {
+    fn resolve(&self, name: &str) -> Option<&Graph> {
+        self.get(name)
+    }
+}
 
 /// Which end of an edge failed to resolve.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -160,6 +171,17 @@ pub enum LoadError {
         /// Directory searched.
         dir: PathBuf,
     },
+    /// A `role: graph` node's `uses.graph` names a file the directory does
+    /// not hold, so no walk could descend into it.
+    #[error("{graph}: node '{node}' uses.graph '{sub}' has no {sub}.json in the directory")]
+    MissingSubgraph {
+        /// Graph name.
+        graph: String,
+        /// The `role: graph` node.
+        node: NodeId,
+        /// The `uses.graph` value.
+        sub: String,
+    },
 }
 
 fn describe_when(label: Option<&Label>) -> String {
@@ -282,21 +304,44 @@ pub fn load_file(path: &Path) -> Result<Graph, LoadError> {
         path: path.to_path_buf(),
         source,
     })?;
-    let stem = path
-        .file_stem()
-        .and_then(OsStr::to_str)
-        .map_or_else(|| path.display().to_string(), str::to_owned);
-    parse(&stem, &text)
+    parse(&stem_of(path), &text)
 }
 
-/// Read every `*.json` in `dir` except [`SCHEMA_FILE`], in file-name order.
+/// Check that every `role: graph` node's `uses.graph` is a key of `graphs`,
+/// so every descent in the set has somewhere to go.
+///
+/// # Errors
+///
+/// [`LoadError::MissingSubgraph`] for the first `role: graph` node, in
+/// file-name then document order, whose subgraph is not in the set.
+pub fn check_subgraphs(graphs: &Graphs) -> Result<(), LoadError> {
+    for g in graphs.values() {
+        for n in &g.nodes {
+            if let Some(sub) = step::subgraph_of(g, &n.id) {
+                if !graphs.contains_key(sub) {
+                    return Err(LoadError::MissingSubgraph {
+                        graph: g.name.clone(),
+                        node: n.id.clone(),
+                        sub: sub.to_owned(),
+                    });
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
+/// Read every `*.json` in `dir` except [`SCHEMA_FILE`] into a [`Graphs`]
+/// keyed by file stem, then check that every `role: graph` node names a
+/// graph in the set, so the result is a complete [`Resolve`].
 ///
 /// # Errors
 ///
 /// [`LoadError::Io`] when the directory cannot be listed,
-/// [`LoadError::NoGraphs`] when it holds no graph files; otherwise the first
-/// file that [`load_file`] refuses.
-pub fn load_dir(dir: &Path) -> Result<Vec<Graph>, LoadError> {
+/// [`LoadError::NoGraphs`] when it holds no graph files, the first file
+/// (in file-name order) that [`load_file`] refuses, or
+/// [`LoadError::MissingSubgraph`] when a descent has nowhere to go.
+pub fn load_dir(dir: &Path) -> Result<Graphs, LoadError> {
     let io = |source| LoadError::Io {
         path: dir.to_path_buf(),
         source,
@@ -316,5 +361,18 @@ pub fn load_dir(dir: &Path) -> Result<Vec<Graph>, LoadError> {
         });
     }
     paths.sort();
-    paths.iter().map(|p| load_file(p)).collect()
+    let mut graphs = Graphs::new();
+    for path in &paths {
+        let g = load_file(path)?;
+        graphs.insert(stem_of(path), g);
+    }
+    check_subgraphs(&graphs)?;
+    Ok(graphs)
+}
+
+/// The file stem, or the whole path when it has none.
+fn stem_of(path: &Path) -> String {
+    path.file_stem()
+        .and_then(OsStr::to_str)
+        .map_or_else(|| path.display().to_string(), str::to_owned)
 }

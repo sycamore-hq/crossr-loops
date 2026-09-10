@@ -42,7 +42,7 @@ A target bootstrapped before the harness loops pin moves to `v1-cards` may still
 
 ### Graphs (topology)
 
-[`graphs/`](graphs/) — `avril`, `axel`, `brick`, `code-gan`, `flagship`. Catalog skills by name. No Rhai. `just graphs-verify`.
+[`graphs/`](graphs/) — `avril`, `axel`, `brick`, `code-gan`, `flagship`. Catalog skills by name. No Rhai. `just graphs-verify`. [`graph-runner`](runner/) replays a committed walk against a graph and never runs one — see [`graphs/GRAPH.md`](graphs/GRAPH.md).
 
 ## Not here
 

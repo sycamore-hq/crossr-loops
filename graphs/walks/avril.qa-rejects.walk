@@ -1,0 +1,8 @@
+# avril — QA rejects once: generator → po → qa → generator → po → qa → cto → stop; PO blessed, QA sends the whole set back.
+next
+BLESS
+REJECT
+next
+BLESS
+BLESS
+BLESS

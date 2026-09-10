@@ -1,10 +1,19 @@
 #!/usr/bin/env python3
-"""Verify graphs/*.json against the v0 contract. Optional --html report."""
+"""Verify graphs/*.json against the v0 contract. Optional --html report.
+
+When runner/Cargo.toml exists, also replays every graphs/walks/*.walk through
+`graph-runner cover` and fails on any edge no walk took (decision 6 of
+crossr-skills docs/plans/graph-runner-prompt-set.md). Missing cargo is a
+failure, not a skip.
+"""
 
 from __future__ import annotations
 
 import html
 import json
+import re
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -12,6 +21,10 @@ ROOT = Path(__file__).resolve().parents[1]
 GRAPHS = ROOT / "graphs"
 AGENTS = ROOT / ".agents" / "agents"
 SKILLS = ROOT / ".agents" / "skills"
+RUNNER_MANIFEST = ROOT / "runner" / "Cargo.toml"
+TOOLCHAIN = "rust-toolchain.toml"
+COVER_CMD = ["cargo", "run", "-q", "-p", "graph-runner", "--", "cover", "graphs"]
+COVER_LINE = re.compile(r"^uncovered edges: (\d+)$", re.MULTILINE)
 SCHEMA_NAME = "schema.json"
 ALLOWED_GRAPH = {
     "apiVersion",
@@ -163,6 +176,56 @@ def validate(name: str, g: dict, all_names: set[str], c: Check) -> None:
         c.pass_(f"{name}: {len(ids)} nodes, {len(edges)} edges, start {g.get('start')}")
 
 
+def parse_cover(stdout: str) -> int | None:
+    """The count on the runner's `uncovered edges: <u>` line; None if absent."""
+    m = COVER_LINE.search(stdout)
+    return int(m.group(1)) if m else None
+
+
+def judge_cover(returncode: int, stdout: str, stderr: str) -> tuple[list[str], list[str]]:
+    """Pure: (ok, bad) check messages for one `graph-runner cover` run.
+
+    Zero uncovered edges and exit 0 pass. Otherwise every line the runner
+    printed (the uncovered edges, or its error) is reported, so the failure
+    names `<graph>: <from> --<when>--> <to>`.
+    """
+    count = parse_cover(stdout)
+    if returncode == 0 and count == 0:
+        summary = next(
+            (line for line in stdout.splitlines() if line.startswith("taken ")), ""
+        )
+        return [f"cover: uncovered edges: 0 ({summary or 'graph-runner cover'})"], []
+    bad: list[str] = []
+    if count is None:
+        bad.append(f"cover: graph-runner exited {returncode} without an `uncovered edges:` line")
+    else:
+        bad.append(f"cover: uncovered edges: {count}")
+    bad.extend(
+        f"cover: {line}"
+        for line in (stdout + "\n" + stderr).splitlines()
+        if line.strip() and not line.startswith(("taken ", "uncovered edges:"))
+    )
+    return [], bad
+
+
+def run_cover(c: Check) -> None:
+    """Action: shell out to `cargo run -q -p graph-runner -- cover graphs`."""
+    if not RUNNER_MANIFEST.is_file():
+        return
+    if shutil.which("cargo") is None:
+        c.fail(
+            f"cover: `cargo` not on PATH; runner/Cargo.toml exists, so install the "
+            f"toolchain pinned in {TOOLCHAIN} (rustup) — no silent skip"
+        )
+        return
+    proc = subprocess.run(COVER_CMD, cwd=ROOT, capture_output=True, text=True, check=False)
+    ok, bad = judge_cover(proc.returncode, proc.stdout, proc.stderr)
+    for msg in ok:
+        c.pass_(msg)
+    for msg in bad:
+        c.fail(msg)
+
+
 def mermaid(g: dict) -> str:
     lines = ["flowchart LR"]
     for e in g.get("edges") or []:
@@ -281,6 +344,7 @@ def main() -> int:
     names = set(graphs)
     for name in sorted(graphs):
         validate(name, graphs[name], names, c)
+    run_cover(c)
     if html_out:
         write_html(graphs, c, GRAPHS / "index.html")
     print()
