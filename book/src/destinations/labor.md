@@ -31,13 +31,13 @@ Setup pastes, handed to a setup Bot, not dumped into the Chief-of-Staff profile:
 3. Asked backend red → card. No silent fallback to hands unless the user said "do it yourself" this turn.
 4. Add-project still clones `/workspace/<name>`. That tree is for board, `gh`, `audit-plan`, `audit-packet`, and the named check. Cursor "never clone" is labor-host law for CloudAgent runs, not working-tree law.
 5. After any mutating labor run (CloudAgent or on-box `--auto`), believe GitHub (PR URL + HEAD SHA), not the agent story. Uncommitted labor edits are not a result.
-6. Model law is roles, not IDs. `LABOR_CHEAP` = generation, verification, test authoring, draft diffs. `LABOR_SMART` = architecture, planning, judgement review. Confirm live OpenCode ids with `opencode models`.
+6. Model law is roles, not IDs. `ROLE CHEAP` = generation, verification, test authoring, draft diffs. `ROLE SMART` = architecture, planning, judgement review. Confirm live OpenCode ids with `opencode models`.
 7. Do not route Grok-via-OpenCode-Go from a Grok Bot.
 8. Secrets: secret-request by name, persist `/home/box/agent-data/box-secrets.json` chmod 600, never print. `CURSOR_API_KEY` only if CloudAgent cannot list. Claude is `CLAUDE_CODE_OAUTH_TOKEN` from `claude setup-token`, not an API key. OpenCode is `OPENCODE_API_KEY` from the Go sub.
 9. Deck-review law is unchanged. Reviewer briefs start with `/github-pr-review` (nits on). Fix briefs start with `/github-pr-fix` (nits on).
 10. Lights-off merge still refused. Chief-of-Staff still never votes.
 11. No fifth remote. No catalog skill. No pin move.
-12. HQ engine nicknames stay HQ-only. Destinations uses Cursor Cloud Agent, Claude Code, OpenCode Go.
+12. Destinations uses Cursor Cloud Agent, Claude Code, OpenCode Go. No other names for these engines.
 
 ## Stand-up probe
 
@@ -82,8 +82,8 @@ Mechanical green (`just check`, `audit-plan`, `audit-packet`) stays Chief-of-Sta
 
 OpenCode Go models change. Confirm provider string and ids with `opencode auth list` and `opencode models` on the box. Do not freeze `opencode` vs `opencode-go`. Official Go docs write `opencode-go/<id>`; the CLI may print `opencode/<id>`. Use whatever those two commands print.
 
-LABOR_CHEAP examples: `glm-5.3-flash`, `deepseek-v4.1-flash`, `mimo-v2.5`, `qwen3.8-flash`.
-LABOR_SMART examples: `kimi-k3`, `glm-5.3`, `qwen3.8-max`, `kimi-k2.7-code`.
+ROLE CHEAP examples: `glm-5.3-flash`, `deepseek-v4.1-flash`, `mimo-v2.5`, `qwen3.8-flash`.
+ROLE SMART examples: `kimi-k3`, `glm-5.3`, `qwen3.8-max`, `kimi-k2.7-code`.
 
 Do not pin Grok 4.6, GPT 5.6 Luna, or any Grok-via-Go id from a Grok Bot.
 
@@ -136,4 +136,4 @@ Setup: [labor-opencode.md](labor-opencode.md).
 - Routing Grok-via-Go from a Grok Bot.
 - Lights-off merge.
 - Freehand review when deck-review law applies.
-- HQ nicknames in Destinations.
+- Other names for Cursor Cloud Agent, Claude Code, or OpenCode Go.

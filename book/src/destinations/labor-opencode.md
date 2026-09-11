@@ -75,8 +75,8 @@ opencode models
 Expect Go models on the list. Report the provider prefix those commands print (`opencode/` or `opencode-go/`). If the list is empty, re-request the secret. Do not guess IDs.
 
 ### 5. Roles, not IDs
-- LABOR_CHEAP — generation, verification, test authoring, draft diffs
-- LABOR_SMART — architecture, planning, judgement review
+- ROLE CHEAP — generation, verification, test authoring, draft diffs
+- ROLE SMART — architecture, planning, judgement review
 
 Dated examples 2026-09-10. Refresh from `opencode models` on this box. Skip any id that is not listed.
 
