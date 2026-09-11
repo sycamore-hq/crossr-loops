@@ -66,13 +66,21 @@ ROLE: CHEAP|SMART
 BACKEND: green|red|unset
 ```
 
+`red` is a Chief-of-Staff probe token, not a seat dispatch token. Rule 3 cards before a brief goes out.
+
+- `green` — seat may dispatch; no hands
+- `unset` — labor off; seat uses hands
+- `red` — Chief-of-Staff already carded; seat waits; no hands unless the user said "do it yourself" this turn
+
+A seat should not see `red`. If one arrives anyway, wait. Do not invent a fallback.
+
 Default assignment when LABOR is not named in the user turn:
 
 | Job class | ROLE | Backend if green |
 | --- | --- | --- |
 | Generator code / draft diff / test authoring | CHEAP | Cursor if mutate; else OpenCode |
 | Mechanical verify write-up | CHEAP | OpenCode |
-| Generator plan / Architect / Planning Architect / CTO | SMART | Claude if judgement; else OpenCode |
+| Generator plan / Architect / Planning Architect / CTO | SMART | Ask. Named LABOR this turn wins. Silence = hands. |
 | Reviewer (`/github-pr-review`) | SMART | Claude (artifact); seat posts the witness review |
 | Fix (`/github-pr-fix`) | CHEAP | Claude |
 

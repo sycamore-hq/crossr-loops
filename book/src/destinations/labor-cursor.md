@@ -36,7 +36,7 @@ If `/home/box/agent-data/managed-skills/skills/code-changes/SKILL.md` exists, re
 
 5. **Operating rules**
    - Launch with a clear prompt, repo URL (or `new_repo: true` for greenfield), optional `starting_ref`.
-   - Review / fix prompts start with `/github-pr-review` or `/github-pr-fix` (nits on). No freehand review essay.
+   - Review / fix prompts start with `/github-pr-review` or `/github-pr-fix` (nits on). No freehand review essay. How that slash resolves is harness/model dependent. Destinations does not freeze CloudAgent skill loading. The required text is the skill name; the host behind that CloudAgent run decides whether the name binds to a skill file, a managed skill, or prompt text.
    - Prefer CloudAgent over hand-rolling curl when the tool can do the job.
    - After a run finishes: believe GitHub (PR URL + HEAD SHA), not the agent's story.
    - Never paste API keys, tokens, or cookies into chat.

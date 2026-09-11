@@ -161,7 +161,7 @@ Descent, `cover`, full edge coverage, docs. Per crossr-skills `docs/plans/graph-
 
 ## destinations — Grok Bot (COMPLETED)
 
-`book/src/destinations/{overview,grok-bot,grok-bot-profile}.md`. AXEL writer persona `generator-agent.md`. No pin move. Go cards until a loops tag containing `generator-agent.md` is what harness bootstrap writes.
+`book/src/destinations/{overview,grok-bot,grok-bot-profile}.md`. AXEL writer persona `generator-agent.md`. #17 landed those on loops main. "Go cards until a loops tag containing `generator-agent.md` is what harness bootstrap writes" is a harness pin move, not an open dest-grok-bot unit. This PR excludes pin moves.
 
 ## destinations — labor (IN PROGRESS)
 
