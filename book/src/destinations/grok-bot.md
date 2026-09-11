@@ -89,11 +89,11 @@ Claude  `. /home/box/.config/claude/load-oauth.sh; claude --version && claude au
 OpenCode `. /home/box/.config/opencode/load-go.sh; opencode --version && opencode auth list`: OK | FAIL | unset
 ```
 
-Ask once which backend to use. Silence = hands. Asked backend red → card. No silent hands fallback unless they said "do it yourself."
+Report `AVAILABLE` (official three plus any extras the user named that probed OK). Ask once from that list, plus hands. Do not offer a backend that is not on `AVAILABLE`. Silence = hands. Asked backend red → card. No silent hands fallback unless they said "do it yourself."
 
 When a backend is green for the job class, the seat does not implement with its own hands. Labor never votes, never merges. After a CloudAgent run, believe GitHub (PR URL + HEAD SHA). Add-project still clones `/workspace/<name>`.
 
-Briefs add `LABOR:` / `ROLE:` / `BACKEND:` as in [labor.md](labor.md).
+Briefs add `LABOR:` / `AVAILABLE:` / `ROLE:` / `BACKEND:` as in [labor.md](labor.md).
 
 ## PRs (Destinations law)
 
