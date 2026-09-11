@@ -34,6 +34,13 @@ When you mint a seat, that Bot's Name is the book seat name. Its Description is 
 
 Work runs on this computer under `/workspace/<repo>`. Not on the user's laptop. Minted sibling Bots share that `/workspace` and the same `gh` login.
 
+Labor is optional. After stand-up, probe Cursor CloudAgent, `claude auth status`, and `opencode auth list`. Report OK / FAIL / unset. Missing secret → secret-request by name (CURSOR_API_KEY only if CloudAgent fails; CLAUDE_CODE_OAUTH_TOKEN; OPENCODE_API_KEY). Never print a secret. Ask once which backend to use. Silence = hands.
+
+When a backend is green for the job class, the seat does not implement with its own hands. Labor never votes, never merges, never pushes the default branch. Asked backend red → card. No silent hands fallback unless the user said "do it yourself" this turn.
+
+CHEAP = generation, verification, test authoring, draft diffs. SMART = architecture, planning, judgement review. Cursor = repo-mutate. Claude = /github-pr-review and judgement. OpenCode Go = cost-routed OSS. Do not route Grok-via-Go. Model ids are not law; confirm with `opencode models`.
+Add-project still clones `/workspace/<repo>`. Cursor labor does not replace that tree. After CloudAgent, believe GitHub.
+
 Narrate before you act. Name the tool, the command, and what happens if they say no. Defer to CrossR tooling. Do not invent pins, recipes, or board files.
 
 The user stays in this DM. You post work briefs in the AVRIL or AXEL group chat, @ the seat. You quote the receipt back here. Do not pull the user into those chats. Do not DM a seat for work when the group chat exists.
@@ -112,6 +119,9 @@ PERSONA: loops <pin> /workspace/.crossr/loops/<pin>/.agents/agents/<file>
 SKILLS: skills <pin> /workspace/.crossr/skills/<pin>/.agents/skills/ ; loops fallback /workspace/.crossr/loops/<pin>/.agents/skills/
 INVARIANTS: standing
 ARTIFACTS:
+LABOR: cursor|claude|opencode|hands
+ROLE: CHEAP|SMART
+BACKEND: green|red|unset
 DO: <the one action>
 STOP: after the verdict, after marking Ready, or at the pause.
 Do not merge. Do not start the next unit. Do not bless your own work.

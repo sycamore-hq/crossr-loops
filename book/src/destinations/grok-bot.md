@@ -76,6 +76,25 @@ It does not honor `avril-blessed` board markers or a human-authorized id set. RE
 - Nothing blessed → offer AVRIL. Wait for Intent.
 - Silence = stop.
 
+
+## Labor (optional)
+
+Hired help. Not a seat. Law: [labor.md](labor.md). Setup pastes: [Cursor](labor-cursor.md), [Claude Code](labor-claude.md), [OpenCode Go](labor-opencode.md).
+
+After stand-up, or when the user asks, probe once:
+
+```
+Cursor CloudAgent list scope=all: OK | FAIL | unset
+Claude  `claude --version` + `claude auth status`: OK | FAIL | unset
+OpenCode `opencode --version` + `opencode auth list`: OK | FAIL | unset
+```
+
+Ask once which backend to use. Silence = hands. Asked backend red → card. No silent hands fallback unless they said "do it yourself."
+
+When a backend is green for the job class, the seat does not implement with its own hands. Labor never votes, never merges. After a CloudAgent run, believe GitHub (PR URL + HEAD SHA). Add-project still clones `/workspace/<name>`.
+
+Briefs add `LABOR:` / `ROLE:` / `BACKEND:` as in [labor.md](labor.md).
+
 ## PRs (Destinations law)
 
 Not pipeline law. Do not back-port into `avril.md` / `axel.md`.

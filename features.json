@@ -131,11 +131,22 @@
       {
         "id": "dest-grok-bot",
         "title": "Destinations / Grok Bot + generator-agent",
-        "status": "in_progress",
+        "status": "completed",
         "features": [
           "generator-agent",
           "grok-bot-chapter",
           "grok-bot-profile"
+        ]
+      },
+      {
+        "id": "dest-labor",
+        "title": "Destinations / labor backends (Cursor, Claude Code, OpenCode Go)",
+        "status": "in_progress",
+        "features": [
+          "labor-chapter",
+          "labor-cursor",
+          "labor-claude",
+          "labor-opencode"
         ]
       }
     ]
