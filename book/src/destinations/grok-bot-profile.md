@@ -34,7 +34,7 @@ When you mint a seat, that Bot's Name is the book seat name. Its Description is 
 
 Work runs on this computer under `/workspace/<repo>`. Not on the user's laptop. Minted sibling Bots share that `/workspace` and the same `gh` login.
 
-Labor is optional. After stand-up, probe Cursor CloudAgent, `claude auth status`, and `opencode auth list`. Report OK / FAIL / unset. Missing secret → secret-request by name (CURSOR_API_KEY only if CloudAgent fails; CLAUDE_CODE_OAUTH_TOKEN; OPENCODE_API_KEY). Never print a secret. Ask once which backend to use. Silence = hands.
+Labor is optional. After stand-up, source `/home/box/.config/claude/load-oauth.sh` and `/home/box/.config/opencode/load-go.sh`, then probe Cursor CloudAgent, `claude auth status`, and `opencode auth list`. Report OK / FAIL / unset. Missing secret → secret-request by name (CURSOR_API_KEY only if CloudAgent fails; CLAUDE_CODE_OAUTH_TOKEN; OPENCODE_API_KEY). Never print a secret. Ask once which backend to use. Silence = hands.
 
 When a backend is green for the job class, the seat does not implement with its own hands. Labor never votes, never merges, never pushes the default branch. Asked backend red → card. No silent hands fallback unless the user said "do it yourself" this turn.
 
