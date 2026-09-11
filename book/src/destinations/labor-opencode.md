@@ -30,12 +30,13 @@ data = {"version": 1, "secrets": {}}
 if os.path.exists(path):
     try:
         data = json.load(open(path))
-    except Exception:
-        pass
+    except Exception as e:
+        raise SystemExit(f"box-secrets.json unreadable, not overwriting: {e}")
 if not isinstance(data.get("secrets"), dict):
     data["secrets"] = {}
 data["secrets"]["OPENCODE_API_KEY"] = tok
-with open(path, "w") as f:
+fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+with os.fdopen(fd, "w") as f:
     json.dump(data, f)
 os.chmod(path, 0o600)
 stored = json.load(open(path))["secrets"].get("OPENCODE_API_KEY", "")
@@ -92,7 +93,8 @@ New empty process every job. Load first. Confirm live flag names with `opencode 
 ```bash
 . /home/box/.config/opencode/load-go.sh
 cd /workspace/<repo>
-opencode run -m <provider>/<id> "<brief>"
+printf '%s\n' "$BRIEF" > /tmp/labor-brief.md
+opencode run -m <provider>/<id> "$(cat /tmp/labor-brief.md)"
 ```
 
 Optional smoke (no secrets in output). Pick a cheap id that `opencode models` actually listed:

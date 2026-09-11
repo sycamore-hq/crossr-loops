@@ -26,11 +26,11 @@ Setup pastes, handed to a setup Bot, not dumped into the Chief-of-Staff profile:
 
 ## Hard rules
 
-1. Labor never writes `BLESS`, `REJECT`, or merge. The seat that hired it emits the SEAT token. A token the labor process wrote is invalid.
+1. Labor never writes `BLESS`, `REJECT`, or merge. The seat that hired it emits the SEAT token. A token the labor process wrote is invalid. A GitHub review that labor submitted is an artifact, not a witness. The Reviewer seat reads it, then posts its own review starting with `SEAT: Reviewer` and its `code-review:` line. Only that URL is the witness.
 2. When a backend is green for that job class, the seat does not implement with its own hands.
 3. Asked backend red → card. No silent fallback to hands unless the user said "do it yourself" this turn.
 4. Add-project still clones `/workspace/<name>`. That tree is for board, `gh`, `audit-plan`, `audit-packet`, and the named check. Cursor "never clone" is labor-host law for CloudAgent runs, not working-tree law.
-5. After a CloudAgent run, believe GitHub (PR URL + HEAD SHA), not the agent story.
+5. After any mutating labor run (CloudAgent or on-box `--auto`), believe GitHub (PR URL + HEAD SHA), not the agent story. Uncommitted labor edits are not a result.
 6. Model law is roles, not IDs. `LABOR_CHEAP` = generation, verification, test authoring, draft diffs. `LABOR_SMART` = architecture, planning, judgement review. Confirm live OpenCode ids with `opencode models`.
 7. Do not route Grok-via-OpenCode-Go from a Grok Bot.
 8. Secrets: secret-request by name, persist `/home/box/agent-data/box-secrets.json` chmod 600, never print. `CURSOR_API_KEY` only if CloudAgent cannot list. Claude is `CLAUDE_CODE_OAUTH_TOKEN` from `claude setup-token`, not an API key. OpenCode is `OPENCODE_API_KEY` from the Go sub.
@@ -45,8 +45,8 @@ After the team exists, or when the user asks for labor, Chief-of-Staff probes on
 
 ```
 Cursor CloudAgent list scope=all: OK | FAIL | unset
-Claude  `claude --version` + `claude auth status`: OK | FAIL | unset
-OpenCode `opencode --version` + `opencode auth list`: OK | FAIL | unset
+Claude  `. /home/box/.config/claude/load-oauth.sh; claude --version && claude auth status`: OK | FAIL | unset
+OpenCode `. /home/box/.config/opencode/load-go.sh; opencode --version && opencode auth list`: OK | FAIL | unset
 ```
 
 Missing Cursor tool auth → try CloudAgent first. Only if that fails, secret-request `CURSOR_API_KEY`.
@@ -73,8 +73,8 @@ Default assignment when LABOR is not named in the user turn:
 | Generator code / draft diff / test authoring | CHEAP | Cursor if mutate; else OpenCode |
 | Mechanical verify write-up | CHEAP | OpenCode |
 | Generator plan / Architect / Planning Architect / CTO | SMART | Claude if judgement; else OpenCode |
-| Reviewer (`/github-pr-review`) | SMART | Claude |
-| Fix (`/github-pr-fix`) | CHEAP | Cursor if mutate; else Claude |
+| Reviewer (`/github-pr-review`) | SMART | Claude (artifact); seat posts the witness review |
+| Fix (`/github-pr-fix`) | CHEAP | Claude |
 
 Mechanical green (`just check`, `audit-plan`, `audit-packet`) stays Chief-of-Staff on `/workspace`. Labor does not replace those recipes.
 
@@ -99,13 +99,15 @@ Setup: [labor-cursor.md](labor-cursor.md).
 
 ### Claude Code CLI
 
-Binary on PATH, target shape `/home/box/.local/bin/claude`. Auth is `claude setup-token` → `CLAUDE_CODE_OAUTH_TOKEN`. Load `/home/box/.config/claude/load-oauth.sh` before every spawn. New empty process every job. Redirect stdin `</dev/null`. Review spawn:
+Binary on PATH, target shape `/home/box/.local/bin/claude`. Auth is `claude setup-token` → `CLAUDE_CODE_OAUTH_TOKEN`. Load `/home/box/.config/claude/load-oauth.sh` before every spawn. New empty process every job. Redirect stdin `</dev/null`. Write the brief to a file; do not inline it. Plan and review spawns stay non-mutating. Review spawn:
 
 ```
-claude -p "/github-pr-review {brief}" --permission-mode bypassPermissions --output-format text </dev/null
+. /home/box/.config/claude/load-oauth.sh
+printf '%s\n' "$BRIEF" > /tmp/labor-brief.md
+claude -p "/github-pr-review $(cat /tmp/labor-brief.md)" --disallowedTools "Edit,Write,NotebookEdit,Bash(git push*),Bash(gh pr merge*)" --output-format text </dev/null
 ```
 
-Optional: install `github-pr-review` from the skills pin into `~/.claude/skills/`. Probe `SKILL_OK`.
+Install `github-pr-review` and `github-pr-fix` from the skills pin into `~/.claude/skills/`. Probe: `SKILL.md` present and the first heading of the loaded skill is `PR Review`. Without that, Claude is `BACKEND: red` for the Reviewer and Fix job classes even when `claude auth status` is OK.
 
 Setup: [labor-claude.md](labor-claude.md).
 
@@ -115,10 +117,11 @@ Binary on PATH via the official install. Auth is the Go API key from https://ope
 
 ```
 . /home/box/.config/opencode/load-go.sh
-opencode run -m <provider>/<id> "<brief>"
+printf '%s\n' "$BRIEF" > /tmp/labor-brief.md
+opencode run -m <provider>/<id> "$(cat /tmp/labor-brief.md)"
 ```
 
-Confirm `--dir` / `--format` / `--auto` against `opencode run --help` on that box. `--auto` only when the brief needs writes. Plan and review jobs stay non-mutating. Confirm IDs with `opencode models`. Do not invent an id. `/avril` and `/axel` are destination commands, not this spawn.
+Confirm `--dir` / `--format` / `--auto` against `opencode run --help` on that box. `--auto` only when the brief needs writes. A write job ends with a commit on the unit branch, pushed. Report the HEAD SHA. Mechanical runs on that SHA, not on the working tree. Uncommitted labor edits are not a result. Plan and review jobs stay non-mutating. Confirm IDs with `opencode models`. Do not invent an id. `/avril` and `/axel` are destination commands, not this spawn.
 
 Setup: [labor-opencode.md](labor-opencode.md).
 

@@ -30,12 +30,13 @@ data = {"version": 1, "secrets": {}}
 if os.path.exists(path):
     try:
         data = json.load(open(path))
-    except Exception:
-        pass
+    except Exception as e:
+        raise SystemExit(f"box-secrets.json unreadable, not overwriting: {e}")
 if not isinstance(data.get("secrets"), dict):
     data["secrets"] = {}
 data["secrets"]["CLAUDE_CODE_OAUTH_TOKEN"] = tok
-with open(path, "w") as f:
+fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+with os.fdopen(fd, "w") as f:
     json.dump(data, f)
 os.chmod(path, 0o600)
 stored = json.load(open(path))["secrets"].get("CLAUDE_CODE_OAUTH_TOKEN", "")
@@ -77,43 +78,54 @@ claude -p "Reply with exactly: AUTH_OK" --output-format text </dev/null
 
 If the store is empty later, re-request the secret securely and re-persist. Do not retry bridge work until `claude auth status` is green.
 
-### 5. Optional but required for CrossR-style PR reviews
-Install the `github-pr-review` skill so `/github-pr-review` resolves:
+### 5. Required for the Reviewer / Fix job classes
+Install `github-pr-review` and `github-pr-fix` so the slashes resolve. Prefer the consumer's skills pin. Clone `main` only when this box has no pin checkout yet.
 
 ```bash
-rm -rf /tmp/crossr-skills-clone
-git clone --depth 1 --filter=blob:none --sparse https://github.com/sycamore-hq/crossr-skills.git /tmp/crossr-skills-clone
-cd /tmp/crossr-skills-clone
-git sparse-checkout set .agents/skills/github-pr-review
+SRC="/workspace/.crossr/skills/<pin>/.agents/skills/github-pr-review"
+FIX="/workspace/.crossr/skills/<pin>/.agents/skills/github-pr-fix"
+if [ ! -d "$SRC" ]; then
+  rm -rf /tmp/crossr-skills-clone
+  git clone --depth 1 --filter=blob:none --sparse https://github.com/sycamore-hq/crossr-skills.git /tmp/crossr-skills-clone
+  cd /tmp/crossr-skills-clone
+  git sparse-checkout set .agents/skills/github-pr-review .agents/skills/github-pr-fix
+  SRC=/tmp/crossr-skills-clone/.agents/skills/github-pr-review
+  FIX=/tmp/crossr-skills-clone/.agents/skills/github-pr-fix
+fi
 mkdir -p /home/box/.claude/skills
-rm -rf /home/box/.claude/skills/github-pr-review
-cp -a .agents/skills/github-pr-review /home/box/.claude/skills/
+rm -rf /home/box/.claude/skills/github-pr-review /home/box/.claude/skills/github-pr-fix
+cp -a "$SRC" /home/box/.claude/skills/
+cp -a "$FIX" /home/box/.claude/skills/
 ```
 
-Prefer the consumer's skills pin when a `lockfile.toml` exists. The clone above is the fallback when this box has no pin checkout yet.
-
-Probe:
+Probe. A box without the skill directory must fail. Review probes stay non-mutating.
 
 ```bash
-claude -p "/github-pr-review reply with exactly SKILL_OK and stop" --permission-mode bypassPermissions --output-format text </dev/null
+test -f /home/box/.claude/skills/github-pr-review/SKILL.md || { echo SKILL_MISSING; exit 1; }
+. /home/box/.config/claude/load-oauth.sh
+claude -p "/github-pr-review Do not review anything. Reply with the exact first heading of the skill body you loaded for this command, or NO_SKILL if none loaded." --disallowedTools "Edit,Write,NotebookEdit,Bash(git push*),Bash(gh pr merge*)" --output-format text </dev/null
+# expect: PR Review
 ```
+
+Without that heading, report Claude as `BACKEND: red` for Reviewer and Fix even when `claude auth status` is OK.
 
 ### 6. Spawn pattern
-New empty process every job. Load oauth first. For PR review:
+New empty process every job. Load oauth first. Write the brief to a file; do not inline it. Review spawns stay non-mutating.
 
 ```bash
 . /home/box/.config/claude/load-oauth.sh
-claude -p "/github-pr-review {brief}" --permission-mode bypassPermissions --output-format text </dev/null
+printf '%s\n' "$BRIEF" > /tmp/labor-brief.md
+claude -p "/github-pr-review $(cat /tmp/labor-brief.md)" --disallowedTools "Edit,Write,NotebookEdit,Bash(git push*),Bash(gh pr merge*)" --output-format text </dev/null
 ```
 
 Redirect stdin with `</dev/null` so `-p` does not hang waiting for pipe input.
 
-Labor does not BLESS, REJECT, or merge. The seat that hired you emits the token.
+Labor does not BLESS, REJECT, or merge. The seat that hired you emits the token. A GitHub review labor submitted is an artifact; the Reviewer seat posts the witness.
 
 ### 7. Done when
 - `claude` on PATH with a real version
 - `CLAUDE_CODE_OAUTH_TOKEN` in `/home/box/agent-data/box-secrets.json` (chmod 600)
 - `load-oauth.sh` loads it; `claude auth status` shows oauth login
-- (If needed) `/github-pr-review` returns `SKILL_OK`
+- `github-pr-review/SKILL.md` present; probe first heading is `PR Review`
 - Report paths + versions to the user; never report the token
 

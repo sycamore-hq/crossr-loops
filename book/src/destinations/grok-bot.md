@@ -85,8 +85,8 @@ After stand-up, or when the user asks, probe once:
 
 ```
 Cursor CloudAgent list scope=all: OK | FAIL | unset
-Claude  `claude --version` + `claude auth status`: OK | FAIL | unset
-OpenCode `opencode --version` + `opencode auth list`: OK | FAIL | unset
+Claude  `. /home/box/.config/claude/load-oauth.sh; claude --version && claude auth status`: OK | FAIL | unset
+OpenCode `. /home/box/.config/opencode/load-go.sh; opencode --version && opencode auth list`: OK | FAIL | unset
 ```
 
 Ask once which backend to use. Silence = hands. Asked backend red → card. No silent hands fallback unless they said "do it yourself."
