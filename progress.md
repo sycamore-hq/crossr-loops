@@ -159,6 +159,10 @@ Descent, `cover`, full edge coverage, docs. Per crossr-skills `docs/plans/graph-
 - Docs (decision 10): `graphs/GRAPH.md` `## Runner`; one sentence in `README.md` Graphs (topology); one sentence in `book/src/pipeline/overview.md` after "Topology (not law)". `justfile` `graphs-cover`.
 - Graphs, `schema.json`, `.agents/`, `lockfile.toml` byte-identical. `verify-graphs` PASS (incl. `uncovered edges: 0`), `verify-protocol` PASS, `verify-skill-refs` PASS (`v1-packets`), Python tests OK, Rust matrix green.
 
-## destinations — Grok Bot (IN PROGRESS)
+## destinations — Grok Bot (COMPLETED)
 
 `book/src/destinations/{overview,grok-bot,grok-bot-profile}.md`. AXEL writer persona `generator-agent.md`. No pin move. Go cards until a loops tag containing `generator-agent.md` is what harness bootstrap writes.
+
+## destinations — labor (IN PROGRESS)
+
+Optional labor backends on the Grok Bot destination. Law: `book/src/destinations/labor.md`. Setup pastes: `labor-cursor.md`, `labor-claude.md`, `labor-opencode.md`. Pointers on overview, grok-bot, grok-bot-profile. No pin move. No catalog skill. Labor never votes.
