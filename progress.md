@@ -165,4 +165,4 @@ Descent, `cover`, full edge coverage, docs. Per crossr-skills `docs/plans/graph-
 
 ## destinations — labor (IN PROGRESS)
 
-Optional labor backends on the Grok Bot destination. Law: `book/src/destinations/labor.md`. Setup pastes: `labor-cursor.md`, `labor-claude.md`, `labor-opencode.md`. Pointers on overview, grok-bot, grok-bot-profile. No pin move. No catalog skill. Labor never votes.
+Optional labor backends on the Grok Bot destination. Official: Cursor, Claude Code, OpenCode Go. User may name extras. Probe reports `AVAILABLE`. Law: `book/src/destinations/labor.md`. Setup pastes for the official three. Pointers on overview, grok-bot, grok-bot-profile. No pin move. No catalog skill. Labor never votes.
