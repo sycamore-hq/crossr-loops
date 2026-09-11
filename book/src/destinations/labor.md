@@ -14,7 +14,9 @@ user  ↔→  Chief-of-Staff
                         └─ OpenCode Go CLI      `opencode run -m` on the box
 ```
 
-Hands — the Bot editing `/workspace` itself — stay the fourth engine. Silence at the probe = hands.
+Hands — the Bot editing `/workspace` itself — stay the last-resort engine. Silence at the probe = hands.
+
+The official Destinations labor backends are Cursor Cloud Agent, Claude Code, and OpenCode Go. Those three have contracts and setup pastes in this chapter. The user may name additional backends for this team. An extra uses the name the user gave. It does not get an official contract unless one is written here. Extra labor still never votes, never merges.
 
 OpenCode-as-destination (`/avril`, `/axel` in the OpenCode TUI) is not OpenCode-as-labor (`opencode run`). This chapter names the second only.
 
@@ -41,7 +43,9 @@ Setup pastes, handed to a setup Bot, not dumped into the Chief-of-Staff profile:
 
 ## Stand-up probe
 
-After the team exists, or when the user asks for labor, Chief-of-Staff probes once. Report status, never secrets.
+After the team exists, or when the user asks for labor, Chief-of-Staff probes once. Report status, never secrets. The report is how everyone knows what is available.
+
+Official three:
 
 ```
 Cursor CloudAgent list scope=all: OK | FAIL | unset
@@ -49,22 +53,32 @@ Claude  `. /home/box/.config/claude/load-oauth.sh; claude --version && claude au
 OpenCode `. /home/box/.config/opencode/load-go.sh; opencode --version && opencode auth list`: OK | FAIL | unset
 ```
 
+Then each extra the user named. Probe only the way the user said. Do not invent a probe, a secret name, or a spawn. Missing any of those → `unset` and ask how; do not enable that extra.
+
+`AVAILABLE` = official backends that reported OK + extras that reported OK.
+
+```
+AVAILABLE: cursor=OK claude=OK opencode=FAIL
+```
+
 Missing Cursor tool auth → try CloudAgent first. Only if that fails, secret-request `CURSOR_API_KEY`.
 Missing Claude → secret-request `CLAUDE_CODE_OAUTH_TOKEN`. Hand [labor-claude.md](labor-claude.md) to a setup Bot if the CLI is missing.
 Missing OpenCode → secret-request `OPENCODE_API_KEY`. Hand [labor-opencode.md](labor-opencode.md) if the CLI is missing.
 
-Then ask once: "Use Cursor, Claude Code, OpenCode Go, or keep working with the Bots' own hands?"
-Silence = hands. Do not enable labor uninvited.
+Then ask once, listing `AVAILABLE` and hands. Do not offer a backend that is not on `AVAILABLE`. Silence = hands. Do not enable labor uninvited.
 
 ## Brief line
 
 Add to every seat brief when labor is on:
 
 ```
-LABOR: cursor|claude|opencode|hands
+LABOR: <one of AVAILABLE, or hands>
+AVAILABLE: <last probe report>
 ROLE: CHEAP|SMART
 BACKEND: green|red|unset
 ```
+
+`LABOR` is not a closed three-name enum. Official tokens are `cursor`, `claude`, `opencode`. Any other token is an extra the user named. `hands` is always allowed.
 
 `red` is a Chief-of-Staff probe token, not a seat dispatch token. Rule 3 cards before a brief goes out.
 
@@ -74,13 +88,13 @@ BACKEND: green|red|unset
 
 A seat should not see `red`. If one arrives anyway, wait. Do not invent a fallback.
 
-Default assignment when LABOR is not named in the user turn:
+Default assignment when LABOR is not named in the user turn. A default applies only if that backend is on `AVAILABLE`. If it is not, ask from `AVAILABLE`. Named LABOR this turn wins if it is on `AVAILABLE`; if named and not available → card (rule 3).
 
-| Job class | ROLE | Backend if green |
+| Job class | ROLE | Backend if on AVAILABLE |
 | --- | --- | --- |
 | Generator code / draft diff / test authoring | CHEAP | Cursor if mutate; else OpenCode |
 | Mechanical verify write-up | CHEAP | OpenCode |
-| Generator plan / Architect / Planning Architect / CTO | SMART | Ask. Named LABOR this turn wins. Silence = hands. |
+| Generator plan / Architect / Planning Architect / CTO | SMART | Ask from AVAILABLE. Named LABOR this turn wins. Silence = hands. |
 | Reviewer (`/github-pr-review`) | SMART | Claude (artifact); seat posts the witness review |
 | Fix (`/github-pr-fix`) | CHEAP | Claude |
 

@@ -34,7 +34,7 @@ When you mint a seat, that Bot's Name is the book seat name. Its Description is 
 
 Work runs on this computer under `/workspace/<repo>`. Not on the user's laptop. Minted sibling Bots share that `/workspace` and the same `gh` login.
 
-Labor is optional. After stand-up, source `/home/box/.config/claude/load-oauth.sh` and `/home/box/.config/opencode/load-go.sh`, then probe Cursor CloudAgent, `claude auth status`, and `opencode auth list`. Report OK / FAIL / unset. Missing secret → secret-request by name (CURSOR_API_KEY only if CloudAgent fails; CLAUDE_CODE_OAUTH_TOKEN; OPENCODE_API_KEY). Never print a secret. Ask once which backend to use. Silence = hands.
+Labor is optional. Official backends are Cursor Cloud Agent, Claude Code, OpenCode Go. The user may name extras. After stand-up, source `/home/box/.config/claude/load-oauth.sh` and `/home/box/.config/opencode/load-go.sh`, then probe the official three and each extra the way the user said. Report `AVAILABLE` (OK names only). Missing official secret → secret-request by name (CURSOR_API_KEY only if CloudAgent fails; CLAUDE_CODE_OAUTH_TOKEN; OPENCODE_API_KEY). Extra with no probe or spawn → card; do not invent one. Never print a secret. Ask once from `AVAILABLE` plus hands. Silence = hands.
 
 When a backend is green for the job class, the seat does not implement with its own hands. Labor never votes, never merges, never pushes the default branch. Asked backend red → card. No silent hands fallback unless the user said "do it yourself" this turn.
 
@@ -119,7 +119,8 @@ PERSONA: loops <pin> /workspace/.crossr/loops/<pin>/.agents/agents/<file>
 SKILLS: skills <pin> /workspace/.crossr/skills/<pin>/.agents/skills/ ; loops fallback /workspace/.crossr/loops/<pin>/.agents/skills/
 INVARIANTS: standing
 ARTIFACTS:
-LABOR: cursor|claude|opencode|hands
+LABOR: <one of AVAILABLE, or hands>
+AVAILABLE: <last probe report>
 ROLE: CHEAP|SMART
 BACKEND: green|red|unset
 DO: <the one action>
