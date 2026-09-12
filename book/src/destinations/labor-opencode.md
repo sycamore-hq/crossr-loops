@@ -87,7 +87,49 @@ Dated examples 2026-09-10. Refresh from `opencode models` on this box. Skip any 
 Never route a Grok model through Go from a Grok Bot (`grok-*` on whatever prefix the list printed).
 
 ### 6. Spawn
-New empty process every job. Load first. Confirm live flag names with `opencode run --help` on this box. If `--dir` exists, point it at `/workspace/<repo>`. If it does not, `cd` into that tree first. Do not invent `--yolo`. If a permission flag exists and is required for headless (`--auto` is the documented one), name it in the report and use it only when the brief needs writes.
+New empty process every job. Load first. Confirm live flag names with `opencode run --help` on this box. If `--dir` exists, point it at `/workspace/<repo>`. If it does not, `cd` into that tree first. Do not invent `--yolo`. If a permission flag exists and is required for headless (`--auto` is the documented one), name it in the report and use it only when the brief needs writes. Do not run `--auto` until `/home/box/.config/opencode/opencode.json` denies push-to-default and merge.
+
+Confirm the `permission.bash` glob → deny shape against the permissions docs for the version on this box (last matching rule wins). Merge these deny keys into that file; do not replace an existing object:
+
+```bash
+python3 <<'PY'
+import json, os
+path = "/home/box/.config/opencode/opencode.json"
+os.makedirs(os.path.dirname(path), exist_ok=True)
+data = {}
+if os.path.exists(path):
+    try:
+        data = json.load(open(path))
+    except Exception as e:
+        raise SystemExit(f"opencode.json unreadable, not overwriting: {e}")
+if data and not isinstance(data, dict):
+    raise SystemExit("opencode.json is not an object, not overwriting")
+data.setdefault("$schema", "https://opencode.ai/config.json")
+perm = data.setdefault("permission", {})
+if not isinstance(perm, dict):
+    raise SystemExit("permission is not an object, not overwriting")
+bash = perm.setdefault("bash", {})
+if not isinstance(bash, dict):
+    raise SystemExit("permission.bash is not an object, not overwriting")
+for key in (
+    "git push origin main*",
+    "git push * main*",
+    "git push --force*",
+    "gh pr merge*",
+    "gh pr ready*",
+    "gh api *merge*",
+):
+    bash.pop(key, None)
+    bash[key] = "deny"
+fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+with os.fdopen(fd, "w") as f:
+    json.dump(data, f, indent=2)
+    f.write("\n")
+print("write_fence", path)
+PY
+```
+
+`--auto` still honors deny. Without those keys, do not run `--auto`.
 
 `-m` takes the exact `provider/id` string `opencode models` printed.
 
@@ -115,6 +157,7 @@ OpenCode reads `.agents/skills` from the repo working tree. Do not copy `github-
 - `opencode` on PATH with a real version
 - `OPENCODE_API_KEY` in `/home/box/agent-data/box-secrets.json` (chmod 600)
 - `load-go.sh` loads it; `opencode models` lists Go models
+- `/home/box/.config/opencode/opencode.json` denies `git push origin main*`, `git push * main*`, `git push --force*`, `gh pr merge*`, `gh pr ready*`, and `gh api *merge*`
 - One AUTH_OK-style smoke
 - Report paths + versions + one cheap id + one smart id actually listed. Never the key.
 
