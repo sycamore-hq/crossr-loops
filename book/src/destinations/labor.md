@@ -128,7 +128,7 @@ Binary on PATH, target shape `/home/box/.local/bin/claude`. Auth is `claude setu
 cat > /tmp/labor-brief.md <<'BRIEF'
 <paste the brief verbatim>
 BRIEF
-claude -p "/github-pr-review $(cat /tmp/labor-brief.md)" --disallowedTools "Edit,Write,NotebookEdit,Bash(git push*),Bash(gh pr merge*)" --output-format text </dev/null
+claude -p "/github-pr-review $(cat /tmp/labor-brief.md)" --allowedTools "Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),Bash(gh pr review *),Bash(gh api *)" --disallowedTools "Edit,Write,NotebookEdit,Bash(git push*),Bash(gh pr merge*),Bash(gh api *merge*)" --output-format text </dev/null
 ```
 
 Fix spawn: `--permission-mode acceptEdits`, edit and push the unit branch only, `gh pr merge` and the default branch stay denied. Ends with a pushed commit; report the HEAD SHA. Shape in [labor-claude.md](labor-claude.md).
