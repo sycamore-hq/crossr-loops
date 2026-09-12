@@ -114,7 +114,15 @@ if not isinstance(bash, dict):
 for key in (
     "git push origin main*",
     "git push * main*",
+    "git push *:main*",
+    "git push origin master*",
+    "git push * master*",
+    "git push *:master*",
+    "git push origin trunk*",
+    "git push * trunk*",
+    "git push *:trunk*",
     "git push --force*",
+    "git push -f*",
     "gh pr merge*",
     "gh pr ready*",
     "gh api *merge*",
@@ -136,10 +144,11 @@ PY
 ```bash
 . /home/box/.config/opencode/load-go.sh
 cd /workspace/<repo>
-cat > /tmp/labor-brief.md <<'BRIEF'
+D="$(mktemp -d /tmp/labor.XXXXXX)"
+cat > "$D/brief.md" <<'BRIEF'
 <paste the brief verbatim>
 BRIEF
-opencode run -m <provider>/<id> "$(cat /tmp/labor-brief.md)"
+opencode run -m <provider>/<id> "$(cat "$D/brief.md")"
 ```
 
 Optional smoke (no secrets in output). Pick a cheap id that `opencode models` actually listed:
@@ -157,7 +166,7 @@ OpenCode reads `.agents/skills` from the repo working tree. Do not copy `github-
 - `opencode` on PATH with a real version
 - `OPENCODE_API_KEY` in `/home/box/agent-data/box-secrets.json` (chmod 600)
 - `load-go.sh` loads it; `opencode models` lists Go models
-- `/home/box/.config/opencode/opencode.json` denies `git push origin main*`, `git push * main*`, `git push --force*`, `gh pr merge*`, `gh pr ready*`, and `gh api *merge*`
+- `/home/box/.config/opencode/opencode.json` denies `git push origin main*`, `git push * main*`, `git push *:main*`, the same three with `master` and `trunk`, `git push --force*`, `git push -f*`, `gh pr merge*`, `gh pr ready*`, and `gh api *merge*`
 - One AUTH_OK-style smoke
 - Report paths + versions + one cheap id + one smart id actually listed. Never the key.
 
