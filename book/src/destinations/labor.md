@@ -58,7 +58,7 @@ Then each extra the user named. Probe only the way the user said. Do not invent 
 `AVAILABLE` = official backends that reported OK + extras that reported OK.
 
 ```
-AVAILABLE: cursor=OK claude=OK opencode=FAIL
+AVAILABLE: cursor claude
 ```
 
 Missing Cursor tool auth → try CloudAgent first. Only if that fails, secret-request `CURSOR_API_KEY`.
@@ -73,7 +73,7 @@ Add to every seat brief when labor is on:
 
 ```
 LABOR: <one of AVAILABLE, or hands>
-AVAILABLE: <last probe report>
+AVAILABLE: <OK names from the last probe>
 ROLE: CHEAP|SMART
 BACKEND: green|red|unset
 ```
@@ -125,7 +125,9 @@ Binary on PATH, target shape `/home/box/.local/bin/claude`. Auth is `claude setu
 
 ```
 . /home/box/.config/claude/load-oauth.sh
-printf '%s\n' "$BRIEF" > /tmp/labor-brief.md
+cat > /tmp/labor-brief.md <<'BRIEF'
+<paste the brief verbatim>
+BRIEF
 claude -p "/github-pr-review $(cat /tmp/labor-brief.md)" --disallowedTools "Edit,Write,NotebookEdit,Bash(git push*),Bash(gh pr merge*)" --output-format text </dev/null
 ```
 
@@ -139,7 +141,9 @@ Binary on PATH via the official install. Auth is the Go API key from https://ope
 
 ```
 . /home/box/.config/opencode/load-go.sh
-printf '%s\n' "$BRIEF" > /tmp/labor-brief.md
+cat > /tmp/labor-brief.md <<'BRIEF'
+<paste the brief verbatim>
+BRIEF
 opencode run -m <provider>/<id> "$(cat /tmp/labor-brief.md)"
 ```
 

@@ -38,8 +38,8 @@ Labor is optional. Official backends are Cursor Cloud Agent, Claude Code, OpenCo
 
 When a backend is green for the job class, the seat does not implement with its own hands. Labor never votes, never merges, never pushes the default branch. Asked backend red → card. No silent hands fallback unless the user said "do it yourself" this turn.
 
-CHEAP = generation, verification, test authoring, draft diffs. SMART = architecture, planning, judgement review. Cursor = repo-mutate. Claude = /github-pr-review and judgement. OpenCode Go = cost-routed OSS. Do not route Grok-via-Go. Model ids are not law; confirm with `opencode models`.
-Add-project still clones `/workspace/<repo>`. Cursor labor does not replace that tree. After CloudAgent, believe GitHub.
+CHEAP = generation, verification, test authoring, draft diffs. SMART = architecture, planning, judgement review. Cursor = repo-mutate. Claude = `/github-pr-review` (artifact; the Reviewer seat posts the witness) and `/github-pr-fix`. OpenCode Go = cost-routed OSS. SMART plan / architecture jobs: ask from `AVAILABLE`; named LABOR this turn wins; silence = hands. Do not route Grok-via-Go. Model ids are not law; confirm with `opencode models`.
+Add-project still clones `/workspace/<repo>`. Cursor labor does not replace that tree. After any mutating labor run (CloudAgent or on-box `--auto`), believe GitHub: PR URL + HEAD SHA. Uncommitted labor edits are not a result.
 
 Narrate before you act. Name the tool, the command, and what happens if they say no. Defer to CrossR tooling. Do not invent pins, recipes, or board files.
 
@@ -120,7 +120,7 @@ SKILLS: skills <pin> /workspace/.crossr/skills/<pin>/.agents/skills/ ; loops fal
 INVARIANTS: standing
 ARTIFACTS:
 LABOR: <one of AVAILABLE, or hands>
-AVAILABLE: <last probe report>
+AVAILABLE: <OK names from the last probe>
 ROLE: CHEAP|SMART
 BACKEND: green|red|unset
 DO: <the one action>
