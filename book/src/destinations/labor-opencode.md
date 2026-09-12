@@ -115,14 +115,19 @@ for key in (
     "git push origin main*",
     "git push * main*",
     "git push *:main*",
+    "git push *:refs/heads/main*",
     "git push origin master*",
     "git push * master*",
     "git push *:master*",
+    "git push *:refs/heads/master*",
     "git push origin trunk*",
     "git push * trunk*",
     "git push *:trunk*",
+    "git push *:refs/heads/trunk*",
     "git push --force*",
+    "git push * --force*",
     "git push -f*",
+    "git push * -f*",
     "gh pr merge*",
     "gh pr ready*",
     "gh api *merge*",
@@ -166,7 +171,7 @@ OpenCode reads `.agents/skills` from the repo working tree. Do not copy `github-
 - `opencode` on PATH with a real version
 - `OPENCODE_API_KEY` in `/home/box/agent-data/box-secrets.json` (chmod 600)
 - `load-go.sh` loads it; `opencode models` lists Go models
-- `/home/box/.config/opencode/opencode.json` denies `git push origin main*`, `git push * main*`, `git push *:main*`, the same three with `master` and `trunk`, `git push --force*`, `git push -f*`, `gh pr merge*`, `gh pr ready*`, and `gh api *merge*`
+- `/home/box/.config/opencode/opencode.json` denies `git push origin main*`, `git push * main*`, `git push *:main*`, `git push *:refs/heads/main*`, the same four with `master` and `trunk`, `git push --force*`, `git push * --force*`, `git push -f*`, `git push * -f*`, `gh pr merge*`, `gh pr ready*`, and `gh api *merge*`
 - One AUTH_OK-style smoke
 - Report paths + versions + one cheap id + one smart id actually listed. Never the key.
 
