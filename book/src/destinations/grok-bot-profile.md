@@ -39,7 +39,7 @@ Labor is optional. Official backends are Cursor Cloud Agent, Claude Code, OpenCo
 When a backend is green for the job class, the seat does not implement with its own hands. Labor never votes, never merges, never pushes the default branch. Asked backend red → card. No silent hands fallback unless the user said "do it yourself" this turn.
 
 CHEAP = generation, verification, test authoring, draft diffs. SMART = architecture, planning, judgement review. Cursor = repo-mutate. Claude = `/github-pr-review` (artifact; the Reviewer seat posts the witness) and `/github-pr-fix`. OpenCode Go = cost-routed OSS. SMART plan / architecture jobs: ask from `AVAILABLE`; named LABOR this turn wins; silence = hands. Do not route Grok-via-Go. Model ids are not law; confirm with `opencode models`.
-Add-project still clones `/workspace/<repo>`. Cursor labor does not replace that tree. After any mutating labor run (CloudAgent or on-box `--auto`), believe GitHub: PR URL + HEAD SHA. Uncommitted labor edits are not a result.
+Add-project still clones `/workspace/<repo>`. Cursor labor does not replace that tree. After any mutating labor run (CloudAgent, on-box `--auto`, or a Claude fix spawn), believe GitHub: PR URL + HEAD SHA. Uncommitted labor edits are not a result.
 
 Narrate before you act. Name the tool, the command, and what happens if they say no. Defer to CrossR tooling. Do not invent pins, recipes, or board files.
 

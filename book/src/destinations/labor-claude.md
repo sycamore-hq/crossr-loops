@@ -80,7 +80,7 @@ claude -p "Reply with exactly: AUTH_OK" --output-format text </dev/null
 If the store is empty later, re-request the secret securely and re-persist. Do not retry bridge work until `claude auth status` is green.
 
 ### 5. Required for the Reviewer / Fix job classes
-Install `github-pr-review` and `github-pr-fix` so the slashes resolve. Prefer the consumer's skills pin. Clone `main` only when this box has no pin checkout yet.
+Install `github-pr-review` and `github-pr-fix` so the slashes resolve. Prefer the consumer's skills pin. Clone `main` only when the pin tree lacks the skill; say so in the report.
 
 `<repo>` is the active add-project. No lockfile → stop and card; do not clone.
 
@@ -90,7 +90,7 @@ PIN="$(sed -n 's/^skills *= *"\([^"]*\)".*/\1/p' /workspace/<repo>/lockfile.toml
 test -n "$PIN" || { echo "no skills pin; card"; exit 1; }
 SRC="/workspace/.crossr/skills/$PIN/.agents/skills/github-pr-review"
 FIX="/workspace/.crossr/skills/$PIN/.agents/skills/github-pr-fix"
-if [ ! -d "$SRC" ]; then
+if [ ! -d "$SRC" ] || [ ! -d "$FIX" ]; then
   rm -rf /tmp/crossr-skills-clone
   git clone --depth 1 --filter=blob:none --sparse https://github.com/sycamore-hq/crossr-skills.git /tmp/crossr-skills-clone
   cd /tmp/crossr-skills-clone
@@ -116,7 +116,9 @@ claude -p "/github-pr-review Do not review anything. Reply with the exact first 
 Without that heading, report Claude as `BACKEND: red` for Reviewer and Fix even when `claude auth status` is OK.
 
 ### 6. Spawn pattern
-New empty process every job. Load oauth first. Write the brief to a file; do not inline it. Review spawns stay non-mutating.
+New empty process every job. Load oauth first. Write the brief to a file; do not inline it. Review spawns stay non-mutating. Fix spawn is mutating: edits and pushes the unit branch only; still no merge. A fix run ends with a commit pushed on the unit branch; report the HEAD SHA (rule 5).
+
+Review:
 
 ```bash
 . /home/box/.config/claude/load-oauth.sh
@@ -124,6 +126,16 @@ cat > /tmp/labor-brief.md <<'BRIEF'
 <paste the brief verbatim>
 BRIEF
 claude -p "/github-pr-review $(cat /tmp/labor-brief.md)" --disallowedTools "Edit,Write,NotebookEdit,Bash(git push*),Bash(gh pr merge*)" --output-format text </dev/null
+```
+
+Fix:
+
+```bash
+. /home/box/.config/claude/load-oauth.sh
+cat > /tmp/labor-brief.md <<'BRIEF'
+<paste the brief verbatim>
+BRIEF
+claude -p "/github-pr-fix $(cat /tmp/labor-brief.md)" --permission-mode acceptEdits --allowedTools "Bash(git add *),Bash(git commit *),Bash(git push origin <unit-branch>*)" --disallowedTools "Bash(gh pr merge*),Bash(git push origin main*)" --output-format text </dev/null
 ```
 
 Redirect stdin with `</dev/null` so `-p` does not hang waiting for pipe input.

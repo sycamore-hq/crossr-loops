@@ -89,7 +89,7 @@ Claude  `. /home/box/.config/claude/load-oauth.sh; claude --version && claude au
 OpenCode `. /home/box/.config/opencode/load-go.sh; opencode --version && opencode auth list`: OK | FAIL | unset
 ```
 
-Report `AVAILABLE` (official three plus any extras the user named that probed OK). Ask once from that list, plus hands. Do not offer a backend that is not on `AVAILABLE`. Silence = hands. Asked backend red → card. No silent hands fallback unless they said "do it yourself."
+Report `AVAILABLE` (OK names only: official backends that probed OK plus any extras the user named that probed OK). Ask once from that list, plus hands. Do not offer a backend that is not on `AVAILABLE`. Silence = hands. Asked backend red → card. No silent hands fallback unless they said "do it yourself."
 
 When a backend is green for the job class, the seat does not implement with its own hands. Labor never votes, never merges. After any mutating labor run, believe GitHub (PR URL + HEAD SHA). Add-project still clones `/workspace/<name>`.
 
