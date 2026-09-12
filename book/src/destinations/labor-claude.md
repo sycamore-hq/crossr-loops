@@ -128,18 +128,18 @@ cat > /tmp/labor-brief.md <<'BRIEF'
 
 Draft the review to /tmp/labor-review/review.json
 BRIEF
-claude -p "/github-pr-review $(cat /tmp/labor-brief.md)" --allowedTools "Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),Bash(gh pr review *),Bash(gh api graphql *),Bash(gh api repos/*/pulls/*),Bash(gh api repos/*/compare/*),Bash(gh api user *),Edit(//tmp/labor-review/**),Write(//tmp/labor-review/**),Bash(git fetch origin *),Bash(git worktree add /tmp/labor-review/* *),Bash(git worktree remove *),Bash(python3 /home/box/.claude/skills/github-pr-review/scripts/validate_review.py *)" --disallowedTools "NotebookEdit,Bash(git push*),Bash(gh pr merge*),Bash(gh api *merge*),Bash(gh api *createCommitOnBranch*),Bash(gh api *updateRef*),Bash(gh api *createRef*)" --output-format text </dev/null
+claude -p "/github-pr-review $(cat /tmp/labor-brief.md)" --allowedTools "Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),Bash(gh api graphql *),Bash(gh api repos/*/pulls/*),Bash(gh api repos/*/compare/*),Bash(gh api user *),Edit(//tmp/labor-review/**),Write(//tmp/labor-review/**),Bash(git fetch origin *),Bash(git worktree add /tmp/labor-review/* *),Bash(git worktree remove *),Bash(python3 /home/box/.claude/skills/github-pr-review/scripts/validate_review.py *)" --disallowedTools "NotebookEdit,Bash(git push*),Bash(gh pr merge*),Bash(gh api *merge*),Bash(gh api *createCommitOnBranch*),Bash(gh api *updateRef*),Bash(gh api *createRef*),Bash(gh api *-X PATCH*),Bash(gh api *-X PUT*),Bash(gh api *-X DELETE*),Bash(gh api *--method *),Bash(gh api *update-branch*),Bash(gh api *dismissals*),Bash(gh api *markPullRequestReadyForReview*),Bash(gh api *closePullRequest*),Bash(gh api *dismissPullRequestReview*),Bash(gh api *deleteRef*)" --output-format text </dev/null
 ```
 
 Fix:
 
 ```bash
 . /home/box/.config/claude/load-oauth.sh
-cd /workspace/<repo> && git checkout <unit-branch>
+cd /workspace/<repo> && git fetch origin <unit-branch> && git checkout <unit-branch> && git merge --ff-only origin/<unit-branch>
 cat > /tmp/labor-brief.md <<'BRIEF'
 <paste the brief verbatim>
 BRIEF
-claude -p "/github-pr-fix $(cat /tmp/labor-brief.md)" --permission-mode acceptEdits --allowedTools "Bash(git add *),Bash(git commit *),Bash(git push origin <unit-branch>),Bash(git push -u origin <unit-branch>),Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),Bash(gh api graphql *),Bash(gh api repos/*/pulls/*),Bash(gh api repos/*/compare/*),Bash(gh api user *)" --disallowedTools "Bash(gh pr merge*),Bash(gh api *merge*),Bash(gh api *createCommitOnBranch*),Bash(gh api *updateRef*),Bash(gh api *createRef*),Bash(git push origin main*)" --output-format text </dev/null
+claude -p "/github-pr-fix $(cat /tmp/labor-brief.md)" --permission-mode acceptEdits --allowedTools "Bash(git add *),Bash(git commit *),Bash(git push origin <unit-branch>),Bash(git push -u origin <unit-branch>),Bash(git status*),Bash(git diff*),Bash(git log*),Bash(git show*),Bash(git fetch origin <unit-branch>),Bash(git pull --ff-only origin <unit-branch>),Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),Bash(gh api graphql *),Bash(gh api repos/*/pulls/*),Bash(gh api repos/*/compare/*),Bash(gh api user *)" --disallowedTools "Bash(gh pr merge*),Bash(gh api *merge*),Bash(gh api *createCommitOnBranch*),Bash(gh api *updateRef*),Bash(gh api *createRef*),Bash(git push origin main*),Bash(gh api *-X PATCH*),Bash(gh api *-X PUT*),Bash(gh api *-X DELETE*),Bash(gh api *--method *),Bash(gh api *update-branch*),Bash(gh api *dismissals*),Bash(gh api *markPullRequestReadyForReview*),Bash(gh api *closePullRequest*),Bash(gh api *dismissPullRequestReview*),Bash(gh api *deleteRef*)" --output-format text </dev/null
 ```
 
 Redirect stdin with `</dev/null` so `-p` does not hang waiting for pipe input.

@@ -131,7 +131,7 @@ cat > /tmp/labor-brief.md <<'BRIEF'
 
 Draft the review to /tmp/labor-review/review.json
 BRIEF
-claude -p "/github-pr-review $(cat /tmp/labor-brief.md)" --allowedTools "Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),Bash(gh pr review *),Bash(gh api graphql *),Bash(gh api repos/*/pulls/*),Bash(gh api repos/*/compare/*),Bash(gh api user *),Edit(//tmp/labor-review/**),Write(//tmp/labor-review/**),Bash(git fetch origin *),Bash(git worktree add /tmp/labor-review/* *),Bash(git worktree remove *),Bash(python3 /home/box/.claude/skills/github-pr-review/scripts/validate_review.py *)" --disallowedTools "NotebookEdit,Bash(git push*),Bash(gh pr merge*),Bash(gh api *merge*),Bash(gh api *createCommitOnBranch*),Bash(gh api *updateRef*),Bash(gh api *createRef*)" --output-format text </dev/null
+claude -p "/github-pr-review $(cat /tmp/labor-brief.md)" --allowedTools "Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),Bash(gh api graphql *),Bash(gh api repos/*/pulls/*),Bash(gh api repos/*/compare/*),Bash(gh api user *),Edit(//tmp/labor-review/**),Write(//tmp/labor-review/**),Bash(git fetch origin *),Bash(git worktree add /tmp/labor-review/* *),Bash(git worktree remove *),Bash(python3 /home/box/.claude/skills/github-pr-review/scripts/validate_review.py *)" --disallowedTools "NotebookEdit,Bash(git push*),Bash(gh pr merge*),Bash(gh api *merge*),Bash(gh api *createCommitOnBranch*),Bash(gh api *updateRef*),Bash(gh api *createRef*),Bash(gh api *-X PATCH*),Bash(gh api *-X PUT*),Bash(gh api *-X DELETE*),Bash(gh api *--method *),Bash(gh api *update-branch*),Bash(gh api *dismissals*),Bash(gh api *markPullRequestReadyForReview*),Bash(gh api *closePullRequest*),Bash(gh api *dismissPullRequestReview*),Bash(gh api *deleteRef*)" --output-format text </dev/null
 ```
 
 Fix spawn: `--permission-mode acceptEdits`, edit and push the unit branch only, `gh pr merge` and the default branch stay denied. Ends with a pushed commit; report the HEAD SHA. Shape in [labor-claude.md](labor-claude.md).
@@ -152,7 +152,7 @@ BRIEF
 opencode run -m <provider>/<id> "$(cat /tmp/labor-brief.md)"
 ```
 
-Confirm `--dir` / `--format` / `--auto` against `opencode run --help` on that box. `--auto` only when the brief needs writes. A write job ends with a commit on the unit branch, pushed. Report the HEAD SHA. Mechanical runs on that SHA, not on the working tree. Uncommitted labor edits are not a result. Plan and review jobs stay non-mutating. Confirm IDs with `opencode models`. Do not invent an id. `/avril` and `/axel` are destination commands, not this spawn.
+Confirm `--dir` / `--format` / `--auto` against `opencode run --help` on that box. `--auto` only when the brief needs writes, and only after `/home/box/.config/opencode/opencode.json` denies `git push` to the default branch, `git push --force`, `gh pr merge`, and `gh pr ready`. `--auto` still honors those deny rules. A write job ends with a commit on the unit branch, pushed. Report the HEAD SHA. Mechanical runs on that SHA, not on the working tree. Uncommitted labor edits are not a result. Plan and review jobs stay non-mutating. Confirm IDs with `opencode models`. Do not invent an id. `/avril` and `/axel` are destination commands, not this spawn.
 
 Setup: [labor-opencode.md](labor-opencode.md).
 
