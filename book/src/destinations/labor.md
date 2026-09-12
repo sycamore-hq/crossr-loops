@@ -133,10 +133,11 @@ Binary on PATH via the official install. Auth is the Go API key from https://ope
 
 ```
 . /home/box/.config/opencode/load-go.sh
-cat > /tmp/labor-brief.md <<'BRIEF'
+D="$(mktemp -d /tmp/labor.XXXXXX)"
+cat > "$D/brief.md" <<'BRIEF'
 <paste the brief verbatim>
 BRIEF
-opencode run -m <provider>/<id> "$(cat /tmp/labor-brief.md)"
+opencode run -m <provider>/<id> "$(cat "$D/brief.md")"
 ```
 
 Confirm `--dir` / `--format` / `--auto` against `opencode run --help` on that box. `--auto` only when the brief needs writes, and only after `/home/box/.config/opencode/opencode.json` denies `git push` to the default branch, `git push --force`, `gh pr merge`, and `gh pr ready`. `--auto` still honors those deny rules. A write job ends with a commit on the unit branch, pushed. Report the HEAD SHA. Mechanical runs on that SHA, not on the working tree. Uncommitted labor edits are not a result. Plan and review jobs stay non-mutating. Confirm IDs with `opencode models`. Do not invent an id. `/avril` and `/axel` are destination commands, not this spawn.
