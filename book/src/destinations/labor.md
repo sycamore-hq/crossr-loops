@@ -121,20 +121,7 @@ Setup: [labor-cursor.md](labor-cursor.md).
 
 ### Claude Code CLI
 
-Binary on PATH, target shape `/home/box/.local/bin/claude`. Auth is `claude setup-token` → `CLAUDE_CODE_OAUTH_TOKEN`. Load `/home/box/.config/claude/load-oauth.sh` before every spawn. New empty process every job. Redirect stdin `</dev/null`. Write the brief to a file; do not inline it. Plan and review spawns stay non-mutating on `/workspace`. Review spawn:
-
-```
-. /home/box/.config/claude/load-oauth.sh
-cd /workspace/<repo>
-cat > /tmp/labor-brief.md <<'BRIEF'
-<paste the brief verbatim>
-
-Draft the review to /tmp/labor-review/review.json
-BRIEF
-claude -p "/github-pr-review $(cat /tmp/labor-brief.md)" --allowedTools "Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),Bash(gh api graphql *),Bash(gh api repos/*/pulls/*),Bash(gh api repos/*/compare/*),Bash(gh api user *),Edit(//tmp/labor-review/**),Write(//tmp/labor-review/**),Bash(git fetch origin *),Bash(git worktree add /tmp/labor-review/* *),Bash(git worktree remove *),Bash(python3 /home/box/.claude/skills/github-pr-review/scripts/validate_review.py *)" --disallowedTools "NotebookEdit,Bash(git push*),Bash(gh pr merge*),Bash(gh api *merge*),Bash(gh api *createCommitOnBranch*),Bash(gh api *updateRef*),Bash(gh api *createRef*),Bash(gh api *-X PATCH*),Bash(gh api *-X PUT*),Bash(gh api *-X DELETE*),Bash(gh api *--method *),Bash(gh api *update-branch*),Bash(gh api *dismissals*),Bash(gh api *markPullRequestReadyForReview*),Bash(gh api *closePullRequest*),Bash(gh api *dismissPullRequestReview*),Bash(gh api *deleteRef*)" --output-format text </dev/null
-```
-
-Fix spawn: `--permission-mode acceptEdits`, edit and push the unit branch only, `gh pr merge` and the default branch stay denied. Ends with a pushed commit; report the HEAD SHA. Shape in [labor-claude.md](labor-claude.md).
+Binary on PATH, target shape `/home/box/.local/bin/claude`. Auth is `claude setup-token` → `CLAUDE_CODE_OAUTH_TOKEN`. Load `/home/box/.config/claude/load-oauth.sh` before every spawn. New empty process every job. Redirect stdin `</dev/null`. Write the brief to a file; do not inline it. Plan and review spawns stay non-mutating on `/workspace`. Each spawn gets its own `mktemp -d /tmp/labor.XXXXXX` for the brief and, on review, the scratch worktree and draft; no push, no merge. Fix spawn: `--permission-mode acceptEdits`, edit and push the unit branch only, `gh pr merge` and the default branch stay denied. Ends with a pushed commit; report the HEAD SHA. Commands in [labor-claude.md](labor-claude.md).
 
 Install `github-pr-review` and `github-pr-fix` from the skills pin into `~/.claude/skills/`. Probe: `SKILL.md` present and the first heading of the loaded skill is `PR Review`. Without that, Claude is `BACKEND: red` for the Reviewer and Fix job classes even when `claude auth status` is OK.
 
