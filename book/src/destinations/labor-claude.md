@@ -116,16 +116,19 @@ claude -p "/github-pr-review Do not review anything. Reply with the exact first 
 Without that heading, report Claude as `BACKEND: red` for Reviewer and Fix even when `claude auth status` is OK.
 
 ### 6. Spawn pattern
-New empty process every job. Load oauth first. Write the brief to a file; do not inline it. Review spawns stay non-mutating. Fix spawn is mutating: edits and pushes the unit branch only; still no merge. A fix run ends with a commit pushed on the unit branch; report the HEAD SHA (rule 5).
+New empty process every job. Load oauth first. Write the brief to a file; do not inline it. Review spawns stay non-mutating on `/workspace`: they verify in a scratch worktree under `/tmp/labor-review/` and draft to `/tmp/labor-review/review.json` (name that path in the brief). Do not `gh pr checkout` the shared tree. Fix spawn is mutating: edits and pushes the unit branch only; still no merge. A fix run ends with a commit pushed on the unit branch; report the HEAD SHA (rule 5).
 
 Review:
 
 ```bash
 . /home/box/.config/claude/load-oauth.sh
+cd /workspace/<repo>
 cat > /tmp/labor-brief.md <<'BRIEF'
 <paste the brief verbatim>
+
+Draft the review to /tmp/labor-review/review.json
 BRIEF
-claude -p "/github-pr-review $(cat /tmp/labor-brief.md)" --allowedTools "Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),Bash(gh pr review *),Bash(gh api *)" --disallowedTools "Edit,Write,NotebookEdit,Bash(git push*),Bash(gh pr merge*),Bash(gh api *merge*)" --output-format text </dev/null
+claude -p "/github-pr-review $(cat /tmp/labor-brief.md)" --allowedTools "Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),Bash(gh pr review *),Bash(gh api graphql *),Bash(gh api repos/*/pulls/*),Bash(gh api repos/*/compare/*),Bash(gh api user *),Edit(//tmp/labor-review/**),Write(//tmp/labor-review/**),Bash(git fetch origin *),Bash(git worktree add /tmp/labor-review/* *),Bash(git worktree remove *),Bash(python3 /home/box/.claude/skills/github-pr-review/scripts/validate_review.py *)" --disallowedTools "NotebookEdit,Bash(git push*),Bash(gh pr merge*),Bash(gh api *merge*),Bash(gh api *createCommitOnBranch*),Bash(gh api *updateRef*),Bash(gh api *createRef*)" --output-format text </dev/null
 ```
 
 Fix:
@@ -136,7 +139,7 @@ cd /workspace/<repo> && git checkout <unit-branch>
 cat > /tmp/labor-brief.md <<'BRIEF'
 <paste the brief verbatim>
 BRIEF
-claude -p "/github-pr-fix $(cat /tmp/labor-brief.md)" --permission-mode acceptEdits --allowedTools "Bash(git add *),Bash(git commit *),Bash(git push origin <unit-branch>),Bash(git push -u origin <unit-branch>),Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),Bash(gh pr review *),Bash(gh api *)" --disallowedTools "Bash(gh pr merge*),Bash(gh api *merge*),Bash(git push origin main*)" --output-format text </dev/null
+claude -p "/github-pr-fix $(cat /tmp/labor-brief.md)" --permission-mode acceptEdits --allowedTools "Bash(git add *),Bash(git commit *),Bash(git push origin <unit-branch>),Bash(git push -u origin <unit-branch>),Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),Bash(gh api graphql *),Bash(gh api repos/*/pulls/*),Bash(gh api repos/*/compare/*),Bash(gh api user *)" --disallowedTools "Bash(gh pr merge*),Bash(gh api *merge*),Bash(gh api *createCommitOnBranch*),Bash(gh api *updateRef*),Bash(gh api *createRef*),Bash(git push origin main*)" --output-format text </dev/null
 ```
 
 Redirect stdin with `</dev/null` so `-p` does not hang waiting for pipe input.

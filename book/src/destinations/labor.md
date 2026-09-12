@@ -121,14 +121,17 @@ Setup: [labor-cursor.md](labor-cursor.md).
 
 ### Claude Code CLI
 
-Binary on PATH, target shape `/home/box/.local/bin/claude`. Auth is `claude setup-token` → `CLAUDE_CODE_OAUTH_TOKEN`. Load `/home/box/.config/claude/load-oauth.sh` before every spawn. New empty process every job. Redirect stdin `</dev/null`. Write the brief to a file; do not inline it. Plan and review spawns stay non-mutating. Review spawn:
+Binary on PATH, target shape `/home/box/.local/bin/claude`. Auth is `claude setup-token` → `CLAUDE_CODE_OAUTH_TOKEN`. Load `/home/box/.config/claude/load-oauth.sh` before every spawn. New empty process every job. Redirect stdin `</dev/null`. Write the brief to a file; do not inline it. Plan and review spawns stay non-mutating on `/workspace`. Review spawn:
 
 ```
 . /home/box/.config/claude/load-oauth.sh
+cd /workspace/<repo>
 cat > /tmp/labor-brief.md <<'BRIEF'
 <paste the brief verbatim>
+
+Draft the review to /tmp/labor-review/review.json
 BRIEF
-claude -p "/github-pr-review $(cat /tmp/labor-brief.md)" --allowedTools "Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),Bash(gh pr review *),Bash(gh api *)" --disallowedTools "Edit,Write,NotebookEdit,Bash(git push*),Bash(gh pr merge*),Bash(gh api *merge*)" --output-format text </dev/null
+claude -p "/github-pr-review $(cat /tmp/labor-brief.md)" --allowedTools "Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),Bash(gh pr review *),Bash(gh api graphql *),Bash(gh api repos/*/pulls/*),Bash(gh api repos/*/compare/*),Bash(gh api user *),Edit(//tmp/labor-review/**),Write(//tmp/labor-review/**),Bash(git fetch origin *),Bash(git worktree add /tmp/labor-review/* *),Bash(git worktree remove *),Bash(python3 /home/box/.claude/skills/github-pr-review/scripts/validate_review.py *)" --disallowedTools "NotebookEdit,Bash(git push*),Bash(gh pr merge*),Bash(gh api *merge*),Bash(gh api *createCommitOnBranch*),Bash(gh api *updateRef*),Bash(gh api *createRef*)" --output-format text </dev/null
 ```
 
 Fix spawn: `--permission-mode acceptEdits`, edit and push the unit branch only, `gh pr merge` and the default branch stay denied. Ends with a pushed commit; report the HEAD SHA. Shape in [labor-claude.md](labor-claude.md).
