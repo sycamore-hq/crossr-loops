@@ -32,7 +32,7 @@ Setup pastes, handed to a setup Bot, not dumped into the Chief-of-Staff profile:
 2. When a backend is green for that job class, the seat does not implement with its own hands.
 3. Asked backend red → card. No silent fallback to hands unless the user said "do it yourself" this turn.
 4. Add-project still clones `/workspace/<name>`. That tree is for board, `gh`, `audit-plan`, `audit-packet`, and the named check. Cursor "never clone" is labor-host law for CloudAgent runs, not working-tree law.
-5. After any mutating labor run (CloudAgent or on-box `--auto`), believe GitHub (PR URL + HEAD SHA), not the agent story. Uncommitted labor edits are not a result.
+5. After any mutating labor run (CloudAgent, on-box `--auto`, or a Claude fix spawn), believe GitHub (PR URL + HEAD SHA), not the agent story. Uncommitted labor edits are not a result.
 6. Model law is roles, not IDs. `ROLE CHEAP` = generation, verification, test authoring, draft diffs. `ROLE SMART` = architecture, planning, judgement review. Confirm live OpenCode ids with `opencode models`.
 7. Do not route Grok-via-OpenCode-Go from a Grok Bot.
 8. Secrets: secret-request by name, persist `/home/box/agent-data/box-secrets.json` chmod 600, never print. `CURSOR_API_KEY` only if CloudAgent cannot list. Claude is `CLAUDE_CODE_OAUTH_TOKEN` from `claude setup-token`, not an API key. OpenCode is `OPENCODE_API_KEY` from the Go sub.
@@ -130,6 +130,8 @@ cat > /tmp/labor-brief.md <<'BRIEF'
 BRIEF
 claude -p "/github-pr-review $(cat /tmp/labor-brief.md)" --disallowedTools "Edit,Write,NotebookEdit,Bash(git push*),Bash(gh pr merge*)" --output-format text </dev/null
 ```
+
+Fix spawn: `--permission-mode acceptEdits`, edit and push the unit branch only, `gh pr merge` and the default branch stay denied. Ends with a pushed commit; report the HEAD SHA. Shape in [labor-claude.md](labor-claude.md).
 
 Install `github-pr-review` and `github-pr-fix` from the skills pin into `~/.claude/skills/`. Probe: `SKILL.md` present and the first heading of the loaded skill is `PR Review`. Without that, Claude is `BACKEND: red` for the Reviewer and Fix job classes even when `claude auth status` is OK.
 
