@@ -125,17 +125,18 @@ Review:
 cat > /tmp/labor-brief.md <<'BRIEF'
 <paste the brief verbatim>
 BRIEF
-claude -p "/github-pr-review $(cat /tmp/labor-brief.md)" --disallowedTools "Edit,Write,NotebookEdit,Bash(git push*),Bash(gh pr merge*)" --output-format text </dev/null
+claude -p "/github-pr-review $(cat /tmp/labor-brief.md)" --allowedTools "Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),Bash(gh pr review *),Bash(gh api *)" --disallowedTools "Edit,Write,NotebookEdit,Bash(git push*),Bash(gh pr merge*),Bash(gh api *merge*)" --output-format text </dev/null
 ```
 
 Fix:
 
 ```bash
 . /home/box/.config/claude/load-oauth.sh
+cd /workspace/<repo> && git checkout <unit-branch>
 cat > /tmp/labor-brief.md <<'BRIEF'
 <paste the brief verbatim>
 BRIEF
-claude -p "/github-pr-fix $(cat /tmp/labor-brief.md)" --permission-mode acceptEdits --allowedTools "Bash(git add *),Bash(git commit *),Bash(git push origin <unit-branch>*)" --disallowedTools "Bash(gh pr merge*),Bash(git push origin main*)" --output-format text </dev/null
+claude -p "/github-pr-fix $(cat /tmp/labor-brief.md)" --permission-mode acceptEdits --allowedTools "Bash(git add *),Bash(git commit *),Bash(git push origin <unit-branch>),Bash(git push -u origin <unit-branch>),Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),Bash(gh pr review *),Bash(gh api *)" --disallowedTools "Bash(gh pr merge*),Bash(gh api *merge*),Bash(git push origin main*)" --output-format text </dev/null
 ```
 
 Redirect stdin with `</dev/null` so `-p` does not hang waiting for pipe input.
