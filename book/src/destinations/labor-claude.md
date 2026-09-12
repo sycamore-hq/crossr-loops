@@ -35,10 +35,11 @@ if os.path.exists(path):
 if not isinstance(data.get("secrets"), dict):
     data["secrets"] = {}
 data["secrets"]["CLAUDE_CODE_OAUTH_TOKEN"] = tok
+if os.path.exists(path):
+    os.chmod(path, 0o600)
 fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
 with os.fdopen(fd, "w") as f:
     json.dump(data, f)
-os.chmod(path, 0o600)
 stored = json.load(open(path))["secrets"].get("CLAUDE_CODE_OAUTH_TOKEN", "")
 print("store_set", bool(stored), "len", len(stored), "match", stored == tok)
 PY
@@ -81,9 +82,14 @@ If the store is empty later, re-request the secret securely and re-persist. Do n
 ### 5. Required for the Reviewer / Fix job classes
 Install `github-pr-review` and `github-pr-fix` so the slashes resolve. Prefer the consumer's skills pin. Clone `main` only when this box has no pin checkout yet.
 
+`<repo>` is the active add-project. No lockfile → stop and card; do not clone.
+
 ```bash
-SRC="/workspace/.crossr/skills/<pin>/.agents/skills/github-pr-review"
-FIX="/workspace/.crossr/skills/<pin>/.agents/skills/github-pr-fix"
+test -f /workspace/<repo>/lockfile.toml || { echo "no lockfile; card"; exit 1; }
+PIN="$(sed -n 's/^skills *= *"\([^"]*\)".*/\1/p' /workspace/<repo>/lockfile.toml)"
+test -n "$PIN" || { echo "no skills pin; card"; exit 1; }
+SRC="/workspace/.crossr/skills/$PIN/.agents/skills/github-pr-review"
+FIX="/workspace/.crossr/skills/$PIN/.agents/skills/github-pr-fix"
 if [ ! -d "$SRC" ]; then
   rm -rf /tmp/crossr-skills-clone
   git clone --depth 1 --filter=blob:none --sparse https://github.com/sycamore-hq/crossr-skills.git /tmp/crossr-skills-clone
@@ -114,7 +120,9 @@ New empty process every job. Load oauth first. Write the brief to a file; do not
 
 ```bash
 . /home/box/.config/claude/load-oauth.sh
-printf '%s\n' "$BRIEF" > /tmp/labor-brief.md
+cat > /tmp/labor-brief.md <<'BRIEF'
+<paste the brief verbatim>
+BRIEF
 claude -p "/github-pr-review $(cat /tmp/labor-brief.md)" --disallowedTools "Edit,Write,NotebookEdit,Bash(git push*),Bash(gh pr merge*)" --output-format text </dev/null
 ```
 

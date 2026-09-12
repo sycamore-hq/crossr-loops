@@ -35,16 +35,17 @@ if os.path.exists(path):
 if not isinstance(data.get("secrets"), dict):
     data["secrets"] = {}
 data["secrets"]["OPENCODE_API_KEY"] = tok
+if os.path.exists(path):
+    os.chmod(path, 0o600)
 fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
 with os.fdopen(fd, "w") as f:
     json.dump(data, f)
-os.chmod(path, 0o600)
 stored = json.load(open(path))["secrets"].get("OPENCODE_API_KEY", "")
 print("store_set", bool(stored), "len", len(stored), "match", stored == tok)
 PY
 ```
 
-Also write creds into OpenCode's own store without echoing. Prefer the CLI (`opencode auth`) if it can take a key non-interactively. Fallback: write `~/.local/share/opencode/auth.json` mode 600 using the provider id the CLI already uses after `/connect` (confirm with `opencode auth list` — names only, no keys). Official Go docs write `opencode-go`. The CLI may print `opencode`. Use whatever `opencode auth list` prints. Do not invent a second store format. Do not print the file.
+Auth is `OPENCODE_API_KEY` in the environment. `opencode models` after the loader is the proof. Do not write `auth.json`. Do not run `/connect` or the TUI. This box has no usable TTY or browser for OAuth.
 
 ### 4. Loader
 Ensure `/home/box/.config/opencode/load-go.sh` exists and sources the store without echoing the value:
@@ -93,7 +94,9 @@ New empty process every job. Load first. Confirm live flag names with `opencode 
 ```bash
 . /home/box/.config/opencode/load-go.sh
 cd /workspace/<repo>
-printf '%s\n' "$BRIEF" > /tmp/labor-brief.md
+cat > /tmp/labor-brief.md <<'BRIEF'
+<paste the brief verbatim>
+BRIEF
 opencode run -m <provider>/<id> "$(cat /tmp/labor-brief.md)"
 ```
 
@@ -106,7 +109,7 @@ opencode run -m <provider>/<cheap-id> "Reply with exactly: AUTH_OK"
 Labor does not BLESS, REJECT, or merge. The seat that hired you emits the token.
 
 ### 7. Skills
-OpenCode reads `.agents/skills` from the repo working tree. Do not copy `github-pr-review` into `~/.claude`. Reviewer briefs that need the slash still prefer Claude Code when that backend is green. OpenCode labor may load the same skill from the pin checkout if the user asked for OpenCode on that review.
+OpenCode reads `.agents/skills` from the repo working tree. Do not copy `github-pr-review` into `~/.claude`. Reviewer and Fix stay on Claude Code when that backend is on `AVAILABLE`. Do not offer OpenCode for `/github-pr-review` or `/github-pr-fix`.
 
 ### 8. Done when
 - `opencode` on PATH with a real version
