@@ -28,18 +28,19 @@ Charter: [`skills-loops-harness-split.html`](https://github.com/sycamore-hq/cros
 
 - AVRIL: `avril-conductor`, `planning-architect`, `product-owner`, `qa-architect`, `visionary-cto`
 - AXEL: `axel-conductor`
+- CrossR Review: `crossr-review-conductor`
 - Code GAN: `generator`, `reviewer`, `tester`, `architect`
 - BRICK stages: `brick-specifier`, `brick-coder`, `brick-refactorer`, `brick-mutator` *agents* (the stage *skills* stay in skills)
 
 ### OpenCode prompt bodies
 
-Conductor agent entrypoints are generated from `axel-conductor-agent` and `avril-conductor-agent` (`<role>-conductor-agent` → `<role>`). Command bodies: `templates/harness/opencode/command/{avril,axel}.md`.
+Conductor agent entrypoints are generated from `axel-conductor-agent`, `avril-conductor-agent`, and `crossr-review-conductor-agent` (`<role>-conductor-agent` → `<role>`). Command bodies: `templates/harness/opencode/command/{avril,axel,crossr-review}.md`.
 
 A target bootstrapped before the harness loops pin moves to `v1-cards` may still carry an unmarked `.opencode/agent/avril.md`. Delete that file by hand before regen — the never-overwrite rule will otherwise protect it forever.
 
 ### Pipeline law
 
-`book/src/pipeline/{overview,avril,axel,brick}.md` is the SSOT for those chapters. `book/src/destinations/` is Grok Bot, optional labor backends, and later hosts.
+`book/src/pipeline/{overview,avril,axel,brick}.md` is the SSOT for those chapters. `book/src/pipeline/crossr-review.md` is a sidecar, not a flagship node. `book/src/destinations/` is Grok Bot, optional labor backends, and later hosts.
 
 ### Graphs (topology)
 
