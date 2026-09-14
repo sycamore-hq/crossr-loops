@@ -181,3 +181,15 @@ Not in `crossr-skills` `docs/public-skills.json` (orchestration freeze). Not a f
 - `just graphs-verify --html`: PASS (6 graphs, taken 46/46 edges)
 - `just verify-protocol`: PASS (unchanged; no adversary nodes)
 - `cargo test --workspace`: PASS after `committed_graphs_all_check` includes `crossr-review`
+
+## crossr-review — review surface
+
+Persona, OpenCode command, book sidecar, harness-agnostic models. Tracking unit `cr-conductor` under phase `crossr-review`.
+
+- SKILL.md model flags stay `--model-review` / `--model-fix`. Defaults stay Fable 5.1 high and user default. Cursor slugs live in `references/cursor-models.md`, loaded on demand.
+- `.agents/agents/crossr-review-conductor-agent.md` — required skill `crossr-review` only. No `gan-verdict`. Conductor never reviews or fixes.
+- `templates/harness/opencode/command/crossr-review.md` — `agent: crossr-review`. Empty invocation asks for a PR and stops. Loads `crossr-review` only.
+- `book/src/pipeline/crossr-review.md` — thin lens. Linked from overview as a sidecar. Not in `graphs/flagship.json`.
+- README personas + OpenCode command list name the new files.
+
+Not in `crossr-skills` `docs/public-skills.json` (orchestration freeze). No ResumeZen / cvzengarden companion.
