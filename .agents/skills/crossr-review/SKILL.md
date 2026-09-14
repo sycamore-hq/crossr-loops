@@ -39,25 +39,23 @@ Parse from the invocation. Unknown flags: stop and ask.
 
 | Flag | Default | Meaning |
 |---|---|---|
-| `--model-review <id>` | `high` | Review Agent model |
+| `--model-review <id>` | Fable 5.1 high | Review Agent model |
 | `--model-fix <id>` | user's default | Fix Agent model |
 | `--max-rounds <n>` | `8` | Review→Fix cycles before a dirty stop |
 
 A bare PR reference (URL, `owner/repo#N`, `pr 58`, `#91`) is the target, not a flag.
 
-### Model ids
+### Models
 
-`--model-review` short ids map to Claude Fable 5.1 thinking slugs:
+`--model-review` and `--model-fix` are harness parameters. Defaults stay
+Fable 5.1 high and the user's default. How a short id maps to a session
+slug is a harness disclosure — not this card.
 
-| id | slug |
-|---|---|
-| `low` / `medium` / `high` / `xhigh` / `max` | `claude-fable-5-1-thinking-<id>` |
-| same + `-fast` | `claude-fable-5-1-thinking-<id>-fast` |
+When the harness is Cursor, load `references/cursor-models.md`. Other
+harnesses disclose their own map, or treat the token as a raw slug.
 
-Any other token is a raw slug. `--model-fix` has no short map (example:
-the Desktop slug for Kimi K3 Max). If a requested slug is not in this
-session's model list: Review Agent — stop and ask; Fix Agent — use the
-user's default and say so once.
+If a requested model is not in this session's list: Review Agent — stop
+and ask; Fix Agent — use the user's default and say so once.
 
 ## Resolve the PR
 
