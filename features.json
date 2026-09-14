@@ -150,5 +150,22 @@
         ]
       }
     ]
+  },
+  "crossr-review": {
+    "status": "in_progress",
+    "commits": [
+      {
+        "id": "cr-conductor",
+        "title": "Slash-only /crossr-review conductor, graph, persona, command, book lens",
+        "status": "in_progress",
+        "features": [
+          "crossr-review-skill",
+          "crossr-review-graph",
+          "crossr-review-persona",
+          "crossr-review-command",
+          "crossr-review-book"
+        ]
+      }
+    ]
   }
 }
