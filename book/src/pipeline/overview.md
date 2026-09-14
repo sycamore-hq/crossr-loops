@@ -37,3 +37,5 @@ The `graph-runner` in crossr-loops replays a walk against that topology and neve
 - [First session prompts](../getting-started/bootstrap.md#first-session-avril--axel)
 
 In OpenCode, the pair is one keystroke away: `/avril` for planning (bare `/avril` is a read-only status report) and `/axel` for execution (bare `/axel` reports the next blessed PBI and asks before running). Restart opencode after installing them.
+
+Sidecar (not a flagship node): [CrossR Review](crossr-review.md) — Review → Fix on one PR. Slash `/crossr-review`. Empty invocation asks for a PR and stops. Not on the Intent → AVRIL → AXEL path.
