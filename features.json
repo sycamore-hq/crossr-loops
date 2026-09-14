@@ -152,12 +152,12 @@
     ]
   },
   "crossr-review": {
-    "status": "in_progress",
+    "status": "completed",
     "commits": [
       {
         "id": "cr-conductor",
         "title": "Slash-only /crossr-review conductor, graph, persona, command, book lens",
-        "status": "in_progress",
+        "status": "completed",
         "features": [
           "crossr-review-skill",
           "crossr-review-graph",

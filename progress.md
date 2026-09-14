@@ -193,3 +193,10 @@ Persona, OpenCode command, book sidecar, harness-agnostic models. Tracking unit 
 - README personas + OpenCode command list name the new files.
 
 Not in `crossr-skills` `docs/public-skills.json` (orchestration freeze). No ResumeZen / cvzengarden companion.
+
+## Verification Status
+- `python3 ./scripts/verify-graphs --html`: PASS (6 graphs, taken 46/46 edges)
+- `python3 ./scripts/verify-protocol`: PASS (7 adversary nodes; crossr-review adds none)
+- `python3 ./scripts/verify-skill-refs`: PASS (`CROSSR_SKILLS_PATH` set; persona `crossr-review` only)
+- `python3 -m unittest discover -s test -v`: OK (82)
+- `cargo test --workspace`: PASS
