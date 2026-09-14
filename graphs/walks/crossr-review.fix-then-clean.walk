@@ -1,0 +1,9 @@
+# crossr-review — one Fix pass then clean: resolve-pr → ensure-skills → review → decide → fix → review → decide → stamp → done.
+pr
+present
+next
+issues
+next
+next
+clean
+next

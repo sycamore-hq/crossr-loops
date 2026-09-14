@@ -115,6 +115,28 @@
         </section>
         <section class="p-5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3">
           <div class="flex items-baseline justify-between gap-3">
+            <h2 class="font-display text-white text-lg">crossr-review — Review → Fix loop</h2>
+            <code class="text-xs text-emerald-300">crossr-review.json</code>
+          </div>
+          <p class="text-sm text-slate-400">Slash-only. Review Agent then Fix Agent until zero issues and questions, then stamp. SKILL.md is the law.</p>
+          <p class="text-xs text-slate-500">conductor: <code>crossr-review</code> · catalog skills: <code>crossr-review</code>, <code>github-pr-review</code>, <code>github-pr-fix</code></p>
+          <div class="grid md:grid-cols-2 gap-4 text-sm">
+            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Nodes</h3><ul class="space-y-1 font-mono text-xs text-slate-300"><li><code>resolve-pr</code> gate {}</li><li><code>ensure-skills</code> gate {}</li><li><code>review</code> generator {&quot;skill&quot;:&quot;github-pr-review&quot;}</li><li><code>decide</code> gate {}</li><li><code>fix</code> generator {&quot;skill&quot;:&quot;github-pr-fix&quot;}</li><li><code>stamp</code> gate {}</li><li><code>done</code> terminal {}</li><li><code>questions</code> terminal {}</li><li><code>dirty</code> terminal {}</li></ul></div>
+            <div><h3 class="text-slate-400 text-xs uppercase mb-1">Edges</h3><ul class="space-y-1 font-mono text-xs text-slate-300"><li><code>resolve-pr</code> → <code>ensure-skills</code> · pr</li><li><code>ensure-skills</code> → <code>review</code> · present</li><li><code>review</code> → <code>decide</code></li><li><code>decide</code> → <code>stamp</code> · clean</li><li><code>decide</code> → <code>questions</code> · questions</li><li><code>decide</code> → <code>dirty</code> · max-rounds</li><li><code>decide</code> → <code>fix</code> · issues</li><li><code>fix</code> → <code>review</code></li><li><code>stamp</code> → <code>done</code></li></ul></div>
+          </div>
+          <pre class="text-xs text-emerald-300/90 overflow-x-auto">flowchart LR
+  resolve_pr --&gt;|pr| ensure_skills
+  ensure_skills --&gt;|present| review
+  review --&gt; decide
+  decide --&gt;|clean| stamp
+  decide --&gt;|questions| questions
+  decide --&gt;|max-rounds| dirty
+  decide --&gt;|issues| fix
+  fix --&gt; review
+  stamp --&gt; done</pre>
+        </section>
+        <section class="p-5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3">
+          <div class="flex items-baseline justify-between gap-3">
             <h2 class="font-display text-white text-lg">Intent → AVRIL → AXEL → Done</h2>
             <code class="text-xs text-emerald-300">flagship.json</code>
           </div>
@@ -131,7 +153,7 @@
         </section>
     <section class="p-5 rounded-2xl border border-zinc-800 space-y-1">
       <h2 class="font-display text-white mb-2">verify-graphs</h2>
-      <div class="text-emerald-400 text-sm">✓ schema.json parses</div><div class="text-emerald-400 text-sm">✓ avril: 5 nodes, 7 edges, start generator</div><div class="text-emerald-400 text-sm">✓ axel: 7 nodes, 9 edges, start intake</div><div class="text-emerald-400 text-sm">✓ brick: 9 nodes, 8 edges, start task-division</div><div class="text-emerald-400 text-sm">✓ code-gan: 6 nodes, 10 edges, start generate</div><div class="text-emerald-400 text-sm">✓ flagship: 4 nodes, 3 edges, start intent</div><div class="text-emerald-400 text-sm">✓ cover: uncovered edges: 0 (taken 37/37 edges)</div>
+      <div class="text-emerald-400 text-sm">✓ schema.json parses</div><div class="text-emerald-400 text-sm">✓ avril: 5 nodes, 7 edges, start generator</div><div class="text-emerald-400 text-sm">✓ axel: 7 nodes, 9 edges, start intake</div><div class="text-emerald-400 text-sm">✓ brick: 9 nodes, 8 edges, start task-division</div><div class="text-emerald-400 text-sm">✓ code-gan: 6 nodes, 10 edges, start generate</div><div class="text-emerald-400 text-sm">✓ crossr-review: 9 nodes, 9 edges, start resolve-pr</div><div class="text-emerald-400 text-sm">✓ flagship: 4 nodes, 3 edges, start intent</div><div class="text-emerald-400 text-sm">✓ cover: uncovered edges: 0 (taken 46/46 edges)</div>
     </section>
   </main>
 </body>

@@ -183,7 +183,10 @@ fn role_enum_matches_schema() {
 fn committed_graphs_all_check() {
     let graphs = load::load_dir(&graphs_dir()).expect("graphs/ loads");
     let names: Vec<&str> = graphs.values().map(|g| g.name.as_str()).collect();
-    assert_eq!(names, ["avril", "axel", "brick", "code-gan", "flagship"]);
+    assert_eq!(
+        names,
+        ["avril", "axel", "brick", "code-gan", "crossr-review", "flagship"]
+    );
     for g in graphs.values() {
         assert_eq!(g.api_version, Graph::API_VERSION);
         assert_eq!(g.kind, Graph::KIND);

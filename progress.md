@@ -166,3 +166,18 @@ Descent, `cover`, full edge coverage, docs. Per crossr-skills `docs/plans/graph-
 ## destinations — labor (IN PROGRESS)
 
 Optional labor backends on the Grok Bot destination. Official: Cursor, Claude Code, OpenCode Go. User may name extras. Probe reports `AVAILABLE`. Law: `book/src/destinations/labor.md`. Setup pastes for the official three. Pointers on overview, grok-bot, grok-bot-profile. No pin move. No catalog skill. Labor never votes.
+
+## crossr-review conductor
+
+Slash-only Review → Fix loop. SKILL.md is the law. Graph is the map.
+
+- `.agents/skills/crossr-review/SKILL.md` — conductor. Never reviews or edits. Review Agent (`github-pr-review`, Fable 5.1 `high`) then Fix Agent (`github-pr-fix --all`, user default) until zero issues and questions; then APPROVE or comment `APPROVED`. Missing siblings load from `sycamore-hq/crossr-skills` after approval.
+- `graphs/crossr-review.json` — resolve-pr → ensure-skills → review → decide → stamp / questions / dirty / fix→review.
+- Walks: `crossr-review.{happy,questions,dirty,fix-then-clean}.walk` take every edge.
+
+Not in `crossr-skills` `docs/public-skills.json` (orchestration freeze). Not a flagship node.
+
+## Verification Status
+- `just graphs-verify --html`: PASS (6 graphs, taken 46/46 edges)
+- `just verify-protocol`: PASS (unchanged; no adversary nodes)
+- `cargo test --workspace`: PASS after `committed_graphs_all_check` includes `crossr-review`
