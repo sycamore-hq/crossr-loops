@@ -23,7 +23,7 @@ When asked to run `/crossr-review`:
 5. Launch Review Agent (`github-pr-review`, default Fable 5.1 high; override `--model-review`). Wait for its report.
 6. Clean → stamp (APPROVE, or a conversation comment containing `APPROVED` if self-approve is refused), report, stop.
 7. Only `q` remain → report questions, no Fix, no stamp, stop.
-8. Otherwise launch Fix Agent (`github-pr-fix --all`, default the user's default; override `--model-fix`). Loop until clean or `--max-rounds` (default 8). Dirty or max-rounds → no stamp.
+8. Otherwise: if no rounds left → dirty, no Fix, no stamp, stop. Else launch Fix Agent (`github-pr-fix`; the user asked for nits; default the user's default; override `--model-fix`). After Fix, always return to step 5 (Review Agent). Decide only after a review. Dirty or max-rounds → no stamp.
 9. Never review the diff. Never edit the PR branch. Never invent a PR, a model, or a finding.
 
 **One-Sentence Mandate**
