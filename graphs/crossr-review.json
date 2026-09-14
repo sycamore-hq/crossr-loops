@@ -1,0 +1,48 @@
+{
+  "apiVersion": "crossr-loops/v0",
+  "kind": "Graph",
+  "name": "crossr-review",
+  "start": "resolve-pr",
+  "title": "crossr-review — Review → Fix loop",
+  "description": "Slash-only. Review Agent then Fix Agent until zero issues and questions, then stamp. SKILL.md is the law.",
+  "conductor": "crossr-review",
+  "nodes": [
+    {"id": "resolve-pr", "role": "gate"},
+    {"id": "ensure-skills", "role": "gate"},
+    {
+      "id": "review",
+      "role": "generator",
+      "catalog": true,
+      "uses": {"skill": "github-pr-review"}
+    },
+    {"id": "decide", "role": "gate"},
+    {
+      "id": "fix",
+      "role": "generator",
+      "catalog": true,
+      "uses": {"skill": "github-pr-fix"}
+    },
+    {"id": "stamp", "role": "gate"},
+    {"id": "done", "role": "terminal"},
+    {"id": "questions", "role": "terminal"},
+    {"id": "dirty", "role": "terminal"}
+  ],
+  "edges": [
+    {"from": "resolve-pr", "to": "ensure-skills", "when": "pr"},
+    {"from": "ensure-skills", "to": "review", "when": "present"},
+    {"from": "review", "to": "decide"},
+    {"from": "decide", "to": "stamp", "when": "clean"},
+    {"from": "decide", "to": "questions", "when": "questions"},
+    {"from": "decide", "to": "dirty", "when": "max-rounds"},
+    {"from": "decide", "to": "fix", "when": "issues"},
+    {"from": "fix", "to": "review"},
+    {"from": "stamp", "to": "done"}
+  ],
+  "requires": {
+    "skills": [
+      "crossr-review",
+      "github-pr-review",
+      "github-pr-fix"
+    ]
+  }
+}

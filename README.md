@@ -1,6 +1,6 @@
 # crossr-loops
 
-AVRIL, AXEL, BRICK, and orchestrator-prompt live here.
+AVRIL, AXEL, BRICK, crossr-review, and orchestrator-prompt live here.
 
 These are the loops (and later, the graphs) that compose skills from
 [`crossr-skills`](https://github.com/sycamore-hq/crossr-skills) by name.
@@ -21,6 +21,7 @@ Charter: [`skills-loops-harness-split.html`](https://github.com/sycamore-hq/cros
 | `avril` | Planning GAN — blessed PBIs (PO → QA → CTO) |
 | `axel` | Execution loop — blessed PBI → PETC + code GAN |
 | `brick` | BRICK conductor only — stages stay in the catalog |
+| `crossr-review` | Slash `/crossr-review` — Review Agent → Fix Agent until clean, then APPROVE |
 | `orchestrator-prompt` | Generate a stateless loop-runner prompt |
 
 ### Personas
@@ -42,7 +43,7 @@ A target bootstrapped before the harness loops pin moves to `v1-cards` may still
 
 ### Graphs (topology)
 
-[`graphs/`](graphs/) — `avril`, `axel`, `brick`, `code-gan`, `flagship`. Catalog skills by name. No Rhai. `just graphs-verify`. [`graph-runner`](runner/) replays a committed walk against a graph and never runs one — see [`graphs/GRAPH.md`](graphs/GRAPH.md).
+[`graphs/`](graphs/) — `avril`, `axel`, `brick`, `code-gan`, `crossr-review`, `flagship`. Catalog skills by name. No Rhai. `just graphs-verify`. [`graph-runner`](runner/) replays a committed walk against a graph and never runs one — see [`graphs/GRAPH.md`](graphs/GRAPH.md).
 
 ## Not here
 

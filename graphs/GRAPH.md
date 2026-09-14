@@ -28,3 +28,4 @@ Schema: [`schema.json`](schema.json). Gates: `just graphs-verify`, `just verify-
 | `axel.json` | Execution loop; plan-write → plan-audit → plan-architect → `code-gan` |
 | `brick.json` | Stage pipeline; stage *skills* are catalog |
 | `flagship.json` | Intent → AVRIL → AXEL → Done. BRICK is the alternative, not a node here. |
+| `crossr-review.json` | Slash-only Review → Fix loop; catalog `github-pr-review` / `github-pr-fix`; stamp or questions/dirty stop |

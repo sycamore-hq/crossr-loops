@@ -64,6 +64,7 @@ fn committed_walks() {
         "axel.happy",
         "brick.happy",
         "code-gan.happy",
+        "crossr-review.happy",
         "flagship.happy",
     ] {
         assert!(
