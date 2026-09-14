@@ -171,7 +171,7 @@ Optional labor backends on the Grok Bot destination. Official: Cursor, Claude Co
 
 Slash-only Review → Fix loop. SKILL.md is the law. Graph is the map.
 
-- `.agents/skills/crossr-review/SKILL.md` — conductor. Never reviews or edits. Review Agent (`github-pr-review`, Fable 5.1 `high`) then Fix Agent (`github-pr-fix --all`, user default) until zero issues and questions; then APPROVE or comment `APPROVED`. Missing siblings load from `sycamore-hq/crossr-skills` after approval.
+- `.agents/skills/crossr-review/SKILL.md` — conductor. Never reviews or edits. Review Agent (`github-pr-review`, Fable 5.1 `high`) then Fix Agent (`github-pr-fix`; the user asked for nits; user default) until zero issues and questions; then APPROVE or comment `APPROVED`. Missing siblings load from `sycamore-hq/crossr-skills` after approval.
 - `graphs/crossr-review.json` — resolve-pr → ensure-skills → review → decide → stamp / questions / dirty / fix→review.
 - Walks: `crossr-review.{happy,questions,dirty,fix-then-clean}.walk` take every edge.
 

@@ -14,7 +14,7 @@ The conductor **never reviews the diff** and **never edits the PR branch**. It r
 
 Slash-only: `/crossr-review`. Resolve a PR from the invocation or conversation (URL, `owner/repo#N`, `pr N`, `#N`). None → ask and stop.
 
-Review Agent (`github-pr-review`, default Fable 5.1 high) then Fix Agent (`github-pr-fix --all`, user default). `--all` means nits are in scope. `q` threads are not fixes.
+Review Agent (`github-pr-review`, default Fable 5.1 high) then Fix Agent (`github-pr-fix`; the user asked for nits; user default). `q` threads are not fixes.
 
 - Only-`q` → stop, no Fix, no stamp.
 - Dirty / max-rounds (default 8) → no stamp.

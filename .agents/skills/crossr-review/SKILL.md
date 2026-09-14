@@ -27,11 +27,10 @@ You will review the pull request using the "Review Agent" for the code review, t
   Model: Claude Fable 5.1
   ---
   Name: Fix Agent:
-  Skill: /github-pr-fix --all (include nits)
+  Skill: /github-pr-fix
   Model: user default
 
-`--all` means nits are in scope. `q` threads are not fixes; they keep the
-review dirty and stop the loop for a human.
+Launch Fix Agent with "the user asked for nits". `q` threads are not fixes.
 
 ## Flags
 
@@ -92,13 +91,13 @@ On refusal, stop.
 
 ```
 round = 1
-while round <= max_rounds:
+while true:
   run Review Agent on the PR
   if clean → stamp, report, stop
   if only `q` remain → report questions, no Fix, no stamp, stop
-  run Fix Agent on the PR with nits in scope
+  if round > max_rounds → report dirty, no Fix, no stamp, stop
+  run Fix Agent on the PR; the user asked for nits
   round += 1
-report dirty, no stamp, stop
 ```
 
 **Clean** means the Review Agent report has no `blocker`, `should-fix`,
@@ -108,7 +107,7 @@ report dirty, no stamp, stop
 **Review Agent** reads `github-pr-review` and the PR. It posts the review.
 It does not push.
 
-**Fix Agent** reads `github-pr-fix` with nits in scope and the PR. It
+**Fix Agent** reads `github-pr-fix` (the user asked for nits) and the PR. It
 implements, pushes to the PR head, replies, and resolves only threads whose
 `Done when` holds. It does not open a new review.
 
