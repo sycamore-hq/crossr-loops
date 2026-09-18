@@ -2,5 +2,5 @@
 # Same contract as harness and skills — consumer pins, not a self-advertisement
 # of this remote's published tag. Pins, not work state — the board remains
 # the work log. No git submodules.
-skills = "v1-packets"
-loops  = "v1-cards"
+skills = "v1-board"
+loops  = "v1-board-consumers"
