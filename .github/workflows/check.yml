@@ -1,0 +1,37 @@
+name: Check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Python suite
+        run: python3 -m unittest discover -s test -v
+      - name: Graph verification
+        run: python3 ./scripts/verify-graphs
+      - name: Protocol verification
+        run: python3 ./scripts/verify-protocol
+
+  book:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Pinned to match crossr-web-landing. mdbook 0.5 removed the
+      # `multilingual` key, so an unpinned bump is a config break, not a
+      # rendering difference — the kind of thing only a real build catches.
+      - name: Install mdBook
+        run: |
+          MDBOOK_VERSION="0.4.40"
+          curl -L "https://github.com/rust-lang/mdBook/releases/download/v${MDBOOK_VERSION}/mdbook-v${MDBOOK_VERSION}-x86_64-unknown-linux-gnu.tar.gz" | tar xz
+          sudo mv mdbook /usr/local/bin/
+          mdbook --version
+      - name: Build the book
+        run: mdbook build book

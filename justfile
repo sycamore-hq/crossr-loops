@@ -35,3 +35,11 @@ verify-skill-refs:
 
 graphs-verify-html:
     @./scripts/verify-graphs --html
+
+# Loop law as a book. SUMMARY.md is the index; test_book_summary keeps it
+# honest when mdbook is not installed.
+book-build:
+    mdbook build book
+
+book-serve:
+    mdbook serve book
