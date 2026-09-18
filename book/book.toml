@@ -1,0 +1,10 @@
+[book]
+authors = ["Nathan Sculli"]
+description = "Loop law. AVRIL, AXEL, BRICK, CrossR Review, and the Destinations seats. Composes skills from crossr-skills by name; owns no skill text."
+language = "en"
+src = "src"
+title = "CrossR Loops"
+
+[output.html]
+git-repository-url = "https://github.com/sycamore-hq/crossr-loops"
+edit-url-template = "https://github.com/sycamore-hq/crossr-loops/edit/main/book/{path}"
