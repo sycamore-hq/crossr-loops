@@ -28,7 +28,7 @@ If intake is missing or ambiguous: **stop**. Tell the human to run `avril` first
 3. Load board state + Blessed Backlog Summary / authorized ids.
 4. State language stack + adversary chain for this session.
 5. Compute the ready set (deps satisfied, not done).
-6. Pick **one** next PBI (highest rank / `pinto next` / explicit human order).
+6. Pick **one** next PBI (highest rank / deps all done / explicit human order).
 
 ## AXEL Method — Per PBI
 

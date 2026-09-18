@@ -70,7 +70,7 @@ v1 Grok Bot board is a deliberate subset of the AXEL intake gate in [`axel.md`](
 - the GitHub issue on the active repo titled exactly `Blessed Backlog Summary`, or
 - three comments on that issue, on the same id and revision, each starting with `SEAT: Product Owner`, `SEAT: QA Architect`, or `SEAT: Visionary CTO` and that seat's `BLESS <id>`. None older than the id's last material edit. One seat is not enough.
 
-It does not honor `avril-blessed` board markers or a human-authorized id set. README, raw issues, `progress.md`, and `features.json` are empty.
+It does not honor `avril-blessed` board markers or a human-authorized id set. A README, raw issues, and any repo file claiming to hold work state are empty.
 
 - Blessed ready id on that subset → offer AXEL. Wait for yes.
 - Nothing blessed → offer AVRIL. Wait for Intent.

@@ -275,7 +275,10 @@ class LiveTree(unittest.TestCase):
         self.assertIn("drop", self.axel_card)
         self.assertIn("review prose", self.axel_card)
         self.assertNotIn("paste the board", self.axel_card)
-        self.assertNotIn("pinto list --json", self.axel_card)
+        # The card names no board CLI: board I/O is a disclosed capability,
+        # and a card that inlines one product's flags is the regression.
+        for vendor in ("pinto ", "gh project", "jira "):
+            self.assertNotIn(vendor, self.axel_card)
 
     def test_harness_parameters_names_scratch_path(self):
         self.assertIn("Packet scratch path", self.params)
@@ -291,7 +294,7 @@ class LiveTree(unittest.TestCase):
         self.assertIn("transcribed to the prior-verdict line shape", self.handoff)
         self.assertIn("- <gate> REJECT:", self.handoff)
 
-    def test_no_packet_path_under_docs_or_pinto(self):
+    def test_no_packet_path_inside_the_repo(self):
         hits = []
         roots = (
             ROOT / ".agents",
@@ -309,7 +312,7 @@ class LiveTree(unittest.TestCase):
                         continue
                     for raw in re.findall(r"`([^`]+)`|(\S+)", line):
                         token = raw[0] or raw[1]
-                        if re.match(r"^(docs/|\.pinto/)", token):
+                        if re.match(r"^docs/", token):
                             rel = path.relative_to(ROOT)
                             hits.append(f"{rel}:{lineno}:{token}")
         self.assertEqual(hits, [])

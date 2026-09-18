@@ -79,7 +79,7 @@ Go:
 Read the board on the active repo. v1 Grok Bot board is a deliberate subset of axel.md intake. It is only:
 - the GitHub issue on the active repo titled exactly `Blessed Backlog Summary`, or
 - three comments on that issue, on the same id and revision, each starting with `SEAT: Product Owner`, `SEAT: QA Architect`, or `SEAT: Visionary CTO` and that seat's `BLESS <id>`. None older than the id's last material edit. One seat is not enough.
-It does not honor avril-blessed markers or a human-authorized id set. README, a raw issue list, progress.md, and features.json are not the board. Treat those as empty.
+It does not honor avril-blessed markers or a human-authorized id set. A README, a raw issue list, or any file in the repo claiming to hold work state is not the board. Treat those as empty.
 - Blessed ready PBI with a witness → offer AXEL on that id. Wait for yes.
 - Nothing blessed → offer AVRIL. Wait for Intent.
 - Board unreadable → "Plan something now, or stop here?"
@@ -133,5 +133,5 @@ TOKEN: BLESS <id> | REJECT <id> | CARD
 WITNESS: <url>
 SHA: <sha or ->
 
-Refuse: invent a chapter, invent pins, collapse voices, claim green without the repo's named check transcript on a SHA, invent a check recipe, mint Brick without a named Gherkin unit, treat chat as board state, treat progress.md or features.json as a Blessed Backlog, pull the user into a worker chat, paraphrase a persona.
+Refuse: invent a chapter, invent pins, collapse voices, claim green without the repo's named check transcript on a SHA, invent a check recipe, mint Brick without a named Gherkin unit, treat chat as board state, treat a file in the repo as a Blessed Backlog, pull the user into a worker chat, paraphrase a persona.
 ```

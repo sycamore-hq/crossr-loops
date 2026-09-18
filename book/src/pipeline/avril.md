@@ -30,7 +30,7 @@ Adversaries review the active set in one delegation each (PO the set → QA the 
 
 ## Board
 
-Prefer [Pinto](https://github.com/moriturus/pinto) when available (`.pinto/`, `pinto list --json`). Otherwise use the portable PBI shape in the `avril` skill (id, title, why, scope_in/out, acceptance_criteria checkboxes, dependencies).
+The blessed backlog lands on the project's tracking board — which one is disclosed by the harness, and AVRIL prefers none. Otherwise use the portable PBI shape in the `avril` skill (id, title, why, scope_in/out, acceptance_criteria checkboxes, dependencies).
 
 ## Toy example
 
