@@ -65,7 +65,7 @@ Copied byte-identical. Pipeline chapters still point at `scull7/crossr-skills` U
 
 ## Consumers
 
-Install from [`sycamore-hq/crossr-harness`](https://github.com/sycamore-hq/crossr-harness) (`harness-bootstrap`). Current consumer pin: `loops = "v1-cards"` (split-08 first pin was `v0`). This repo's `AGENTS.md` / `justfile` / `lockfile.toml` are a `--process-only` consumer instance (split-08), not loop law. The `features.json` and `progress.md` it also carried were removed when the board became the single source of work state.
+Install from [`sycamore-hq/crossr-harness`](https://github.com/sycamore-hq/crossr-harness) (`harness-bootstrap`). Current consumer pin: `loops = "v1-board-consumers"` (split-08 first pin was `v0`). This repo's `AGENTS.md` / `justfile` / `lockfile.toml` are a `--process-only` consumer instance (split-08), not loop law. The `features.json` and `progress.md` it also carried were removed when the board became the single source of work state.
 
 ## Graphs (split-09)
 
