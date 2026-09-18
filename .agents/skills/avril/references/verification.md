@@ -3,7 +3,7 @@
 In a fresh activation the following seven behaviors are directly observable and scorable:
 
 - The agent recites the One-Sentence Mandate verbatim before the first delegation or backlog mutation.
-- The agent treats board/backend details as harness-disclosed parameters, prefers Pinto when present, and otherwise uses the portable PBI shape — never hard-codes a single project’s paths as universal law.
+- The agent treats board identity and access channel as harness-disclosed parameters, prefers no product over another, and carries the portable PBI shape onto whichever board is disclosed — never hard-codes a single project’s paths as universal law.
 - The agent decomposes intent into small PBIs via the Generator, then runs PO → QA → CTO in that fixed order on each item, citing the chain on every handoff.
 - The agent requires the exact token `BLESS` from all three adversaries before an item is done; on any `REJECT` or missing BLESS it re-delegates the minimal fix to the Generator and restarts the three-adversary chain for that item.
 - The agent itself emits zero PBI authorship, zero code, and zero adversary review content; it only sequences, records, and gates.

@@ -149,8 +149,6 @@ class LiveTree(unittest.TestCase):
         cls.command = (
             ROOT / "templates" / "harness" / "opencode" / "command" / "axel.md"
         ).read_text()
-        cls.features = json.loads((ROOT / "features.json").read_text())
-        cls.progress = (ROOT / "progress.md").read_text()
         cls.params = (
             ROOT / ".agents" / "skills" / "axel" / "references" / "harness-parameters.md"
         ).read_text()
@@ -270,20 +268,6 @@ class LiveTree(unittest.TestCase):
         self.assertRegex(self.params, r"(?i)plan-time Architect|architecture")
         self.assertNotRegex(self.params, r"(?i)per-phase Architect")
 
-    def test_features_records_pr6b(self):
-        phase = self.features["gan-layer-separation"]
-        ids = {
-            c["id"]
-            for c in phase.get("commits") or []
-            if c.get("status") == "completed"
-        }
-        self.assertIn("pr6b", ids)
-
-    def test_progress_records_pr6b(self):
-        self.assertRegex(
-            self.progress,
-            r"(?m)^### gan-layer-separation — PR 6b \(COMPLETED\)",
-        )
 
 
 if __name__ == "__main__":

@@ -19,7 +19,7 @@ This is a harness-layer generator skill. The template it fills describes a three
 
 Naming note: the *runner* personas AXEL/AVRIL in the generated prompt are stateless labor roles. They are distinct from the `axel` (execution conductor) and `avril` (planning GAN) skills in this catalog; the generated orchestrator plays the conductor role the `axel` skill describes, and its PLAN is typically an AVRIL-blessed backlog.
 
-Concrete values — repo path, default branch, plan/ledger paths, CI gate, runner/judge model ids, opencode binary, escalation owner, project invariants, acceptance persona — are parameters disclosed by the invoking harness (root rules file, HARNESS-SPEC or equivalent, justfile, plan documents, Pinto/backlog state) or supplied by the human. The invariants of this skill (verbatim template body, every placeholder resolved or explicitly listed as unresolved, invariants and acceptance persona derived from the project rather than generic, no runner execution) are enforced uniformly.
+Concrete values — repo path, default branch, plan/ledger paths, CI gate, runner/judge model ids, opencode binary, escalation owner, project invariants, acceptance persona — are parameters disclosed by the invoking harness (root rules file, HARNESS-SPEC or equivalent, justfile, plan documents, board state) or supplied by the human. The invariants of this skill (verbatim template body, every placeholder resolved or explicitly listed as unresolved, invariants and acceptance persona derived from the project rather than generic, no runner execution) are enforced uniformly.
 
 ## Inputs
 
@@ -27,7 +27,7 @@ Concrete values — repo path, default branch, plan/ledger paths, CI gate, runne
 |-------|----------------------------|-------------------|
 | `PROJECT_NAME`, `REPO` | human request → git root | unresolved question |
 | `DEFAULT_BRANCH` | `git symbolic-ref refs/remotes/origin/HEAD` → local branch | `main` |
-| `PLAN` | human → `docs/plans/*` / backlog summary / `features.json` phase | unresolved question |
+| `PLAN` | human → `docs/plans/*` / backlog summary / the board item | unresolved question |
 | `LEDGER` | human → existing ledger | `docs/<project>-ledger.md` (state that it does not yet exist) |
 | `CI_GATE` | justfile / CI workflow / rules file | unresolved question |
 | `RUNNER_MODEL`, `JUDGE_MODEL`, `MODEL_POOL` | human → `.opencode/` config → `opencode models` | template MODEL POOL (`opencode-go/` = the `go` plan; `opencode/` = pay-per-token). Cheapest covered model for runners, strongest for judge. Verify ids against `opencode models` rather than trusting the template's list |

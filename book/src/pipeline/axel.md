@@ -25,7 +25,7 @@ AXEL starts only if one of:
 
 ## Per-PBI loop
 
-1. **Select** one ready PBI (deps done; prefer `pinto next`).
+1. **Select** one ready PBI (dependencies done, per the board's ordering links).
 2. **Plan** — Generator + `plan-writer`; phases live inside the plan; blocking questions → stop.
 3. Mechanical audit, then Architect at plan time. Three REJECTs → human. BLESS → commit the plan.
 4. Board → **in-progress**.

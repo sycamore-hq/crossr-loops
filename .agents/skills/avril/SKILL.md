@@ -13,11 +13,11 @@ Disclosed: intent, board, tracking, planning personas. Load `references/harness-
 
 ### Portable PBI shape (calculation layer)
 
-Every PBI — whether stored in Pinto or files — MUST carry:
+Every PBI — whatever board holds it — MUST carry:
 
 | Field | Requirement |
 |-------|-------------|
-| `id` | Stable ID (Pinto-assigned or harness scheme) |
+| `id` | Stable ID (board-assigned, or the harness's scheme) |
 | `title` | Imperative, outcome-oriented, ≤ 80 chars |
 | `why` | One sentence of user/business value |
 | `scope_in` | Bullet list of what is included |

@@ -18,7 +18,7 @@ The `graph-runner` in crossr-loops replays a walk against that topology and neve
 |-------|--------|----------------|
 | **Intent** | Human | PRD, conversation, prototype notes, ADR set |
 | **AVRIL** | Planning GAN | Architect proposes PBIs; PO → QA → CTO must each `BLESS` |
-| **Blessed Backlog** | Board (Pinto preferred) | Finite authorized set — planning **stops** here |
+| **Blessed Backlog** | The disclosed board | Finite authorized set — planning **stops** here |
 | **AXEL** | Execution loop | Only blessed work; PETC + code GAN; AC evidence |
 | **Done** | Board + tracking | Honest status; AC checked; commits linked |
 
