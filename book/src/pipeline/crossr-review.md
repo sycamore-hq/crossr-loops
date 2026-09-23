@@ -14,13 +14,13 @@ The conductor **never reviews the diff** and **never edits the PR branch**. It r
 
 Slash-only: `/crossr-review`. Resolve a PR from the invocation or conversation (URL, `owner/repo#N`, `pr N`, `#N`). None → ask and stop.
 
-Review Agent (`github-pr-review`, default Fable 5.1 high) then Fix Agent (`github-pr-fix`; the user asked for nits; user default). `q` threads are not fixes.
+Review Agent (`github-pr-review`) then Fix Agent (`github-pr-fix`; the user asked for nits). No `--model-review` or `--model-fix` → ask which model runs that agent and wait. Do not pick one. `q` threads are not fixes.
 
 - Only-`q` → stop, no Fix, no stamp.
 - Dirty / max-rounds (default 8) → no stamp.
 - Clean → GitHub APPROVE, or a conversation comment containing `APPROVED` if self-approve is refused.
 
-`--model-review` and `--model-fix` are harness parameters. Cursor slugs live in the skill's `references/`, loaded on demand.
+`--model-review` and `--model-fix` are harness parameters. A provided id is a raw session slug. There is no default model and no short-id map.
 
 ## Related
 
