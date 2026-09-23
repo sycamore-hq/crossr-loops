@@ -14,7 +14,7 @@ The conductor **never reviews the diff** and **never edits the PR branch**. It r
 
 Slash-only: `/crossr-review`. Resolve a PR from the invocation or conversation (URL, `owner/repo#N`, `pr N`, `#N`). None → ask and stop.
 
-Review Agent (`github-pr-review`) then Fix Agent (`github-pr-fix`; the user asked for nits). No `--model-review` or `--model-fix` → ask which model runs that agent and wait. Do not pick one. `q` threads are not fixes.
+Review Agent (`github-pr-review`) then Fix Agent (`github-pr-fix`; the user asked for nits). No `--model-review` or `--model-fix` → ask once which model runs that agent and wait; later rounds reuse the answer. Do not pick one. `q` threads are not fixes.
 
 - Only-`q` → stop, no Fix, no stamp.
 - Dirty / max-rounds (default 8) → no stamp.
