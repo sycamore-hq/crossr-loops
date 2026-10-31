@@ -63,7 +63,16 @@ The harness discloses `books` from the consumer repo's `lockfile.toml` at sessio
 
 **When `books` names more than one book:**
 
-Disclose which book applies **per PBI**. If unspecified, stop and ask. Do not default to first-listed.
+Disclose which book applies **per PBI**. If unspecified, stop and ask. Do not default to first-listed. Only language books count here. Cross-cutting books never enter this choice.
+
+**Cross-cutting books (always, alongside the language book):**
+
+A book whose card carries `metadata.scope: "cross-cutting"` (today: `system-design`) is disclosed from the pinned skills catalog every session. It is not listed in `lockfile.toml` and is not chosen per PBI. Pre-flight step 4 names each one with the skills pin it resolved from, e.g. `cross-cutting: system-design @ v1-…`. When there are none, step 4 says so.
+
+- Generator (plan) also loads: each cross-cutting card + its `RULES.md` + the references its card routes to for this PBI (`plan-writer` picks them; the conductor does not).
+- `architecture` gate also loads: each cross-cutting `RULES.md`. Never its `references/`.
+- `scripts/audit-plan` checks the plan's `## System-design applicability` against the same disclosed set.
+- Generator (execute), `testing`, `code-review`, and the test verifier: no cross-cutting book. `code-writer` carries the overlap.
 
 **When `books` is missing or empty:**
 
