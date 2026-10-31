@@ -62,7 +62,7 @@ class CrossCuttingDisclosure(unittest.TestCase):
         self.assertIn("no cross-cutting book", line)
 
     def test_audit_uses_the_same_disclosed_set(self):
-        self.assertIn("audit-plan", self.cross)
+        self.assertIn("audit-plan --rules", self.cross)
         self.assertIn("same disclosed set", self.cross)
 
 

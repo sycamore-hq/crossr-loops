@@ -71,7 +71,7 @@ A book whose card carries `metadata.scope: "cross-cutting"` (today: `system-desi
 
 - Generator (plan) also loads: each cross-cutting card + its `RULES.md` + the references its card routes to for this PBI (`plan-writer` picks them; the conductor does not).
 - `architecture` gate also loads: each cross-cutting `RULES.md`. Never its `references/`.
-- `scripts/audit-plan` checks the plan's `## System-design applicability` against the same disclosed set.
+- The conductor runs `scripts/audit-plan --rules <RULES.md>` once per disclosed cross-cutting book, so the plan's `## System-design applicability` is checked against the same disclosed set.
 - Generator (execute), `testing`, `code-review`, and the test verifier: no cross-cutting book. `code-writer` carries the overlap.
 
 **When `books` is missing or empty:**
